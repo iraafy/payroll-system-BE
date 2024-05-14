@@ -3,8 +3,10 @@ package com.lawencon.pss.dto;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
 @Setter
+@Getter
 public class DeleteResDto {
+
 	private String message;
+
 }

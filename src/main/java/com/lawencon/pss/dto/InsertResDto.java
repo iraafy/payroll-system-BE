@@ -6,6 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class InsertResDto {
-	private String id;
+    
+    private String id;
 	private String message;
 }

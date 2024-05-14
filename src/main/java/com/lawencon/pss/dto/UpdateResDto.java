@@ -6,6 +6,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UpdateResDto {
-	private Long vrsion;
-	private String message;	
+
+    private Long ver;
+	private String message;
+    
 }

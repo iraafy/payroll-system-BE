@@ -2,7 +2,7 @@
 <section name="Workbench">
 	<section name="MavenProjectImportWizardPage">
 		<list key="rootDirectory">
-			<item value="D:\Lawencon\final project back end"/>
+			<item value="D:\Bootcamp IT Lawencon\Bootcamp Program\Final Project\payroll-system-BE"/>
 		</list>
 		<list key="projectNameTemplate">
 			<item value="[artifactId]"/>
