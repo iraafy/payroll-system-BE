@@ -9,17 +9,18 @@ import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
-@Setter
 @Getter
+@Setter
 @Entity
 @Table(name = "tb_m_companies")
 public class Company extends BaseModel {
 
     @Column(name = "company_name", nullable = false)
-	private String companyName;
-	
-	@ManyToOne
-	@JoinColumn(name = "logo_id", nullable = false)
-	private File logo;
+    private String companyName;
 
+    @ManyToOne
+    @JoinColumn(name = "logo_id", nullable = false)
+    private File logoId;
+    
+    
 }

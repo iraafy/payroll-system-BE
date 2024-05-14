@@ -1,5 +1,6 @@
 package com.lawencon.pss.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,6 +11,9 @@ import com.lawencon.pss.model.Company;
 @Repository
 public interface CompanyRepository extends JpaRepository<Company, String> {
 
-    Optional<Company> findById(Long id);
+    Optional<Company> findById(String id);
+
+    List<Company> findAll();
+
 
 }
