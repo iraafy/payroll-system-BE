@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -12,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 //import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.lawencon.pss.constant.Roles;
 import com.lawencon.pss.dto.InsertResDto;
 import com.lawencon.pss.dto.UpdateResDto;
 import com.lawencon.pss.dto.user.ChangePasswordReqDto;
@@ -46,7 +46,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        final Optional<User> user = userRepository.findByEmail(email);
+        final var user = userRepository.findByEmail(email);
 		if (user.isPresent()) {
             final User result = user.get();
 			return new org.springframework.security.core.userdetails.User(result.getEmail(), result.getPassword(), new ArrayList<>());
@@ -57,8 +57,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public LoginResDto login(LoginReqDto request) {
         final var email = request.getEmail();
+        System.out.println(email);
 		final var result = userRepository.findByEmail(email);
         final var user = result.get();
+        System.out.println(user.getEmail());
 		final var response = new LoginResDto();
 		Map<String, Object> claim = new HashMap<>();
 		claim.put("id", user.getId());
@@ -67,7 +69,7 @@ public class UserServiceImpl implements UserService {
 		response.setId(user.getId());
 		response.setFullName(user.getFullName());
 		response.setRoleCode(user.getRole().getRoleCode());
-		response.setPath(user.getPicture().getPath());
+		response.setCompanyName(user.getCompany().getCompanyName());
 		response.setToken(token);
 		
 		return response;
@@ -126,26 +128,56 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserResDto> getAllUser() {
-        // TODO Auto-generated method stub
-        return null;
+    	final List<UserResDto> response = new ArrayList<>();
+    	final var results = userRepository.findAll();
+    	for (User u: results) {
+    		final var user = new UserResDto();
+    		user.setId(u.getId());
+    		user.setFullName(u.getFullName());
+    		user.setRoleName(u.getRole().getRoleName());
+    		user.setCompanyName(u.getCompany().getCompanyName());
+    		if(u.getFile() != null) {
+    			user.setPath(u.getFile().getStoredPath());
+    		}
+    		response.add(user);
+    	}
+        return response;
     }
 
     @Override
     public List<UserResDto> getAllPs() {
-        // TODO Auto-generated method stub
-        return null;
+    	final List<UserResDto> response = new ArrayList<>();
+    	final var results = userRepository.findByRoleRoleCode(Roles.PS.getCode());
+    	for (User u: results) {
+    		final var user = new UserResDto();
+    		user.setId(u.getId());
+    		user.setFullName(u.getFullName());
+    		user.setRoleName(u.getRole().getRoleName());
+    		user.setCompanyName(u.getCompany().getCompanyName());
+    		if(u.getFile() != null) {
+    			user.setPath(u.getFile().getStoredPath());
+    		}
+    		response.add(user);
+    	}
+        return response;
     }
 
     @Override
     public List<UserResDto> getAllClient() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public List<UserResDto> getClientsByPS(Long id) {
-        // TODO Auto-generated method stub
-        return null;
+    	final List<UserResDto> response = new ArrayList<>();
+    	final var results = userRepository.findByRoleRoleCode(Roles.CL.getCode());
+    	for (User u: results) {
+    		final var user = new UserResDto();
+    		user.setId(u.getId());
+    		user.setFullName(u.getFullName());
+    		user.setRoleName(u.getRole().getRoleName());
+    		user.setCompanyName(u.getCompany().getCompanyName());
+    		if(u.getFile() != null) {
+    			user.setPath(u.getFile().getStoredPath());
+    		}
+    		response.add(user);
+    	}
+        return response;
     }
 
     @Override
