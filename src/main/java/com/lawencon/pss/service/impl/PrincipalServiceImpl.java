@@ -10,10 +10,10 @@ import com.lawencon.pss.service.PrincipalService;
 public class PrincipalServiceImpl implements PrincipalService {
 
 	@Override
-	public Long getUserId() {
+	public String getUserId() {
 		final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		final Object userAuth = auth.getPrincipal();
-		final Long userId = Long.valueOf(userAuth.toString());
+		final String userId = userAuth.toString();
 		
 		return userId;
 	}

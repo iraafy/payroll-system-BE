@@ -19,7 +19,7 @@ public class Company extends BaseModel {
     private String companyName;
 
     @ManyToOne
-    @JoinColumn(name = "logo_id", nullable = false)
+    @JoinColumn(name = "logo_id")
     private File logoId;
     
     

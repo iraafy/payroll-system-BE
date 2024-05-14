@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 public class UserResDto {
 
-	private Long id;
+	private String id;
 	private String fullName;
 	private String path;
 	private String companyName;
