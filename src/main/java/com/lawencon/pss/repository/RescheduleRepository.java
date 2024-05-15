@@ -15,5 +15,7 @@ public interface RescheduleRepository extends JpaRepository<Reschedule, String>{
     Optional<Reschedule> findById(String id);
 
     List<Reschedule> findAll();
+    
+    Optional<Reschedule> findByPayrollIdId(String id);
 
 }
