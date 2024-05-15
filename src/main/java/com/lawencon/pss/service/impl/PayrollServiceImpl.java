@@ -3,12 +3,14 @@ package com.lawencon.pss.service.impl;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
 import com.lawencon.pss.dto.InsertResDto;
+import com.lawencon.pss.dto.UpdateResDto;
 import com.lawencon.pss.dto.payroll.PayrollReqDto;
 import com.lawencon.pss.dto.payroll.PayrollResDto;
 import com.lawencon.pss.model.Payroll;
@@ -55,7 +57,9 @@ public class PayrollServiceImpl implements PayrollsService {
 
 		final var payrollDto = new PayrollResDto();
 		payrollDto.setId(payroll.getId());
-		payrollDto.setScheduleDate(payroll.getScheduleDate().toString());
+		if(payroll.getScheduleDate() != null) {
+			payrollDto.setScheduleDate(payroll.getScheduleDate().toString());			
+		}
 		payrollDto.setTitle(payroll.getTitle());
 
 		return payrollDto;
@@ -65,13 +69,17 @@ public class PayrollServiceImpl implements PayrollsService {
 	@Override
 	public InsertResDto createNewPayroll(PayrollReqDto data) {
 		final var payrollModel = new Payroll();
+		System.out.println("======================>" + data.getClientId());
 		final var user = userRepository.findById(data.getClientId());
 		System.out.println("errorrr" + user);
 		final User client = user.get();
 		
 		payrollModel.setClientId(client);
 		payrollModel.setTitle(data.getTitle());
-		payrollModel.setScheduleDate(LocalDateTime.parse(data.getScheduledDate()));
+		
+		if(data.getScheduledDate() != null) {
+			payrollModel.setScheduleDate(LocalDateTime.parse(data.getScheduledDate()));			
+		}
 		
 		payrollModel.setCreatedBy(principalService.getUserId());
 		payrollModel.setCreatedAt(LocalDateTime.now());
@@ -85,6 +93,29 @@ public class PayrollServiceImpl implements PayrollsService {
 		res.setMessage("Payroll " + data.getTitle() + " berhasil terbuat");
 		
 		return res;
+	}
+
+	@Override
+	public UpdateResDto setPaymentDate(String id, PayrollReqDto data) {
+		final Optional<Payroll> payroll = payrollRepository.findById(id);
+		final UpdateResDto updateRes = new UpdateResDto();
+		
+		if(payroll.get() != null) {
+			Payroll pay = payroll.get();
+			if(pay.getScheduleDate() == null) {
+				pay.setScheduleDate(LocalDateTime.parse(data.getScheduledDate()));
+				
+				pay = payrollRepository.save(pay);
+				updateRes.setVer(pay.getVer());
+				updateRes.setMessage("Tanggal Pembayaran Payroll " + pay.getTitle() + " Berhasil Ditetapkan");				
+			}else {
+				updateRes.setMessage("Tanggal Pembayaran Payroll " + pay.getTitle() + " sudah ditetapkan, silahkan ajukan reschedule untuk mengubah tanggal Pembayaran");
+			}
+		}else {
+			updateRes.setMessage("Tanggal Pembayaran Payroll Gagal Ditetapkan");
+		}
+		
+		return updateRes;
 	}
 
 }
