@@ -8,7 +8,7 @@ import lombok.Setter;
 @Setter
 public class ClientAssignmentReqDto {
 
-    private Long psId;
-	private Long clientId;
+    private String psId;
+	private String clientId;
 
 }

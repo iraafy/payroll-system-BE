@@ -1,16 +1,17 @@
 package com.lawencon.pss.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import com.lawencon.pss.service.EmailService;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class EmailServiceImpl implements EmailService {
 
-	@Autowired
 	private JavaMailSender emailSender;
 	
 	@Override
