@@ -1,11 +1,11 @@
-package com.lawencon.pss.dto.schedules;
+package com.lawencon.pss.dto.reschedules;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class SchedulesResDto {
+public class ReschedulesResDto {
 
     private String id;
     private String newScheduleDate;
