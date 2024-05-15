@@ -9,7 +9,7 @@ public class LoginResDto {
 
     private String token;
 	private String fullName;
-	private Long id;
+	private String id;
 	private String path;
 	private String roleCode;
 	private String companyName;
