@@ -12,5 +12,5 @@ public interface CompanyService {
 
     CompanyResDto getCompanyById(String id);
 
-//    InsertResDto createCompany(CreateCompanyReqDto data);
+    InsertResDto createCompany(CreateCompanyReqDto data);
 }

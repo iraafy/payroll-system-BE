@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,13 +33,13 @@ public class CompanyController {
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
-//    @PostMapping("/new")
-//    public ResponseEntity<InsertResDto> createCompany(CreateCompanyReqDto data) {
-//
-//        final var res = companyService.createCompany(data);
-//
-//        return new ResponseEntity<>(res, HttpStatus.CREATED);
-//    }
+    @PostMapping("/new")
+    public ResponseEntity<InsertResDto> createCompany(@RequestBody CreateCompanyReqDto data) {
+
+        final var res = companyService.createCompany(data);
+
+        return new ResponseEntity<>(res, HttpStatus.CREATED);
+    }
     
     @GetMapping("/{id}")
     public ResponseEntity<CompanyResDto> getCompanyById(@PathVariable String id){
