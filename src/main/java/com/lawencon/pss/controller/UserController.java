@@ -1,7 +1,13 @@
 package com.lawencon.pss.controller;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,6 +17,7 @@ import com.lawencon.pss.dto.InsertResDto;
 import com.lawencon.pss.dto.user.CreateUserReqDto;
 import com.lawencon.pss.dto.user.LoginReqDto;
 import com.lawencon.pss.dto.user.LoginResDto;
+import com.lawencon.pss.dto.user.UserResDto;
 import com.lawencon.pss.service.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -21,9 +28,12 @@ import lombok.RequiredArgsConstructor;
 public class UserController {
 	
 	private final UserService userService;
+	private final AuthenticationManager authenticationManager;
 	
 	@PostMapping("login")
 	public ResponseEntity<LoginResDto> login(@RequestBody LoginReqDto request) {
+		final Authentication auth = new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword());
+		authenticationManager.authenticate(auth);
 		final var response = userService.login(request);
 		return new ResponseEntity<LoginResDto>(response, HttpStatus.OK);
 	}
@@ -32,6 +42,24 @@ public class UserController {
 	public ResponseEntity<InsertResDto> createUser(@RequestBody CreateUserReqDto request) {
 		final var response = userService.createUser(request);
 		return new ResponseEntity<InsertResDto>(response, HttpStatus.CREATED);
+	}
+	
+	@GetMapping()
+	public ResponseEntity<List<UserResDto>> getAllUser() {
+		final var response = userService.getAllUser();
+		return new ResponseEntity<List<UserResDto>>(response, HttpStatus.OK);
+	}
+	
+	@GetMapping("allPs")
+	public ResponseEntity<List<UserResDto>> getAllPs() {
+		final var response = userService.getAllPs();
+		return new ResponseEntity<List<UserResDto>>(response, HttpStatus.OK);
+	}
+	
+	@GetMapping("allClient")
+	public ResponseEntity<List<UserResDto>> getAllClient() {
+		final var response = userService.getAllClient();
+		return new ResponseEntity<List<UserResDto>>(response, HttpStatus.OK);
 	}
 
 }

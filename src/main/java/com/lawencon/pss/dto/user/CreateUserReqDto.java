@@ -7,11 +7,10 @@ import lombok.Setter;
 @Setter
 public class CreateUserReqDto {
 
-
     private String email;
 	private String fullName;
-	private Long roleId;
-	private Long companyId;
+	private String roleId;
+	private String companyId;
 	private String path;
 
 }
