@@ -22,5 +22,4 @@ public class Company extends BaseModel {
     @JoinColumn(name = "logo_id")
     private File logoId;
     
-    
 }
