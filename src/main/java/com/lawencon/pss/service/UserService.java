@@ -19,7 +19,6 @@ public interface UserService extends UserDetailsService {
     List<UserResDto> getAllUser();
     List<UserResDto> getAllPs();
     List<UserResDto> getAllClient();
-    List<UserResDto> getClientsByPS(Long id);
     List<UserResDto> getAvailableClients();
     UpdateResDto updatePassword(ChangePasswordReqDto request);
 
