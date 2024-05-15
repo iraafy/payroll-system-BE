@@ -51,6 +51,9 @@ public class SecurityConfig {
 		matchers.add(new AntPathRequestMatcher("/companies/new", HttpMethod.POST.name()));
 		matchers.add(new AntPathRequestMatcher("/payrolls/*", HttpMethod.GET.name()));
 		matchers.add(new AntPathRequestMatcher("/payrolls/new", HttpMethod.POST.name()));
+		matchers.add(new AntPathRequestMatcher("/reschedules/**", HttpMethod.GET.name()));
+		matchers.add(new AntPathRequestMatcher("/reschedules/*", HttpMethod.PATCH.name()));
+		matchers.add(new AntPathRequestMatcher("/reschedules/new", HttpMethod.POST.name()));
 		return matchers; 
 	}
 	
