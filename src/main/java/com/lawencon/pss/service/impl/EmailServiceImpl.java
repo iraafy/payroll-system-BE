@@ -13,16 +13,16 @@ import lombok.RequiredArgsConstructor;
 public class EmailServiceImpl implements EmailService {
 
 	private JavaMailSender emailSender;
-	
+
 	@Override
 	public void sendEmail(String to, String subject, String body) {
 		SimpleMailMessage message = new SimpleMailMessage();
-		
+
 		message.setFrom("aminullah.alfiyanto@gmail.com");
 		message.setTo(to);
 		message.setSubject(subject);
 		message.setText(body);
-		
+
 		emailSender.send(message);
 
 	}

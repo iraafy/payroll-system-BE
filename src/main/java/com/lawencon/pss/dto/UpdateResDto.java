@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 public class UpdateResDto {
 
-    private Long ver;
+    private String ver;
 	private String message;
     
 }

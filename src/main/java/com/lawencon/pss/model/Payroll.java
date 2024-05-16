@@ -23,6 +23,6 @@ public class Payroll extends BaseModel{
 
     private String title;
 
-    @Column(name = "scheduled_date", nullable = false)
+    @Column(name = "scheduled_date")
     private LocalDateTime scheduleDate;
 }
