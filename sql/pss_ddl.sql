@@ -163,3 +163,6 @@ INSERT INTO tb_m_users (id, email, pwd, role_id, company_id, created_by, created
 
 
 DROP TABLE tb_r_reschedules, tb_r_payroll_details, tb_r_payrolls, tb_r_chats, tb_r_client_assignments, tb_m_users, tb_m_user_roles, tb_m_companies, tb_m_files, tb_m_email_templates;
+
+SELECT * FROM tb_m_users tmu ;
+SELECT * FROM tb_r_client_assignments trca ;
