@@ -1,10 +1,12 @@
 package com.lawencon.pss.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lawencon.pss.dto.InsertResDto;
+import com.lawencon.pss.dto.UpdateResDto;
+import com.lawencon.pss.dto.payroll.PayrollDetailReqDto;
 import com.lawencon.pss.dto.payroll.PayrollReqDto;
 import com.lawencon.pss.dto.payroll.PayrollResDto;
 import com.lawencon.pss.service.PayrollsService;
@@ -48,6 +52,22 @@ public class PayrollController {
 		final var res = payrollsService.createNewPayroll(data);
 		
 		return new ResponseEntity<>(res, HttpStatus.CREATED);
+	}
+	
+	@PatchMapping("/{id}")
+	public ResponseEntity<UpdateResDto> setScheduledDate(@PathVariable String id, @RequestBody PayrollReqDto data) {
+		final UpdateResDto res = payrollsService.setPaymentDate(id, data);
+		if(res.getVer() != null) {
+			return new ResponseEntity<>(res, HttpStatus.OK);
+		}
+		
+		return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
+	}
+	
+	@PostMapping("{id}/details")
+	public ResponseEntity<InsertResDto> getDetails(@PathVariable String id, @RequestBody ArrayList<PayrollDetailReqDto> data) {
+		final InsertResDto res = payrollsService.createPayrollDetails(id, data);
+		return new ResponseEntity<>(null, HttpStatus.OK);
 	}
 
 }

@@ -1,8 +1,11 @@
 package com.lawencon.pss.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.lawencon.pss.dto.InsertResDto;
+import com.lawencon.pss.dto.UpdateResDto;
+import com.lawencon.pss.dto.payroll.PayrollDetailReqDto;
 import com.lawencon.pss.dto.payroll.PayrollReqDto;
 import com.lawencon.pss.dto.payroll.PayrollResDto;
 
@@ -14,5 +17,9 @@ public interface PayrollsService {
 	PayrollResDto getPayRollById(String id);
 	
 	InsertResDto createNewPayroll(PayrollReqDto data);
+	
+	UpdateResDto setPaymentDate(String id, PayrollReqDto data);
+	
+	InsertResDto createPayrollDetails(String id, ArrayList<PayrollDetailReqDto> data);
     
 }

@@ -57,10 +57,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public LoginResDto login(LoginReqDto request) {
         final var email = request.getEmail();
-        System.out.println(email);
 		final var result = userRepository.findByEmail(email);
         final var user = result.get();
-        System.out.println(user.getEmail());
 		final var response = new LoginResDto();
 		Map<String, Object> claim = new HashMap<>();
 		claim.put("id", user.getId());
