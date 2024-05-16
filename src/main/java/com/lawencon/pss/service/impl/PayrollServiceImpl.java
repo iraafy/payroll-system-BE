@@ -6,8 +6,6 @@ import java.time.LocalTime;
 import java.time.format.TextStyle;
 import java.time.temporal.ChronoField;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -19,12 +17,13 @@ import org.springframework.stereotype.Service;
 import com.lawencon.pss.dto.InsertResDto;
 import com.lawencon.pss.dto.UpdateResDto;
 import com.lawencon.pss.dto.payroll.PayrollDetailReqDto;
+import com.lawencon.pss.dto.payroll.PayrollDetailResDto;
 import com.lawencon.pss.dto.payroll.PayrollReqDto;
 import com.lawencon.pss.dto.payroll.PayrollResDto;
 import com.lawencon.pss.model.Payroll;
 import com.lawencon.pss.model.PayrollDetail;
 import com.lawencon.pss.model.User;
-import com.lawencon.pss.repository.CompanyRepository;
+import com.lawencon.pss.repository.PayrollDetailRepository;
 import com.lawencon.pss.repository.PayrollRepository;
 import com.lawencon.pss.repository.UserRepository;
 import com.lawencon.pss.service.PayrollsService;
@@ -37,8 +36,8 @@ import lombok.RequiredArgsConstructor;
 public class PayrollServiceImpl implements PayrollsService {
 
 	private final PayrollRepository payrollRepository;
+	private final PayrollDetailRepository payrollDetailRepository;
 	private final UserRepository userRepository;
-	private final CompanyRepository companyRepository;
 	
 	private final PrincipalService principalService;
 
@@ -172,11 +171,86 @@ public class PayrollServiceImpl implements PayrollsService {
 	}
 
 	@Override
-	public InsertResDto createPayrollDetails(String id, ArrayList<PayrollDetailReqDto> data) {
-		for(PayrollDetailReqDto detail : data) {
-			final PayrollDetail newDetail = new PayrollDetail();
+	public InsertResDto createPayrollDetails(String id, PayrollDetailReqDto data) {
+		final Optional<Payroll> payroll = payrollRepository.findById(id);
+		final InsertResDto res = new InsertResDto();
+		
+		if(payroll.get() != null) {
+			PayrollDetail newDetail = new PayrollDetail();
+			newDetail.setDescription(data.getDescription());
+			newDetail.setForClient(data.getForClient());
+			newDetail.setMaxUploadDate(LocalDateTime.of(data.getMaxUploadDate(), LocalTime.MIN.minusSeconds(1)));
+			newDetail.setPayroll(payroll.get());
+			newDetail.setCreatedBy(principalService.getUserId());
+			
+			newDetail = payrollDetailRepository.save(newDetail);
+			res.setId(newDetail.getId());
+			res.setMessage("Berhasil menambahkan detail aktivitas untuk Payroll "+payroll.get().getTitle());
+			
+		}else {
+			res.setMessage("Payroll tidak ditemukan !");
 		}
-		return null;
+		return res;
 	}
 
+	@Override
+	public ArrayList<PayrollDetailResDto> getPayrollDetails(String id) {
+		final ArrayList<PayrollDetail> details = payrollDetailRepository.findByPayrollId(id);
+		final ArrayList<PayrollDetailResDto> resDetails = new ArrayList<>();
+		
+		for(PayrollDetail detail : details) {
+			final PayrollDetailResDto resDetail = new PayrollDetailResDto();
+			resDetail.setId(detail.getId());
+			resDetail.setDescription(detail.getDescription());
+			
+			if(detail.getFile() != null && detail.getFile().getStoredPath() != null) {
+				resDetail.setFilePath(detail.getFile().getStoredPath());				
+			}
+			
+			if(detail.getFile() != null && detail.getFile().getFileContent() != null) {
+				resDetail.setFileContent(detail.getFile().getFileContent());
+			}
+			
+			resDetail.setForClient(detail.getForClient());
+			resDetail.setClientAcknowledge(detail.getClientAcknowledge());
+			resDetail.setPsAcknowledge(detail.getPsAcknowledge());
+			resDetail.setMaxUploadDate(detail.getMaxUploadDate());
+			
+			resDetails.add(resDetail);
+		}
+		
+		return resDetails;
+	}
+
+	@Override
+	public UpdateResDto psAckPayrollDetails(String id) {
+		final Optional<PayrollDetail> payrollDetail = payrollDetailRepository.findById(id);
+		final UpdateResDto updateRes = new UpdateResDto();
+		if(payrollDetail.get() != null) {
+			PayrollDetail detail = payrollDetail.get();
+			detail.setPsAcknowledge(true);
+			
+			detail = payrollDetailRepository.save(detail);
+			updateRes.setVer(detail.getVer());
+			updateRes.setMessage("Berhasil Menandatangani Dokumen");
+		}
+		return updateRes;
+	}
+
+	@Override
+	public UpdateResDto clientAckPayrollDetails(String id) {
+		final Optional<PayrollDetail> payrollDetail = payrollDetailRepository.findById(id);
+		final UpdateResDto updateRes = new UpdateResDto();
+		if(payrollDetail.get() != null) {
+			PayrollDetail detail = payrollDetail.get();
+			detail.setClientAcknowledge(true);
+			
+			detail = payrollDetailRepository.save(detail);
+			updateRes.setVer(detail.getVer());
+			updateRes.setMessage("Berhasil Menandatangani Dokumen");
+		}
+		return updateRes;
+	}
+	
+	
 }

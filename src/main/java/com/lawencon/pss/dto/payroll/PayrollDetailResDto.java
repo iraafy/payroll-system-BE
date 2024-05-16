@@ -10,8 +10,10 @@ import lombok.Setter;
 public class PayrollDetailResDto {
 	private String id;
 	private String description;
+	private String fileContent;
 	private String filePath;
 	private LocalDateTime maxUploadDate;
 	private Boolean psAcknowledge;
 	private Boolean clientAcknowledge;
+	private Boolean forClient;
 }

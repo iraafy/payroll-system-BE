@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lawencon.pss.dto.InsertResDto;
 import com.lawencon.pss.dto.UpdateResDto;
 import com.lawencon.pss.dto.payroll.PayrollDetailReqDto;
+import com.lawencon.pss.dto.payroll.PayrollDetailResDto;
 import com.lawencon.pss.dto.payroll.PayrollReqDto;
 import com.lawencon.pss.dto.payroll.PayrollResDto;
 import com.lawencon.pss.service.PayrollsService;
@@ -65,9 +66,25 @@ public class PayrollController {
 	}
 	
 	@PostMapping("{id}/details")
-	public ResponseEntity<InsertResDto> getDetails(@PathVariable String id, @RequestBody ArrayList<PayrollDetailReqDto> data) {
+	public ResponseEntity<InsertResDto> getDetails(@PathVariable String id, @RequestBody PayrollDetailReqDto data) {
 		final InsertResDto res = payrollsService.createPayrollDetails(id, data);
-		return new ResponseEntity<>(null, HttpStatus.OK);
+		
+		if(res.getId() != null) {
+			return new ResponseEntity<>(res, HttpStatus.OK);			
+		}else {
+			return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
+		}
 	}
-
+	
+	@GetMapping("{id}/details")
+	public ResponseEntity<ArrayList<PayrollDetailResDto>> getDetails(@PathVariable String id) {
+		final ArrayList<PayrollDetailResDto> res = payrollsService.getPayrollDetails(id);
+		return new ResponseEntity<>(res, HttpStatus.OK);
+	}
+	
+	@PatchMapping("*/details/{id}")
+	public ResponseEntity<UpdateResDto> psAcknowledge(@PathVariable String id) {
+		final UpdateResDto res = payrollsService.psAckPayrollDetails(id);
+		return new ResponseEntity<>(res, HttpStatus.OK);
+	}
 }
