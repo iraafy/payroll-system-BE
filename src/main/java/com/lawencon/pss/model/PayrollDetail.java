@@ -30,6 +30,9 @@ public class PayrollDetail extends BaseModel {
 	@Column(name = "client_acknowledge")
 	private Boolean clientAcknowledge;
 	
+	@Column(name = "for_client")
+	private Boolean forClient;
+	
 	@OneToOne
 	@JoinColumn(name = "file_id")
 	private File file;
@@ -37,5 +40,4 @@ public class PayrollDetail extends BaseModel {
 	@ManyToOne
 	@JoinColumn(name = "payroll_id")
 	private Payroll payroll;
-	
 }

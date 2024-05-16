@@ -1,6 +1,6 @@
 package com.lawencon.pss.dto.payroll;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -8,8 +8,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PayrollDetailReqDto {
-	private String id;
 	private String description;
 	private String filePath;
-	private LocalDateTime maxUploadDate; 
+	private LocalDate maxUploadDate;
+	private Boolean forClient;
 }
