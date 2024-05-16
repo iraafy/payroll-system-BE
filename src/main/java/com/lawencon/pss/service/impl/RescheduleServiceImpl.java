@@ -118,7 +118,7 @@ public class RescheduleServiceImpl implements RescheduleService {
 		final var updatedReschedule = reschedulesRepository.save(reschedule);
 		final var res = new UpdateResDto();
 
-		res.setVer(updatedReschedule.getId());
+		res.setVer(updatedReschedule.getVer());
 		res.setMessage("payroll disetujui untuk di reschedule");
 
 		return res;

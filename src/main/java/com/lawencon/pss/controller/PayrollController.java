@@ -1,5 +1,6 @@
 package com.lawencon.pss.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.lawencon.pss.dto.InsertResDto;
 import com.lawencon.pss.dto.UpdateResDto;
+import com.lawencon.pss.dto.payroll.PayrollDetailReqDto;
 import com.lawencon.pss.dto.payroll.PayrollReqDto;
 import com.lawencon.pss.dto.payroll.PayrollResDto;
 import com.lawencon.pss.service.PayrollsService;
@@ -60,6 +62,12 @@ public class PayrollController {
 		}
 		
 		return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
+	}
+	
+	@PostMapping("{id}/details")
+	public ResponseEntity<InsertResDto> getDetails(@PathVariable String id, @RequestBody ArrayList<PayrollDetailReqDto> data) {
+		final InsertResDto res = payrollsService.createPayrollDetails(id, data);
+		return new ResponseEntity<>(null, HttpStatus.OK);
 	}
 
 }
