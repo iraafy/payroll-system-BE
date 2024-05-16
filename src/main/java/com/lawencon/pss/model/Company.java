@@ -17,6 +17,9 @@ public class Company extends BaseModel {
 
     @Column(name = "company_name", nullable = false)
     private String companyName;
+    
+    @Column(name = "default_payment_day", nullable = false)
+    private Long defaultPaymentDay;
 
     @ManyToOne
     @JoinColumn(name = "logo_id")
