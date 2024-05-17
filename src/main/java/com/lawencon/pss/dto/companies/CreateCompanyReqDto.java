@@ -9,4 +9,5 @@ public class CreateCompanyReqDto {
 
     private String companyName;
     private String filePath;
+    private Byte defaultPaymentDay;
 }
