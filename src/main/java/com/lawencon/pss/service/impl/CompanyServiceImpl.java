@@ -27,7 +27,6 @@ public class CompanyServiceImpl implements CompanyService {
 
     private final CompanyRepository companyRepository;
     private final FileRepository fileRepository;
-    private final UserRepository userRepository;
     
     private final PrincipalService principalService;
 
@@ -67,6 +66,7 @@ public class CompanyServiceImpl implements CompanyService {
         final var companyModel = new Company();
         
         companyModel.setCompanyName(data.getCompanyName());
+        companyModel.setDefaultPaymentDay(data.getDefaultPaymentDay());
 
         final var file = new File();
         file.setStoredPath(data.getFilePath());

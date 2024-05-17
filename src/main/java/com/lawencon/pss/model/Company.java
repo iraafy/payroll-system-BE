@@ -19,7 +19,7 @@ public class Company extends BaseModel {
     private String companyName;
     
     @Column(name = "default_payment_day", nullable = false)
-    private Long defaultPaymentDay;
+    private Byte defaultPaymentDay;
 
     @ManyToOne
     @JoinColumn(name = "logo_id")
