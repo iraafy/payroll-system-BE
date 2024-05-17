@@ -17,19 +17,19 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lawencon.pss.dto.InsertResDto;
 import com.lawencon.pss.dto.file.FileDto;
 import com.lawencon.pss.dto.file.FileResDto;
-import com.lawencon.pss.dto.ftp.DownloadFtpReqDto;
 import com.lawencon.pss.dto.ftp.FtpReqDto;
 import com.lawencon.pss.model.File;
 import com.lawencon.pss.service.FileService;
 import com.lawencon.pss.util.FtpUtil;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
+@RequiredArgsConstructor
 public class FileController {
 
-	private FileService fileServices;
-	public FileController(FileService fileServices) {
-		this.fileServices = fileServices;
-	}
+	private final FtpUtil ftpUtil;
+	private final FileService fileServices;
 
 	@PostMapping("files")
 	public ResponseEntity<InsertResDto> addEmployee(@RequestBody FileDto data) {
@@ -54,16 +54,18 @@ public class FileController {
 	public ResponseEntity<InsertResDto> addFile(@RequestBody FtpReqDto request) {
 		final var fileBase64 = request.getFileBase64();
 		final var remoteLocation = request.getRemoteLocation();
-		FtpUtil.sendFile(fileBase64, remoteLocation);
+		ftpUtil.sendFile(fileBase64, remoteLocation);
 		final InsertResDto response = new InsertResDto();
 		response.setMessage("Sucess");
 		return new ResponseEntity<InsertResDto>(response, HttpStatus.CREATED);
 	}
 	
-	@GetMapping("ftp")
-	public void getFile(@RequestBody DownloadFtpReqDto request) {
-		final var remoteFile = request.getRemoteFile();
-		final var downloadLocation = request.getDownloadLocation();
-		FtpUtil.getFile(remoteFile, downloadLocation);
+	@GetMapping("ftp/{name}")
+	public ResponseEntity<?> getFileFromFTP(@PathVariable String name) {
+		System.out.println(name);
+		final byte[] fileBytes = ftpUtil.getFile("/ftp_server/"+name);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + name)
+                .body(fileBytes);
 	}
 }

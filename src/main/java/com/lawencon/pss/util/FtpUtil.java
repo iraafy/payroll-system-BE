@@ -4,28 +4,45 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Base64;
 
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
+import org.apache.tomcat.util.http.fileupload.ByteArrayOutputStream;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Component;
 
+@Component
 public class FtpUtil {
+	
+	@Value("${ftp.username}")
+	private String username;
+	
+	@Value("${ftp.password}")
+	private String password;
+	
+	@Value("${ftp.port}")
+	private int port;
+	
+	@Value("${ftp.server}")
+	private String server;
 
-	public static void sendFile(String fileBase64, String remoteFile) {
-		final String server = "192.168.20.129";
-		final int port = 21;
-		final String user = "ahmad.aminullah@hotmail.com";
-		final String pass = "#userIPhone6s";
-
+	public void sendFile(String fileBase64, String remoteFile) {
 		final FTPClient ftpClient = new FTPClient();
 		try {
 			ftpClient.connect(server, port);
-			ftpClient.login(user, pass);
+			ftpClient.login(username, password);
 			ftpClient.enterLocalPassiveMode();
 
 			ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
 
+			System.out.println(username);
+			System.out.println(password);
+			System.out.println(server);
+			System.out.println(port);
 			System.out.println("======> Uploading file");
 			final OutputStream outputStream = ftpClient.storeFileStream(remoteFile);
 			final byte[] data = Base64.getDecoder().decode(fileBase64);
@@ -51,32 +68,33 @@ public class FtpUtil {
 		}
 	}
 	
-	public static void getFile(String remoteFile, String downloadLocation) {
-		final String server = "192.168.20.129";
-		final int port = 21;
-		final String user = "ahmad.aminullah@hotmail.com";
-		final String pass = "#userIPhone6s";
- 
+	public byte[] getFile(String remoteFile) {
         FTPClient ftpClient = new FTPClient();
         try {
  
             ftpClient.connect(server, port);
-            ftpClient.login(user, pass);
+            ftpClient.login(username, password);
             ftpClient.enterLocalPassiveMode();
             ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
  
             System.out.println("======> Downloading file");
-            final File downloadFile = new File(downloadLocation);
-            final OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(downloadFile));
-            final boolean success = ftpClient.retrieveFile(remoteFile, outputStream);
-            outputStream.close();
+//            final File downloadFile = new File(downloadLocation);
+//            final OutputStream outputStream = new BufferedOutputStream(new ByteArray);
+            final InputStream success = ftpClient.retrieveFileStream(remoteFile);
+            ByteArrayOutputStream output = new ByteArrayOutputStream();
+            success.transferTo(output);
+            final byte[] byteArray = output.toByteArray();
+            return byteArray;
+            
+//            outputStream.close();
  
-            if (success) {
-                System.out.println("======> Download successfully");
-            }
+//            if (success) {
+//                System.out.println("======> Download successfully");
+//            }
  
         } catch (IOException ex) {
             ex.printStackTrace();
+            return null;
         } finally {
             try {
                 if (ftpClient.isConnected()) {

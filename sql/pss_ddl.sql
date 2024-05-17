@@ -15,6 +15,8 @@ CREATE TABLE tb_m_email_templates (
 CREATE TABLE tb_m_files (
 	id VARCHAR(36) PRIMARY KEY,
 	file_content TEXT,
+	file_ext VARCHAR(10),
+	file_name TEXT,
 	stored_path TEXT,
 	created_by VARCHAR(36) NOT NULL,
 	created_at TIMESTAMP NOT NULL,
@@ -69,6 +71,21 @@ CREATE TABLE tb_m_users (
 	CONSTRAINT role_fk FOREIGN KEY(role_id) REFERENCES tb_m_user_roles(id),
 	CONSTRAINT company_fk FOREIGN KEY(company_id) REFERENCES tb_m_companies(id),
 	CONSTRAINT file_fk FOREIGN KEY(file_id) REFERENCES tb_m_files(id)
+);
+
+CREATE TABLE tb_m_notifications(
+	id VARCHAR(36) PRIMARY KEY,
+	notification_content TEXT NOT NULL,
+	context_url TEXT,
+	context_id VARCHAR(36),
+	user_id VARCHAR(36) NOT NULL,
+	created_by VARCHAR(36) NOT NULL,
+	created_at TIMESTAMP NOT NULL,
+	updated_by VARCHAR(36),
+	updated_at TIMESTAMP,
+	vrsion INT NOT NULL,
+	is_active BOOLEAN DEFAULT TRUE,
+	CONSTRAINT user_fk FOREIGN KEY(user_id) REFERENCES tb_m_users(id)
 );
 
 CREATE TABLE tb_r_client_assignments (
@@ -166,4 +183,4 @@ INSERT INTO tb_m_users (id, email, pwd, role_id, company_id, created_by, created
 	(uuid_generate_v4(), 'example@mail.com', '$2y$10$AMf5FaHHEF5cJFBNEDHl9.4b/QjWSfPULHtJQgqyL2NYsfgkVAyIq', 'b4f6c0bb-ef56-4b5c-b804-9d0d21186394', 'cc8c66d3-96ab-4ecc-bbe9-b984e8562190','1', NOW(), TRUE, 0);
 
 
-DROP TABLE tb_r_reschedules, tb_r_payroll_details, tb_r_payrolls, tb_r_chats, tb_r_client_assignments, tb_m_users, tb_m_user_roles, tb_m_companies, tb_m_files, tb_m_email_templates;
+--DROP TABLE tb_r_reschedules, tb_r_payroll_details, tb_r_payrolls, tb_r_chats, tb_r_client_assignments, tb_m_users, tb_m_user_roles, tb_m_companies, tb_m_files, tb_m_notifications, tb_m_email_templates;
