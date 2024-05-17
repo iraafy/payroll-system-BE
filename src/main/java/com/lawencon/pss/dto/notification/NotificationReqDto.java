@@ -12,5 +12,7 @@ public class NotificationReqDto {
 	private String contextUrl;
 	
 	private String contextId;
+	
+	private String userId;
 
 }
