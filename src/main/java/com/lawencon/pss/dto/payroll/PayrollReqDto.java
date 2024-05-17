@@ -10,5 +10,4 @@ public class PayrollReqDto {
 	private String clientId;
 	private String title;
 	private String scheduledDate;
-
 }
