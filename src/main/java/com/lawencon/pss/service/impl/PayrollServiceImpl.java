@@ -16,13 +16,16 @@ import org.springframework.stereotype.Service;
 
 import com.lawencon.pss.dto.InsertResDto;
 import com.lawencon.pss.dto.UpdateResDto;
+import com.lawencon.pss.dto.notification.NotificationReqDto;
 import com.lawencon.pss.dto.payroll.PayrollDetailReqDto;
 import com.lawencon.pss.dto.payroll.PayrollDetailResDto;
 import com.lawencon.pss.dto.payroll.PayrollReqDto;
 import com.lawencon.pss.dto.payroll.PayrollResDto;
+import com.lawencon.pss.model.Notification;
 import com.lawencon.pss.model.Payroll;
 import com.lawencon.pss.model.PayrollDetail;
 import com.lawencon.pss.model.User;
+import com.lawencon.pss.repository.NotificationRepository;
 import com.lawencon.pss.repository.PayrollDetailRepository;
 import com.lawencon.pss.repository.PayrollRepository;
 import com.lawencon.pss.repository.UserRepository;
@@ -38,6 +41,7 @@ public class PayrollServiceImpl implements PayrollsService {
 	private final PayrollRepository payrollRepository;
 	private final PayrollDetailRepository payrollDetailRepository;
 	private final UserRepository userRepository;
+	private final NotificationRepository notificationRepository;
 	
 	private final PrincipalService principalService;
 
@@ -250,6 +254,29 @@ public class PayrollServiceImpl implements PayrollsService {
 			updateRes.setMessage("Berhasil Menandatangani Dokumen");
 		}
 		return updateRes;
+	}
+
+	@Override
+	public InsertResDto createNewNotificationOnPayrollDetails(NotificationReqDto data) {
+		
+		final var notificationModel = new Notification();
+		
+		notificationModel.setNotificationContent(data.getNotificationContent());
+		notificationModel.setContextUrl(data.getContextUrl());
+		notificationModel.setContextId(data.getContextId());
+		
+		notificationModel.setCreatedBy(principalService.getUserId());
+		notificationModel.setCreatedAt(LocalDateTime.now());
+		notificationModel.setVer(0L);
+		notificationModel.setIsActive(true);
+		
+		final var newNotification = notificationRepository.save(notificationModel);
+		
+		final var response = new InsertResDto();
+		response.setId(newNotification.getId());
+		response.setMessage("Notifikasi untuk " + data.getContextUrl() + " berhasil terbuat");
+		
+		return response;
 	}
 	
 	
