@@ -142,6 +142,20 @@ public class PayrollServiceImpl implements PayrollsService {
 			
 			final var newPayroll = payrollRepository.save(payrollModel);
 			
+			final var notificationModel = new Notification();
+			
+			notificationModel.setNotificationContent("Jadwal Payroll untuk Perusahaan anda telah ditetapkan");
+			notificationModel.setContextUrl("/payroll/"+newPayroll.getId());
+			notificationModel.setContextId(newPayroll.getId());
+			notificationModel.setUser(client);
+			
+			notificationModel.setCreatedBy(principalService.getUserId());
+			notificationModel.setCreatedAt(LocalDateTime.now());
+			notificationModel.setVer(0L);
+			notificationModel.setIsActive(true);
+			
+			notificationRepository.save(notificationModel);
+			
 			res.setId(newPayroll.getId());
 			res.setMessage("Payroll " + data.getTitle() + " berhasil terbuat");
 		}else {
@@ -180,6 +194,7 @@ public class PayrollServiceImpl implements PayrollsService {
 		final InsertResDto res = new InsertResDto();
 		
 		if(payroll.get() != null) {
+			final Optional<User> user = userRepository.findById(payroll.get().getClientId().getId());
 			PayrollDetail newDetail = new PayrollDetail();
 			newDetail.setDescription(data.getDescription());
 			newDetail.setForClient(data.getForClient());
@@ -190,6 +205,20 @@ public class PayrollServiceImpl implements PayrollsService {
 			newDetail = payrollDetailRepository.save(newDetail);
 			res.setId(newDetail.getId());
 			res.setMessage("Berhasil menambahkan detail aktivitas untuk Payroll "+payroll.get().getTitle());
+			
+			final var notificationModel = new Notification();
+			
+			notificationModel.setNotificationContent("Ada aktivitas baru untuk anda");
+			notificationModel.setContextUrl("/payroll/"+payroll.get().getId()+"/details/"+newDetail.getId());
+			notificationModel.setContextId(newDetail.getId());
+			notificationModel.setUser(user.get());
+			
+			notificationModel.setCreatedBy(principalService.getUserId());
+			notificationModel.setCreatedAt(LocalDateTime.now());
+			notificationModel.setVer(0L);
+			notificationModel.setIsActive(true);
+			
+			notificationRepository.save(notificationModel);
 			
 		}else {
 			res.setMessage("Payroll tidak ditemukan !");
@@ -258,12 +287,13 @@ public class PayrollServiceImpl implements PayrollsService {
 
 	@Override
 	public InsertResDto createNewNotificationOnPayrollDetails(NotificationReqDto data) {
-		
+		final Optional<User> user = userRepository.findById(data.getUserId());
 		final var notificationModel = new Notification();
 		
-		notificationModel.setNotificationContent(data.getNotificationContent());
+		notificationModel.setNotificationContent("Ada aktivitas baru untuk anda");
 		notificationModel.setContextUrl(data.getContextUrl());
 		notificationModel.setContextId(data.getContextId());
+		notificationModel.setUser(user.get());
 		
 		notificationModel.setCreatedBy(principalService.getUserId());
 		notificationModel.setCreatedAt(LocalDateTime.now());
