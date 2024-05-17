@@ -85,7 +85,7 @@ public class PayrollServiceImpl implements PayrollsService {
 			final var company = user.get().getCompany();
 			
 			if(company != null) {
-				final Long defaultPaymentDay = company.getDefaultPaymentDay();			
+				final Byte defaultPaymentDay = company.getDefaultPaymentDay();			
 				System.out.print(defaultPaymentDay);
 				LocalDate convertedDate = LocalDate.now();
 				
