@@ -23,16 +23,5 @@ public class File extends BaseModel {
 	
 	@Column(name = "stored_path")
     private String storedPath;
-    
-<<<<<<< HEAD
-    @Column(name = "file_content")
-    private String fileContent;
-    
-    @Column(name = "file_ext")
-    private String fileExt;
-    
-    @Column(name = "file_name")
-    private String fileName;
-=======
->>>>>>> 0c4bdafe158490c41005741211504167960755fe
+
 }
