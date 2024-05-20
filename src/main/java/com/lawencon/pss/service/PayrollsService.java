@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.lawencon.pss.dto.InsertResDto;
 import com.lawencon.pss.dto.UpdateResDto;
+import com.lawencon.pss.dto.notification.NotificationReqDto;
 import com.lawencon.pss.dto.payroll.PayrollDetailReqDto;
 import com.lawencon.pss.dto.payroll.PayrollDetailResDto;
 import com.lawencon.pss.dto.payroll.PayrollReqDto;
@@ -28,4 +29,6 @@ public interface PayrollsService {
 	UpdateResDto psAckPayrollDetails(String id);
 	
 	UpdateResDto clientAckPayrollDetails(String id);
+	
+	InsertResDto createNewNotificationOnPayrollDetails(NotificationReqDto data);
 }

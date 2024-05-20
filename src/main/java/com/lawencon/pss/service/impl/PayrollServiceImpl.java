@@ -16,13 +16,16 @@ import org.springframework.stereotype.Service;
 
 import com.lawencon.pss.dto.InsertResDto;
 import com.lawencon.pss.dto.UpdateResDto;
+import com.lawencon.pss.dto.notification.NotificationReqDto;
 import com.lawencon.pss.dto.payroll.PayrollDetailReqDto;
 import com.lawencon.pss.dto.payroll.PayrollDetailResDto;
 import com.lawencon.pss.dto.payroll.PayrollReqDto;
 import com.lawencon.pss.dto.payroll.PayrollResDto;
+import com.lawencon.pss.model.Notification;
 import com.lawencon.pss.model.Payroll;
 import com.lawencon.pss.model.PayrollDetail;
 import com.lawencon.pss.model.User;
+import com.lawencon.pss.repository.NotificationRepository;
 import com.lawencon.pss.repository.PayrollDetailRepository;
 import com.lawencon.pss.repository.PayrollRepository;
 import com.lawencon.pss.repository.UserRepository;
@@ -38,6 +41,7 @@ public class PayrollServiceImpl implements PayrollsService {
 	private final PayrollRepository payrollRepository;
 	private final PayrollDetailRepository payrollDetailRepository;
 	private final UserRepository userRepository;
+	private final NotificationRepository notificationRepository;
 	
 	private final PrincipalService principalService;
 
@@ -138,6 +142,20 @@ public class PayrollServiceImpl implements PayrollsService {
 			
 			final var newPayroll = payrollRepository.save(payrollModel);
 			
+			final var notificationModel = new Notification();
+			
+			notificationModel.setNotificationContent("Jadwal Payroll untuk Perusahaan anda telah ditetapkan");
+			notificationModel.setContextUrl("/payroll/"+newPayroll.getId());
+			notificationModel.setContextId(newPayroll.getId());
+			notificationModel.setUser(client);
+			
+			notificationModel.setCreatedBy(principalService.getUserId());
+			notificationModel.setCreatedAt(LocalDateTime.now());
+			notificationModel.setVer(0L);
+			notificationModel.setIsActive(true);
+			
+			notificationRepository.save(notificationModel);
+			
 			res.setId(newPayroll.getId());
 			res.setMessage("Payroll " + data.getTitle() + " berhasil terbuat");
 		}else {
@@ -176,6 +194,7 @@ public class PayrollServiceImpl implements PayrollsService {
 		final InsertResDto res = new InsertResDto();
 		
 		if(payroll.get() != null) {
+			final Optional<User> user = userRepository.findById(payroll.get().getClientId().getId());
 			PayrollDetail newDetail = new PayrollDetail();
 			newDetail.setDescription(data.getDescription());
 			newDetail.setForClient(data.getForClient());
@@ -186,6 +205,20 @@ public class PayrollServiceImpl implements PayrollsService {
 			newDetail = payrollDetailRepository.save(newDetail);
 			res.setId(newDetail.getId());
 			res.setMessage("Berhasil menambahkan detail aktivitas untuk Payroll "+payroll.get().getTitle());
+			
+			final var notificationModel = new Notification();
+			
+			notificationModel.setNotificationContent("Ada aktivitas baru untuk anda");
+			notificationModel.setContextUrl("/payroll/"+payroll.get().getId()+"/details/"+newDetail.getId());
+			notificationModel.setContextId(newDetail.getId());
+			notificationModel.setUser(user.get());
+			
+			notificationModel.setCreatedBy(principalService.getUserId());
+			notificationModel.setCreatedAt(LocalDateTime.now());
+			notificationModel.setVer(0L);
+			notificationModel.setIsActive(true);
+			
+			notificationRepository.save(notificationModel);
 			
 		}else {
 			res.setMessage("Payroll tidak ditemukan !");
@@ -250,6 +283,30 @@ public class PayrollServiceImpl implements PayrollsService {
 			updateRes.setMessage("Berhasil Menandatangani Dokumen");
 		}
 		return updateRes;
+	}
+
+	@Override
+	public InsertResDto createNewNotificationOnPayrollDetails(NotificationReqDto data) {
+		final Optional<User> user = userRepository.findById(data.getUserId());
+		final var notificationModel = new Notification();
+		
+		notificationModel.setNotificationContent("Ada aktivitas baru untuk anda");
+		notificationModel.setContextUrl(data.getContextUrl());
+		notificationModel.setContextId(data.getContextId());
+		notificationModel.setUser(user.get());
+		
+		notificationModel.setCreatedBy(principalService.getUserId());
+		notificationModel.setCreatedAt(LocalDateTime.now());
+		notificationModel.setVer(0L);
+		notificationModel.setIsActive(true);
+		
+		final var newNotification = notificationRepository.save(notificationModel);
+		
+		final var response = new InsertResDto();
+		response.setId(newNotification.getId());
+		response.setMessage("Notifikasi untuk " + data.getContextUrl() + " berhasil terbuat");
+		
+		return response;
 	}
 	
 	
