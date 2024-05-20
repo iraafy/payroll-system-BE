@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lawencon.pss.dto.InsertResDto;
+import com.lawencon.pss.dto.user.ClientDropdownResDto;
 import com.lawencon.pss.dto.user.CreateUserReqDto;
 import com.lawencon.pss.dto.user.LoginReqDto;
 import com.lawencon.pss.dto.user.LoginResDto;
@@ -57,9 +58,9 @@ public class UserController {
 	}
 	
 	@GetMapping("allClient")
-	public ResponseEntity<List<UserResDto>> getAllClient() {
+	public ResponseEntity<List<ClientDropdownResDto>> getAllClient() {
 		final var response = userService.getAllClient();
-		return new ResponseEntity<List<UserResDto>>(response, HttpStatus.OK);
+		return new ResponseEntity<List<ClientDropdownResDto>>(response, HttpStatus.OK);
 	}
 	
 	@GetMapping("availableClient")
