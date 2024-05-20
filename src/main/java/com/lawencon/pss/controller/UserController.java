@@ -61,5 +61,11 @@ public class UserController {
 		final var response = userService.getAllClient();
 		return new ResponseEntity<List<UserResDto>>(response, HttpStatus.OK);
 	}
+	
+	@GetMapping("availableClient")
+	public ResponseEntity<List<UserResDto>> getAvailableClient() {
+		final var response = userService.getAvailableClients();
+		return new ResponseEntity<List<UserResDto>>(response, HttpStatus.OK);
+	}
 
 }
