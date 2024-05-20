@@ -2,41 +2,42 @@ package com.lawencon.pss.service.impl;
 
 import java.util.Optional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
 import com.lawencon.pss.dto.InsertResDto;
-import com.lawencon.pss.dto.file.FileDto;
+import com.lawencon.pss.dto.file.FileReqDto;
+import com.lawencon.pss.dto.ftp.FtpReqDto;
 import com.lawencon.pss.model.File;
 import com.lawencon.pss.repository.FileRepository;
+import com.lawencon.pss.repository.PayrollDetailRepository;
 import com.lawencon.pss.service.FileService;
+import com.lawencon.pss.util.FtpUtil;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class FileServiceImpl implements FileService {
 
-	@PersistenceContext
-	private EntityManager em;
-	private final FileRepository fileDao;
+	private final FileRepository fileRepository;
+	private final PayrollDetailRepository payrollDetailRepository;
+	private final FtpUtil ftpUtil;
 	
-	public FileServiceImpl(FileRepository fileDao) {
-		this.fileDao = fileDao;
-	}
 	
 	@Override
 	@Transactional
-	public InsertResDto addNewFile(FileDto data) {
-		final File file = new File();
-		file.setCreatedBy("1");
-		System.out.println("=====================================");
-		System.out.println(data.getStoredPath());
-		System.out.println("=====================================");
-		file.setStoredPath(data.getStoredPath());
-		
+	public InsertResDto addNewFile(FileReqDto data) {
 		final InsertResDto responseDto = new InsertResDto();
-		final File fileSave = fileDao.save(file);
+		
+		final File file = new File();		
+		file.setCreatedBy("1");
+		file.setFileContent(data.getFileContent());
+		file.setFileExt(data.getFileExt());
+		file.setFileName(data.getFileName());
+		
+		final File fileSave = fileRepository.save(file);
 		
 		responseDto.setId(fileSave.getId());
 		responseDto.setMessage("File Baerhasil Ditambahkan");
@@ -45,12 +46,44 @@ public class FileServiceImpl implements FileService {
 	}
 	
 	@Override
-	public File getById(String id) {
-		final Optional<File> temp = fileDao.findById(id);
+	public File getFileById(String id) {
+		final Optional<File> temp = fileRepository.findById(id);
 		if(temp.isPresent()) {
 			return temp.get();
 		}
+		return null;
+	}
+
+	@Override
+	@Transactional
+	public InsertResDto addNewFileFtp(FtpReqDto request) {
+		final var response = new InsertResDto();
 		
+		final var detailId = request.getDetailId();
+		final var payrollId = payrollDetailRepository.findById(detailId).get().getId();
+		final var fileExt = request.getFileExt();
+		final var newDir = "/" + payrollId;
+		final var storedPath = newDir + "/" + detailId + "." + fileExt;
+				
+		ftpUtil.makeDir(newDir);
+		ftpUtil.sendFile(request.getFileContent(), storedPath);
+		
+		final var file = new File();
+		file.setFileName(detailId);
+		file.setFileExt(request.getFileExt());
+		file.setStoredPath(storedPath);
+		
+		final var result = fileRepository.save(file);
+		
+		response.setId(result.getId());
+		response.setMessage("File baru berhasil ditambahkan!");
+		
+		return response;
+	}
+
+	@Override
+	public File getFtpFileById(String fileName) {
+		// TODO Auto-generated method stub
 		return null;
 	}
 }

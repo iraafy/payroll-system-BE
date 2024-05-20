@@ -1,3 +1,4 @@
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE TABLE tb_m_email_templates (
 	id VARCHAR(36) PRIMARY KEY,
 	email_code VARCHAR(15) NOT NULL,
@@ -183,4 +184,4 @@ INSERT INTO tb_m_users (id, email, pwd, role_id, company_id, created_by, created
 	(uuid_generate_v4(), 'example@mail.com', '$2y$10$AMf5FaHHEF5cJFBNEDHl9.4b/QjWSfPULHtJQgqyL2NYsfgkVAyIq', 'b4f6c0bb-ef56-4b5c-b804-9d0d21186394', 'cc8c66d3-96ab-4ecc-bbe9-b984e8562190','1', NOW(), TRUE, 0);
 
 
---DROP TABLE tb_r_reschedules, tb_r_payroll_details, tb_r_payrolls, tb_r_chats, tb_r_client_assignments, tb_m_users, tb_m_user_roles, tb_m_companies, tb_m_files, tb_m_notifications, tb_m_email_templates;
+DROP TABLE tb_r_reschedules, tb_r_payroll_details, tb_r_payrolls, tb_r_chats, tb_r_client_assignments, tb_m_users, tb_m_user_roles, tb_m_companies, tb_m_files, tb_m_notifications, tb_m_email_templates;

@@ -1,8 +1,5 @@
 package com.lawencon.pss.util;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -12,7 +9,6 @@ import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.tomcat.util.http.fileupload.ByteArrayOutputStream;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -29,6 +25,53 @@ public class FtpUtil {
 	
 	@Value("${ftp.server}")
 	private String server;
+	
+    private void showServerReply(FTPClient ftpClient) {
+        String[] replies = ftpClient.getReplyStrings();
+        if (replies != null && replies.length > 0) {
+            for (String aReply : replies) {
+                System.out.println("SERVER: " + aReply);
+            }
+        }
+    }
+	
+	public void makeDir(String dirName) {
+		final FTPClient ftpClient = new FTPClient();
+		try {
+			ftpClient.connect(server, port);
+			ftpClient.login(username, password);
+			ftpClient.enterLocalPassiveMode();
+
+			ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
+
+			System.out.println(username);
+			System.out.println(password);
+			System.out.println(server);
+			System.out.println(port);
+			
+            // Creates a directory
+            String dirToCreate = "/upload123";
+            final var success = ftpClient.makeDirectory(dirToCreate);
+            showServerReply(ftpClient);
+            if (success) {
+                System.out.println("Successfully created directory: " + dirToCreate);
+            } else {
+                System.out.println("Failed to create directory. See server's reply.");
+            }
+            
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		} finally {
+			try {
+				if (ftpClient.isConnected()) {
+					ftpClient.logout();
+					ftpClient.disconnect();
+				}
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+		}
+	}
 
 	public void sendFile(String fileBase64, String remoteFile) {
 		final FTPClient ftpClient = new FTPClient();
@@ -78,19 +121,11 @@ public class FtpUtil {
             ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
  
             System.out.println("======> Downloading file");
-//            final File downloadFile = new File(downloadLocation);
-//            final OutputStream outputStream = new BufferedOutputStream(new ByteArray);
             final InputStream success = ftpClient.retrieveFileStream(remoteFile);
             ByteArrayOutputStream output = new ByteArrayOutputStream();
             success.transferTo(output);
             final byte[] byteArray = output.toByteArray();
             return byteArray;
-            
-//            outputStream.close();
- 
-//            if (success) {
-//                System.out.println("======> Download successfully");
-//            }
  
         } catch (IOException ex) {
             ex.printStackTrace();

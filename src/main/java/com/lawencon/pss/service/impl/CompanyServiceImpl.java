@@ -15,7 +15,6 @@ import com.lawencon.pss.model.Company;
 import com.lawencon.pss.model.File;
 import com.lawencon.pss.repository.CompanyRepository;
 import com.lawencon.pss.repository.FileRepository;
-import com.lawencon.pss.repository.UserRepository;
 import com.lawencon.pss.service.CompanyService;
 import com.lawencon.pss.service.PrincipalService;
 
@@ -39,6 +38,7 @@ public class CompanyServiceImpl implements CompanyService {
             final var companyDto = new CompanyResDto();
             companyDto.setId(company.getId());
             companyDto.setCompanyName(company.getCompanyName());
+            companyDto.setPayrollDate(company.getDefaultPaymentDay());
 
             companies.add(companyDto);
         }
