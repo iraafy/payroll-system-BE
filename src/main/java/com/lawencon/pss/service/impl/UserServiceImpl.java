@@ -15,6 +15,7 @@ import com.lawencon.pss.constant.Roles;
 import com.lawencon.pss.dto.InsertResDto;
 import com.lawencon.pss.dto.UpdateResDto;
 import com.lawencon.pss.dto.user.ChangePasswordReqDto;
+import com.lawencon.pss.dto.user.ClientDropdownResDto;
 import com.lawencon.pss.dto.user.CreateUserReqDto;
 import com.lawencon.pss.dto.user.LoginReqDto;
 import com.lawencon.pss.dto.user.LoginResDto;
@@ -22,6 +23,7 @@ import com.lawencon.pss.dto.user.UserResDto;
 import com.lawencon.pss.model.File;
 //import com.lawencon.pss.model.File;
 import com.lawencon.pss.model.User;
+import com.lawencon.pss.repository.ClientAssignmentRepository;
 import com.lawencon.pss.repository.CompanyRepository;
 import com.lawencon.pss.repository.FileRepository;
 import com.lawencon.pss.repository.RoleRepository;
@@ -40,6 +42,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final FileRepository fileRepository;
+    private final ClientAssignmentRepository clientAssignmentRepository;
     private final RoleRepository roleRepository;
     private final CompanyRepository companyRepository;
     private final PrincipalService principalService;
@@ -169,18 +172,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserResDto> getAllClient() {
-    	final List<UserResDto> response = new ArrayList<>();
+    public List<ClientDropdownResDto> getAllClient() {
+    	final List<ClientDropdownResDto> response = new ArrayList<>();
     	final var results = userRepository.findByRoleRoleCode(Roles.CL.getCode());
     	for (User u: results) {
-    		final var user = new UserResDto();
+    		final var user = new ClientDropdownResDto();
     		user.setId(u.getId());
-    		user.setFullName(u.getFullName());
-    		user.setRoleName(u.getRole().getRoleName());
-    		user.setCompanyName(u.getCompany().getCompanyName());
-    		if(u.getFile() != null) {
-    			user.setPath(u.getFile().getStoredPath());
+    		user.setClientName(u.getFullName());
+    		final var clientAssignmentOpt = clientAssignmentRepository.findByClientId(u.getId());
+    		
+    		if (clientAssignmentOpt.isPresent()) {    			
+    			final var clientAssignment = clientAssignmentOpt.get();
+    			final var psName = clientAssignment.getPs().getFullName();
+    			user.setPsName(psName);
     		}
+    		
     		response.add(user);
     	}
         return response;

@@ -172,16 +172,35 @@ INSERT INTO tb_m_user_roles (id, role_name, role_code, created_by, created_at, i
 INSERT INTO tb_m_companies (id, company_name, logo_id, default_payment_day, created_by, created_at, is_active, vrsion) VALUES
 	('cc8c66d3-96ab-4ecc-bbe9-b984e8562190', 'Lawencon', null, 31, '1', NOW(), TRUE, 0);
 
-INSERT INTO tb_m_users (id, email, pwd, role_id, company_id, created_by, created_at, is_active, vrsion) VALUES 
-    (uuid_generate_v4(), 'a@mail.com', '$2y$10$AMf5FaHHEF5cJFBNEDHl9.4b/QjWSfPULHtJQgqyL2NYsfgkVAyIq', '1e5b3f28-67c4-4615-b0e0-7e7c90f61608', 'cc8c66d3-96ab-4ecc-bbe9-b984e8562190','1', NOW(), TRUE, 0),
-    (uuid_generate_v4(), 'b@mail.com', '$2y$10$AMf5FaHHEF5cJFBNEDHl9.4b/QjWSfPULHtJQgqyL2NYsfgkVAyIq', '1e5b3f28-67c4-4615-b0e0-7e7c90f61608', 'cc8c66d3-96ab-4ecc-bbe9-b984e8562190','1', NOW(), TRUE, 0),
-    (uuid_generate_v4(), 'c@mail.com', '$2y$10$AMf5FaHHEF5cJFBNEDHl9.4b/QjWSfPULHtJQgqyL2NYsfgkVAyIq', '1e5b3f28-67c4-4615-b0e0-7e7c90f61608', 'cc8c66d3-96ab-4ecc-bbe9-b984e8562190','1', NOW(), TRUE, 0),
-    (uuid_generate_v4(), 'd@mail.com', '$2y$10$AMf5FaHHEF5cJFBNEDHl9.4b/QjWSfPULHtJQgqyL2NYsfgkVAyIq', '8487cf5c-044d-44e9-8e02-e51fd8c8d127', 'cc8c66d3-96ab-4ecc-bbe9-b984e8562190','1', NOW(), TRUE, 0),
-    (uuid_generate_v4(), 'e@mail.com', '$2y$10$AMf5FaHHEF5cJFBNEDHl9.4b/QjWSfPULHtJQgqyL2NYsfgkVAyIq', '8487cf5c-044d-44e9-8e02-e51fd8c8d127', 'cc8c66d3-96ab-4ecc-bbe9-b984e8562190','1', NOW(), TRUE, 0),
-    (uuid_generate_v4(), 'f@mail.com', '$2y$10$AMf5FaHHEF5cJFBNEDHl9.4b/QjWSfPULHtJQgqyL2NYsfgkVAyIq', '8487cf5c-044d-44e9-8e02-e51fd8c8d127', 'cc8c66d3-96ab-4ecc-bbe9-b984e8562190','1', NOW(), TRUE, 0);
+INSERT INTO tb_m_users (id, full_name, email, pwd, role_id, company_id, created_by, created_at, is_active, vrsion) VALUES 
+    (uuid_generate_v4(), 'Asmodeus', 'a@mail.com', '$2y$10$AMf5FaHHEF5cJFBNEDHl9.4b/QjWSfPULHtJQgqyL2NYsfgkVAyIq', '1e5b3f28-67c4-4615-b0e0-7e7c90f61608', 'cc8c66d3-96ab-4ecc-bbe9-b984e8562190','1', NOW(), TRUE, 0),
+    (uuid_generate_v4(), 'Beelzebub', 'b@mail.com', '$2y$10$AMf5FaHHEF5cJFBNEDHl9.4b/QjWSfPULHtJQgqyL2NYsfgkVAyIq', '1e5b3f28-67c4-4615-b0e0-7e7c90f61608', 'cc8c66d3-96ab-4ecc-bbe9-b984e8562190','1', NOW(), TRUE, 0),
+    (uuid_generate_v4(), 'Behamoth', 'c@mail.com', '$2y$10$AMf5FaHHEF5cJFBNEDHl9.4b/QjWSfPULHtJQgqyL2NYsfgkVAyIq', '1e5b3f28-67c4-4615-b0e0-7e7c90f61608', 'cc8c66d3-96ab-4ecc-bbe9-b984e8562190','1', NOW(), TRUE, 0),
+    (uuid_generate_v4(), 'Lucifer', 'd@mail.com', '$2y$10$AMf5FaHHEF5cJFBNEDHl9.4b/QjWSfPULHtJQgqyL2NYsfgkVAyIq', '8487cf5c-044d-44e9-8e02-e51fd8c8d127', 'cc8c66d3-96ab-4ecc-bbe9-b984e8562190','1', NOW(), TRUE, 0),
+    (uuid_generate_v4(), 'Satan', 'e@mail.com', '$2y$10$AMf5FaHHEF5cJFBNEDHl9.4b/QjWSfPULHtJQgqyL2NYsfgkVAyIq', '8487cf5c-044d-44e9-8e02-e51fd8c8d127', 'cc8c66d3-96ab-4ecc-bbe9-b984e8562190','1', NOW(), TRUE, 0),
+    (uuid_generate_v4(), 'Leviathan', 'f@mail.com', '$2y$10$AMf5FaHHEF5cJFBNEDHl9.4b/QjWSfPULHtJQgqyL2NYsfgkVAyIq', '8487cf5c-044d-44e9-8e02-e51fd8c8d127', 'cc8c66d3-96ab-4ecc-bbe9-b984e8562190','1', NOW(), TRUE, 0);
 
-INSERT INTO tb_m_users (id, email, pwd, role_id, company_id, created_by, created_at, is_active, vrsion) VALUES 
-	(uuid_generate_v4(), 'example@mail.com', '$2y$10$AMf5FaHHEF5cJFBNEDHl9.4b/QjWSfPULHtJQgqyL2NYsfgkVAyIq', 'b4f6c0bb-ef56-4b5c-b804-9d0d21186394', 'cc8c66d3-96ab-4ecc-bbe9-b984e8562190','1', NOW(), TRUE, 0);
+INSERT INTO tb_m_users (id, full_name, email, pwd, role_id, company_id, created_by, created_at, is_active, vrsion) VALUES 
+	(uuid_generate_v4(), 'SUPEEEER Admin', 'example@mail.com', '$2y$10$AMf5FaHHEF5cJFBNEDHl9.4b/QjWSfPULHtJQgqyL2NYsfgkVAyIq', 'b4f6c0bb-ef56-4b5c-b804-9d0d21186394', 'cc8c66d3-96ab-4ecc-bbe9-b984e8562190','1', NOW(), TRUE, 0);
 
 
 DROP TABLE tb_r_reschedules, tb_r_payroll_details, tb_r_payrolls, tb_r_chats, tb_r_client_assignments, tb_m_users, tb_m_user_roles, tb_m_companies, tb_m_files, tb_m_notifications, tb_m_email_templates;
+
+---------------------------TRUNCATE------------------------------
+--TRUNCATE tb_m_companies RESTART IDENTITY CASCADE;
+--TRUNCATE tb_m_email_templates RESTART IDENTITY CASCADE;
+--TRUNCATE tb_m_files RESTART IDENTITY CASCADE;
+--TRUNCATE tb_m_notifications RESTART IDENTITY CASCADE;
+--TRUNCATE tb_m_user_roles RESTART IDENTITY CASCADE;
+--TRUNCATE tb_m_users RESTART IDENTITY CASCADE;
+--TRUNCATE tb_r_chats RESTART IDENTITY CASCADE;
+--TRUNCATE tb_r_client_assignments RESTART IDENTITY CASCADE;
+--TRUNCATE tb_r_payroll_details RESTART IDENTITY CASCADE;
+--TRUNCATE tb_r_payrolls RESTART IDENTITY CASCADE;
+--TRUNCATE tb_r_reschedules RESTART IDENTITY CASCADE;
+---------------------------TRUNCATE------------------------------
+
+--SELECT * FROM tb_r_client_assignments trca ;
+--SELECT * FROM tb_m_users tmu ;
+
+--SELECT * FROM tb_r_client_assignments trca RIGHT JOIN tb_m_users tmu ON trca.client_id = tmu.id WHERE tmu.role_id = '8487cf5c-044d-44e9-8e02-e51fd8c8d127';
