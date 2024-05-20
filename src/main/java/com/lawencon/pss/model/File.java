@@ -12,9 +12,16 @@ import lombok.Setter;
 @Setter
 public class File extends BaseModel {
     
-    @Column(name = "stored_path")
+	@Column(name = "file_content")
+	private String fileContent;
+
+	@Column(name = "file_ext")
+	private String fileExt;
+	
+	@Column(name = "file_name")
+	private String fileName;
+	
+	@Column(name = "stored_path")
     private String storedPath;
     
-    @Column(name = "file_content")
-    private String fileContent;
 }

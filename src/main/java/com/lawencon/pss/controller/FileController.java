@@ -1,9 +1,5 @@
 package com.lawencon.pss.controller;
 
-import java.util.Base64;
-import java.util.List;
-import java.util.Optional;
-
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,31 +11,31 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lawencon.pss.dto.InsertResDto;
-import com.lawencon.pss.dto.file.FileDto;
+import com.lawencon.pss.dto.file.FileReqDto;
 import com.lawencon.pss.dto.file.FileResDto;
-import com.lawencon.pss.dto.ftp.DownloadFtpReqDto;
 import com.lawencon.pss.dto.ftp.FtpReqDto;
-import com.lawencon.pss.model.File;
 import com.lawencon.pss.service.FileService;
 import com.lawencon.pss.util.FtpUtil;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
+@RequiredArgsConstructor
+@RequestMapping("files")
 public class FileController {
 
-	private FileService fileServices;
-	public FileController(FileService fileServices) {
-		this.fileServices = fileServices;
-	}
+	private final FtpUtil ftpUtil;
+	private final FileService fileServices;
 
-	@PostMapping("files")
-	public ResponseEntity<InsertResDto> addEmployee(@RequestBody FileDto data) {
+	@PostMapping()
+	public ResponseEntity<InsertResDto> addEmployee(@RequestBody FileReqDto data) {
         final InsertResDto res = fileServices.addNewFile(data);
         return new ResponseEntity<>(res, HttpStatus.CREATED);
     }
 	
-	@GetMapping("files/{id}")
+	@GetMapping("{id}")
 	public ResponseEntity<FileResDto> getFile(@PathVariable("id") String id) {
-	    final var file = fileServices.getById(id);
+	    final var file = fileServices.getFileById(id);
 	    if (file == null) {
 	        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	    }
@@ -52,18 +48,16 @@ public class FileController {
 	
 	@PostMapping("ftp")
 	public ResponseEntity<InsertResDto> addFile(@RequestBody FtpReqDto request) {
-		final var fileBase64 = request.getFileBase64();
-		final var remoteLocation = request.getRemoteLocation();
-		FtpUtil.sendFile(fileBase64, remoteLocation);
-		final InsertResDto response = new InsertResDto();
-		response.setMessage("Sucess");
+		final var response = fileServices.addNewFileFtp(request);
 		return new ResponseEntity<InsertResDto>(response, HttpStatus.CREATED);
 	}
 	
-	@GetMapping("ftp")
-	public void getFile(@RequestBody DownloadFtpReqDto request) {
-		final var remoteFile = request.getRemoteFile();
-		final var downloadLocation = request.getDownloadLocation();
-		FtpUtil.getFile(remoteFile, downloadLocation);
+	@GetMapping("ftp/{name}")
+	public ResponseEntity<?> getFileFromFTP(@PathVariable String name) {
+		System.out.println(name);
+		final byte[] fileBytes = ftpUtil.getFile("/ftp_server/"+name);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + name)
+                .body(fileBytes);
 	}
 }
