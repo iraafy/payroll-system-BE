@@ -9,7 +9,7 @@ public class ReschedulesResDto {
 
     private String id;
     private String newScheduleDate;
-    private String payrollId;
+    private String payrollDetailId;
     private Boolean isApproved;
     
 }
