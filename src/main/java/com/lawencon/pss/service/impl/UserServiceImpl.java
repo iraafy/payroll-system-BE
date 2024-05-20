@@ -19,9 +19,11 @@ import com.lawencon.pss.dto.user.CreateUserReqDto;
 import com.lawencon.pss.dto.user.LoginReqDto;
 import com.lawencon.pss.dto.user.LoginResDto;
 import com.lawencon.pss.dto.user.UserResDto;
+import com.lawencon.pss.model.File;
 //import com.lawencon.pss.model.File;
 import com.lawencon.pss.model.User;
 import com.lawencon.pss.repository.CompanyRepository;
+import com.lawencon.pss.repository.FileRepository;
 import com.lawencon.pss.repository.RoleRepository;
 import com.lawencon.pss.repository.UserRepository;
 import com.lawencon.pss.service.EmailService;
@@ -37,6 +39,7 @@ import lombok.RequiredArgsConstructor;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final FileRepository fileRepository;
     private final RoleRepository roleRepository;
     private final CompanyRepository companyRepository;
     private final PrincipalService principalService;
@@ -80,7 +83,8 @@ public class UserServiceImpl implements UserService {
 		final var userFullName = request.getFullName();
 		final var roleId = request.getRoleId();
 		final var companyId = request.getCompanyId();
-//		 final var filePath = request.getPath();
+		final var fileContent = request.getFileContent();
+		final var fileExt = request.getFileExt();
 		final var roleOpt = roleRepository.findById(roleId);
         final var role = roleOpt.get();
         final var companyOpt = companyRepository.findById(companyId);
@@ -90,22 +94,25 @@ public class UserServiceImpl implements UserService {
 		
 		final var encodedPassword = passwordEncoder.encode(password);
 		
-//		final File fileToInsert = new File();
-//		fileToInsert.setPath(request.getPath());
-//		final var file = fileDao.insertFile(fileToInsert);
+		final File file = new File();
+		file.setFileContent(fileContent);
+		file.setFileExt(fileExt);
+		file.setFileName("Profile Picture");
+		file.setCreatedBy(createdBy);
+		final var fileResult = fileRepository.save(file);
 		
 		user.setEmail(userEmail);
 		user.setPassword(encodedPassword);
 		user.setFullName(userFullName);
 		user.setRole(role);
 		user.setCompany(company);
-		// user.setPicture(file);
+		user.setFile(fileResult);
 		user.setCreatedBy(createdBy);
 		
 		final var result = userRepository.save(user);
 		
 		final Runnable runnable = () -> {
-			final var subjectEmail = "Selamat Datang di Aplikasi TMS!";
+			final var subjectEmail = "Selamat Datang di Aplikasi Payroll Service System!";
 			final var bodyEmail = "Akun anda telah berhasil di buat!\n\n"
 					+ "email : " + userEmail
 					+ "\npassword : " + password
@@ -187,8 +194,30 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UpdateResDto updatePassword(ChangePasswordReqDto request) {
-        // TODO Auto-generated method stub
-        return null;
+    	final var response = new UpdateResDto();
+    	final var updatedBy = principalService.getUserId();
+    	final var userFound = userRepository.findById(updatedBy);
+    	
+    	if (userFound.isPresent()) {
+    		final var user = userFound.get();
+    		
+    		final var oldPwd = request.getOldPassword();
+    		final var oldPwdHash = user.getPassword();
+    		
+    		if (passwordEncoder.matches(oldPwd, oldPwdHash)) {
+    			final var newPwd = passwordEncoder.encode(request.getNewPassword());
+    			user.setPassword(newPwd);
+    			final var result = userRepository.save(user);
+    			
+    			response.setVer(result.getVer());
+    			response.setMessage("Berhasil mengubah kata sandi!");
+    			
+    		} else {
+    			response.setMessage("Gagal mengubah kata sandi :(");
+    		}
+    	}    	
+    	
+        return response;
     }
 
     

@@ -23,5 +23,5 @@ public class File extends BaseModel {
 	
 	@Column(name = "stored_path")
     private String storedPath;
-    
+
 }
