@@ -11,12 +11,12 @@ public interface RescheduleService {
     
     List<ReschedulesResDto> getAllSchedules();
 
-    ReschedulesResDto getScheduleById(String id);
+    ReschedulesResDto getRescheduleById(String id);
     
     InsertResDto createReschedule(RescheduleReqDto data);
     
     UpdateResDto updateStatusApproval(String id);
 
-    ReschedulesResDto getScheduleByPayyrollId(String payrollId);
+    ReschedulesResDto getScheduleByPayyrollDetailId(String payrollId);
 
 }
