@@ -38,6 +38,7 @@ public class CompanyServiceImpl implements CompanyService {
             final var companyDto = new CompanyResDto();
             companyDto.setId(company.getId());
             companyDto.setCompanyName(company.getCompanyName());
+            companyDto.setPayrollDate(company.getDefaultPaymentDay());
 
             companies.add(companyDto);
         }

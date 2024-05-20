@@ -7,7 +7,8 @@ import lombok.Setter;
 @Getter
 public class FtpReqDto {
 	
-	private String fileBase64;
-	private String remoteLocation;
+	private String fileContent;
+	private String fileExt;
+	private String detailId;
 
 }

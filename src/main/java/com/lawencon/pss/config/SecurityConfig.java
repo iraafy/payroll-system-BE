@@ -46,7 +46,7 @@ public class SecurityConfig {
 		matchers.add(new AntPathRequestMatcher("/users/login", HttpMethod.POST.name()));
 		matchers.add(new AntPathRequestMatcher("/users/new", HttpMethod.POST.name()));
 		matchers.add(new AntPathRequestMatcher("/companies", HttpMethod.GET.name()));
-		matchers.add(new AntPathRequestMatcher("/files/*", HttpMethod.GET.name()));
+		matchers.add(new AntPathRequestMatcher("/files/**", HttpMethod.GET.name()));
 		matchers.add(new AntPathRequestMatcher("/companies/*", HttpMethod.GET.name()));
 		matchers.add(new AntPathRequestMatcher("/companies/new", HttpMethod.POST.name()));
 		matchers.add(new AntPathRequestMatcher("/payrolls/*", HttpMethod.GET.name()));
@@ -55,6 +55,7 @@ public class SecurityConfig {
 		matchers.add(new AntPathRequestMatcher("/reschedules/*", HttpMethod.PATCH.name()));
 		matchers.add(new AntPathRequestMatcher("/reschedules/new", HttpMethod.POST.name()));
 		matchers.add(new AntPathRequestMatcher("/reports**", HttpMethod.GET.name()));
+		matchers.add(new AntPathRequestMatcher("/ftp/**", HttpMethod.GET.name()));
 		return matchers; 
 	}
 	

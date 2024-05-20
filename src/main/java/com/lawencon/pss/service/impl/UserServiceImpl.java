@@ -140,6 +140,7 @@ public class UserServiceImpl implements UserService {
     		user.setId(u.getId());
     		user.setFullName(u.getFullName());
     		user.setRoleName(u.getRole().getRoleName());
+    		user.setEmail(u.getEmail());
     		user.setCompanyName(u.getCompany().getCompanyName());
     		if(u.getFile() != null) {
     			user.setPath(u.getFile().getStoredPath());
