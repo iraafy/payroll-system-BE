@@ -190,8 +190,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserResDto> getAvailableClients() {
-        // TODO Auto-generated method stub
-        return null;
+    	final List<UserResDto> response = new ArrayList<>();
+    	final var results = userRepository.findAvailableClient(Roles.CL.getCode());
+    	for (User u: results) {
+    		final var user = new UserResDto();
+    		user.setId(u.getId());
+    		user.setFullName(u.getFullName());
+    		user.setCompanyName(u.getCompany().getCompanyName());
+    		
+    		response.add(user);
+    	}
+    	return response;
     }
 
     @Override
