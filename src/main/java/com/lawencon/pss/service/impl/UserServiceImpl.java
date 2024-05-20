@@ -14,12 +14,14 @@ import org.springframework.stereotype.Service;
 import com.lawencon.pss.constant.Roles;
 import com.lawencon.pss.dto.InsertResDto;
 import com.lawencon.pss.dto.UpdateResDto;
+import com.lawencon.pss.dto.role.RoleResDto;
 import com.lawencon.pss.dto.user.ChangePasswordReqDto;
 import com.lawencon.pss.dto.user.CreateUserReqDto;
 import com.lawencon.pss.dto.user.LoginReqDto;
 import com.lawencon.pss.dto.user.LoginResDto;
 import com.lawencon.pss.dto.user.UserResDto;
 import com.lawencon.pss.model.File;
+import com.lawencon.pss.model.Role;
 //import com.lawencon.pss.model.File;
 import com.lawencon.pss.model.User;
 import com.lawencon.pss.repository.CompanyRepository;
@@ -219,6 +221,20 @@ public class UserServiceImpl implements UserService {
     	
         return response;
     }
+
+	@Override
+	public List<RoleResDto> getAllRoles() {
+		List<Role> roles = roleRepository.findAll();
+		List<RoleResDto> rolesRes = new ArrayList<RoleResDto>();
+		for(Role role : roles) {
+			final RoleResDto roleRes = new RoleResDto();
+			roleRes.setId(role.getId());
+			roleRes.setRoleCode(role.getRoleCode());
+			roleRes.setRoleName(role.getRoleName());
+			rolesRes.add(roleRes);
+		}
+		return rolesRes;
+	}
 
     
 
