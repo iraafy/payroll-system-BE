@@ -11,6 +11,7 @@ public class CreateUserReqDto {
 	private String fullName;
 	private String roleId;
 	private String companyId;
-	private String path;
+	private String fileContent;
+	private String fileExt;
 
 }

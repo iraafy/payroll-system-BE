@@ -17,4 +17,10 @@ public class File extends BaseModel {
     
     @Column(name = "file_content")
     private String fileContent;
+    
+    @Column(name = "file_ext")
+    private String fileExt;
+    
+    @Column(name = "file_name")
+    private String fileName;
 }
