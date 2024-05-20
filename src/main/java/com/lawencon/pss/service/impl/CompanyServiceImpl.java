@@ -69,7 +69,9 @@ public class CompanyServiceImpl implements CompanyService {
         companyModel.setDefaultPaymentDay(data.getDefaultPaymentDay());
 
         final var file = new File();
-        file.setStoredPath(data.getFilePath());
+        file.setFileContent(data.getFileContent());
+        file.setFileExt(data.getFileExtension());
+        file.setFileName("Company Logo");
 
         file.setCreatedBy(principalService.getUserId());
         file.setCreatedAt(LocalDateTime.now());

@@ -8,5 +8,5 @@ import lombok.Setter;
 public class RescheduleReqDto {
 
 	private String newScheduleDate;
-	private String payrollId;
+	private String payrollDetailId;
 }

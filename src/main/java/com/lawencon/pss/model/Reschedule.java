@@ -21,8 +21,8 @@ public class Reschedule extends BaseModel{
     private LocalDateTime newScheduleDate;
 
     @ManyToOne
-    @JoinColumn(name = "payroll_id", nullable = false)
-    private Payroll payrollId;
+    @JoinColumn(name = "payroll_detail_id", nullable = false)
+    private PayrollDetail payrollDetailId;
 
     @Column(name = "is_approve")
     private Boolean isApprove;

@@ -38,7 +38,7 @@ public class RescheduleController {
 	@GetMapping("/{id}")
 	public ResponseEntity<ReschedulesResDto> getRecheduleById(@PathVariable String id) {
 
-		final var res = rescheduleService.getScheduleById(id);
+		final var res = rescheduleService.getRescheduleById(id);
 
 		return new ResponseEntity<>(res, HttpStatus.OK);
 	}
@@ -66,7 +66,7 @@ public class RescheduleController {
 	@GetMapping("/payroll/{payrollId}")
 	public ResponseEntity<ReschedulesResDto> getScheduleByPayrollId(@PathVariable String payrollId) {
 		
-		final var res = rescheduleService.getScheduleByPayyrollId(payrollId);
+		final var res = rescheduleService.getScheduleByPayyrollDetailId(payrollId);
 		
 		return new ResponseEntity<>(res, HttpStatus.OK);
 	}
