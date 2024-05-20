@@ -32,9 +32,15 @@ public class ClientAssignmentServiceImpl implements ClientAssignmentService {
 		for (ClientAssignment pair : result) {
 			final var client = new ClientAssignmentResDto();
 			final var clientUser = pair.getClient();
+			final var company = clientUser.getCompany();
+			final var fileContent = company.getLogoId().getFileContent();
+			final var fileExt = company.getLogoId().getFileExt();
+			
 			client.setId(clientUser.getId());
 			client.setCompany(clientUser.getCompany().getCompanyName());
 			client.setName(clientUser.getFullName());
+			client.setFileContent(fileContent);
+			client.setFileExt(fileExt);
 			
 			response.add(client);
 		}
