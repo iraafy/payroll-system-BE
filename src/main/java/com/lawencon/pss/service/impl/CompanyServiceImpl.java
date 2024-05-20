@@ -15,7 +15,6 @@ import com.lawencon.pss.model.Company;
 import com.lawencon.pss.model.File;
 import com.lawencon.pss.repository.CompanyRepository;
 import com.lawencon.pss.repository.FileRepository;
-import com.lawencon.pss.repository.UserRepository;
 import com.lawencon.pss.service.CompanyService;
 import com.lawencon.pss.service.PrincipalService;
 
