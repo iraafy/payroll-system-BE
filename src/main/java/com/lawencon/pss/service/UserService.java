@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 
 import com.lawencon.pss.dto.InsertResDto;
 import com.lawencon.pss.dto.UpdateResDto;
+import com.lawencon.pss.dto.role.RoleResDto;
 import com.lawencon.pss.dto.user.ChangePasswordReqDto;
 import com.lawencon.pss.dto.user.ClientDropdownResDto;
 import com.lawencon.pss.dto.user.CreateUserReqDto;
@@ -22,5 +23,5 @@ public interface UserService extends UserDetailsService {
     List<ClientDropdownResDto> getAllClient();
     List<UserResDto> getAvailableClients();
     UpdateResDto updatePassword(ChangePasswordReqDto request);
-
+    List<RoleResDto> getAllRoles();
 }
