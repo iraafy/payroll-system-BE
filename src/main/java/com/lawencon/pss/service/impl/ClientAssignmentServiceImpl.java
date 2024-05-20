@@ -35,7 +35,7 @@ public class ClientAssignmentServiceImpl implements ClientAssignmentService {
 			final var company = clientUser.getCompany();
 
 			client.setId(clientUser.getId());
-			client.setCompany(clientUser.getCompany().getCompanyName());
+			client.setCompany(company.getCompanyName());
 			client.setName(clientUser.getFullName());
 
 			if (company.getLogoId() != null) {
