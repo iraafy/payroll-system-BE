@@ -96,6 +96,7 @@ public class UserServiceImpl implements UserService {
         final var company = companyOpt.get();
 		final var password = GeneratorUtil.randomString();
 		final var createdBy = principalService.getUserId();
+		System.out.println(createdBy);
 		
 		final var encodedPassword = passwordEncoder.encode(password);
 		
