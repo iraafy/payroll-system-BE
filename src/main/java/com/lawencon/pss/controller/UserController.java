@@ -9,6 +9,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -76,6 +77,13 @@ public class UserController {
 	public ResponseEntity<UpdateResDto> changeUserPassword(@RequestBody ChangePasswordReqDto request) {
 		final var response = userService.updatePassword(request);
 		return new ResponseEntity<UpdateResDto>(response, HttpStatus.OK);
+	}
+	
+	@GetMapping("/{id}")
+	public ResponseEntity<UserResDto> getUserById(@PathVariable String id){
+		final var res = userService.getUserById(id);
+		
+		return new ResponseEntity<>(res, HttpStatus.OK);
 	}
 
 }
