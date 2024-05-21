@@ -13,8 +13,10 @@ import com.lawencon.pss.dto.companies.CompanyResDto;
 import com.lawencon.pss.dto.companies.CreateCompanyReqDto;
 import com.lawencon.pss.model.Company;
 import com.lawencon.pss.model.File;
+import com.lawencon.pss.model.User;
 import com.lawencon.pss.repository.CompanyRepository;
 import com.lawencon.pss.repository.FileRepository;
+import com.lawencon.pss.repository.UserRepository;
 import com.lawencon.pss.service.CompanyService;
 import com.lawencon.pss.service.PrincipalService;
 
@@ -26,6 +28,7 @@ public class CompanyServiceImpl implements CompanyService {
 
     private final CompanyRepository companyRepository;
     private final FileRepository fileRepository;
+    private final UserRepository userRepository;
     
     private final PrincipalService principalService;
 
@@ -96,4 +99,21 @@ public class CompanyServiceImpl implements CompanyService {
         return response;
 
     }
+
+	@Override
+	public CompanyResDto getCompanyByClientId(String id) {
+		
+		final var client = userRepository.findById(id);
+		final User clientModel = client.get();
+		
+		final var company = companyRepository.findById(clientModel.getCompany().getId());
+		final Company companyModel = company.get();
+		
+		final var companyDto = new CompanyResDto();
+		companyDto.setCompanyName(companyModel.getCompanyName());
+		companyDto.setId(companyModel.getId());
+		companyDto.setPayrollDate(companyModel.getDefaultPaymentDay());
+		
+		return companyDto;
+	}
 }
