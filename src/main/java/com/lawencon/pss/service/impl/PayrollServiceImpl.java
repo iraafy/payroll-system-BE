@@ -63,6 +63,23 @@ public class PayrollServiceImpl implements PayrollsService {
 		return payrollsDto;
 
 	}
+	
+	@Override
+	public List<PayrollResDto> getPayrollByClientId(String id) {
+		final List<PayrollResDto> responses = new ArrayList<>();
+		final var result = payrollRepository.findByClientIdId(id);
+		
+		for (Payroll payroll : result) {
+			final var response = new PayrollResDto();
+			response.setId(payroll.getId());
+			response.setTitle(response.getTitle());
+			response.setScheduleDate(response.getScheduleDate());
+			
+			responses.add(response);
+		}
+		
+		return responses;
+	}
 
 	@Override
 	public PayrollResDto getPayRollById(String id) {

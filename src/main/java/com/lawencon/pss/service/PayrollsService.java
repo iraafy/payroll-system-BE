@@ -16,6 +16,8 @@ public interface PayrollsService {
 	
 	List<PayrollResDto> getAllPayRolls();
 	
+	List<PayrollResDto> getPayrollByClientId(String id);
+	
 	PayrollResDto getPayRollById(String id);
 	
 	InsertResDto createNewPayroll(PayrollReqDto data);

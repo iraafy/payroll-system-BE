@@ -47,6 +47,15 @@ public class PayrollController {
 
 	}
 	
+	@GetMapping("/client/{clientId}")
+	public ResponseEntity<List<PayrollResDto>> getPayrollByClientId(@PathVariable String clientId) {
+		
+		final var res = payrollsService.getPayrollByClientId(clientId);
+		
+		return new ResponseEntity<List<PayrollResDto>>(res, HttpStatus.OK);
+		
+	}
+	
 	@PostMapping("/new")
 	public ResponseEntity<InsertResDto> createNewPayroll(@RequestBody PayrollReqDto data){
 		
