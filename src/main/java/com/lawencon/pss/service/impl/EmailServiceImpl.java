@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class EmailServiceImpl implements EmailService {
 
-	private JavaMailSender emailSender;
+	private final JavaMailSender emailSender;
 
 	@Override
 	public void sendEmail(String to, String subject, String body) {
