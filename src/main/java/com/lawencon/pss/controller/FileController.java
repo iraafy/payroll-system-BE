@@ -1,5 +1,8 @@
 package com.lawencon.pss.controller;
 
+import java.util.Base64;
+import java.util.Optional;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +17,8 @@ import com.lawencon.pss.dto.InsertResDto;
 import com.lawencon.pss.dto.file.FileReqDto;
 import com.lawencon.pss.dto.file.FileResDto;
 import com.lawencon.pss.dto.ftp.FtpReqDto;
+import com.lawencon.pss.model.File;
+import com.lawencon.pss.repository.FileRepository;
 import com.lawencon.pss.service.FileService;
 import com.lawencon.pss.util.FtpUtil;
 
@@ -26,6 +31,7 @@ public class FileController {
 
 	private final FtpUtil ftpUtil;
 	private final FileService fileServices;
+	private final FileRepository fileRepository;
 
 	@PostMapping()
 	public ResponseEntity<InsertResDto> addEmployee(@RequestBody FileReqDto data) {
@@ -58,6 +64,20 @@ public class FileController {
 		final byte[] fileBytes = ftpUtil.getFile("/ftp_server/"+name);
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + name)
+                .body(fileBytes);
+	}
+	
+	@GetMapping("file/{id}")
+    public ResponseEntity<?> getFileById(@PathVariable("id") String id) {
+		File file = null; 
+        final Optional<File> fileCheck = fileRepository.findById(id);
+        if (fileCheck.isPresent()) {
+        	file = fileCheck.get();
+        }
+        final String fileName = "attachment";
+        final byte[] fileBytes = Base64.getDecoder().decode(file.getFileContent());
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileName + "." + file.getFileExt())
                 .body(fileBytes);
 	}
 }
