@@ -72,8 +72,8 @@ public class PayrollServiceImpl implements PayrollsService {
 		for (Payroll payroll : result) {
 			final var response = new PayrollResDto();
 			response.setId(payroll.getId());
-			response.setTitle(response.getTitle());
-			response.setScheduleDate(response.getScheduleDate());
+			response.setTitle(payroll.getTitle());
+			response.setScheduleDate(payroll.getScheduleDate().toString());
 			
 			responses.add(response);
 		}
