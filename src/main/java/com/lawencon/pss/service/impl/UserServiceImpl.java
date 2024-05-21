@@ -252,6 +252,22 @@ public class UserServiceImpl implements UserService {
 		return rolesRes;
 	}
 
+	@Override
+	public UserResDto getUserById(String id) {
+		final var userRepo = userRepository.findById(id);
+		final User userModel = userRepo.get();
+		
+		final var user = new UserResDto();
+		user.setId(userModel.getId());
+		user.setFullName(userModel.getFullName());
+		user.setRoleName(userModel.getRole().getRoleName());
+		user.setCompanyName(userModel.getCompany().getCompanyName());
+		if(userModel.getFile() != null) {
+			user.setPath(userModel.getFile().getStoredPath());
+		}
+		return user;
+	}
+
     
 
 
