@@ -8,7 +8,10 @@ import com.lawencon.pss.dto.InsertResDto;
 import com.lawencon.pss.dto.chat.ChatReqDto;
 import com.lawencon.pss.dto.chat.ChatResDto;
 import com.lawencon.pss.model.Chat;
+import com.lawencon.pss.model.Notification;
 import com.lawencon.pss.repository.ChatRepository;
+import com.lawencon.pss.repository.NotificationRepository;
+import com.lawencon.pss.repository.UserRepository;
 import com.lawencon.pss.service.ChatService;
 
 import lombok.RequiredArgsConstructor;
@@ -18,6 +21,8 @@ import lombok.RequiredArgsConstructor;
 public class ChatServiceImpl implements ChatService {
 	
 	private final ChatRepository chatRepository;
+	private final NotificationRepository notificationRepository;
+	private final UserRepository userRepository;
 	
 	@Override
 	public ArrayList<ChatResDto> seeChats(Long recipientId) {
@@ -46,6 +51,17 @@ public class ChatServiceImpl implements ChatService {
 		chat.setRecipientId("b4817bf9-cf54-4170-b148-187c4f889b3c");
 		chat.setCreatedBy("b4817bf9-cf54-4170-b148-187c4f889b3c");
 		chat = chatRepository.save(chat);
+		
+		final var notification = new Notification();
+		
+		notification.setContextId("MESSAGE");
+		final var user = userRepository.findById("b4817bf9-cf54-4170-b148-187c4f889b3c").get();
+		notification.setUser(user);
+		notification.setContextUrl("URL Chat");
+		notification.setNotificationContent("Anda memiliki pesan baru");
+		notification.setCreatedBy("b4817bf9-cf54-4170-b148-187c4f889b3c");
+		
+		notificationRepository.save(notification);
 		
 		final InsertResDto insertRes = new InsertResDto();
 		insertRes.setId(chat.getId());
