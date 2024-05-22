@@ -39,7 +39,9 @@ public class ClientAssignmentServiceImpl implements ClientAssignmentService {
 			client.setId(clientUser.getId());
 			client.setCompany(company.getCompanyName());
 			client.setName(clientUser.getFullName());
-			client.setFileId(company.getLogoId().getId());
+			if(company.getLogoId() != null) {
+				client.setFileId(company.getLogoId().getId());				
+			}
 
 			response.add(client);
 		}
