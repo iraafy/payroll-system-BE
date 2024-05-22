@@ -27,7 +27,7 @@ public class ClientAssignmentController {
 	
 	@GetMapping()
 	public ResponseEntity<List<ClientAssignmentResDto>> getClientPs() {
-		final var response = clientAssignmentService.getClientByPsId();
+		final var response = clientAssignmentService.getClientById();
 		return new ResponseEntity<List<ClientAssignmentResDto>>(response, HttpStatus.OK);
 	}
 	
