@@ -9,5 +9,5 @@ import com.lawencon.pss.dto.notification.NotificationResDto;
 public interface NotificationService {
 	
 	InsertResDto createNotification(NotificationReqDto request);
-	List<NotificationResDto> getNotificationById(String id);
+	List<NotificationResDto> getAllNotification();
 }

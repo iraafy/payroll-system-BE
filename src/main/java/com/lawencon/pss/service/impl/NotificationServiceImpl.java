@@ -43,9 +43,10 @@ public class NotificationServiceImpl implements NotificationService {
 	}
 
 	@Override
-	public List<NotificationResDto> getNotificationById(String id) {
+	public List<NotificationResDto> getAllNotification() {
 		final List<NotificationResDto> responses = new ArrayList<>();
-		final var result = notificationRepository.findByUserId(id);
+		final var userId = principalService.getUserId();
+		final var result = notificationRepository.findByUserId(userId);
 		
 		for (Notification notif : result) {
 			final var response = new NotificationResDto();
