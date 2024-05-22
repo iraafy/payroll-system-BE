@@ -111,6 +111,7 @@ public class RescheduleServiceImpl implements RescheduleService {
 
 	}
 
+	@Transactional
 	@Override
 	public UpdateResDto updateStatusApproval(String id) {
 

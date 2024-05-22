@@ -74,8 +74,13 @@ public class UserServiceImpl implements UserService {
 		
 		response.setId(user.getId());
 		response.setFullName(user.getFullName());
+		response.setEmail(user.getEmail());
 		response.setRoleCode(user.getRole().getRoleCode());
 		response.setCompanyName(user.getCompany().getCompanyName());
+		
+		if (user.getFile() != null) {			
+			response.setImageProfile(user.getFile().getId());
+		}
 		response.setToken(token);
 		
 		return response;
@@ -250,6 +255,22 @@ public class UserServiceImpl implements UserService {
 			rolesRes.add(roleRes);
 		}
 		return rolesRes;
+	}
+
+	@Override
+	public UserResDto getUserById(String id) {
+		final var userRepo = userRepository.findById(id);
+		final User userModel = userRepo.get();
+		
+		final var user = new UserResDto();
+		user.setId(userModel.getId());
+		user.setFullName(userModel.getFullName());
+		user.setRoleName(userModel.getRole().getRoleName());
+		user.setCompanyName(userModel.getCompany().getCompanyName());
+		if(userModel.getFile() != null) {
+			user.setPath(userModel.getFile().getStoredPath());
+		}
+		return user;
 	}
 
     

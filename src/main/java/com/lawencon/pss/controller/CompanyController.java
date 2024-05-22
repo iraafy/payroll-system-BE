@@ -47,5 +47,12 @@ public class CompanyController {
     	
     	return new ResponseEntity<>(res, HttpStatus.OK);
     }
+    
+    @GetMapping("client/{id}")
+    public ResponseEntity<CompanyResDto> getCompanyByClientId(@PathVariable String id){
+    	final var res = companyService.getCompanyByClientId(id);
+    	
+    	return new ResponseEntity<>(res, HttpStatus.OK);
+    }
 
 }

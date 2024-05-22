@@ -8,12 +8,16 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lawencon.pss.dto.InsertResDto;
+import com.lawencon.pss.dto.UpdateResDto;
+import com.lawencon.pss.dto.user.ChangePasswordReqDto;
 import com.lawencon.pss.dto.user.ClientDropdownResDto;
 import com.lawencon.pss.dto.user.CreateUserReqDto;
 import com.lawencon.pss.dto.user.LoginReqDto;
@@ -67,6 +71,19 @@ public class UserController {
 	public ResponseEntity<List<UserResDto>> getAvailableClient() {
 		final var response = userService.getAvailableClients();
 		return new ResponseEntity<List<UserResDto>>(response, HttpStatus.OK);
+	}
+	
+	@PatchMapping("changePassword")
+	public ResponseEntity<UpdateResDto> changeUserPassword(@RequestBody ChangePasswordReqDto request) {
+		final var response = userService.updatePassword(request);
+		return new ResponseEntity<UpdateResDto>(response, HttpStatus.OK);
+	}
+	
+	@GetMapping("/{id}")
+	public ResponseEntity<UserResDto> getUserById(@PathVariable String id){
+		final var res = userService.getUserById(id);
+		
+		return new ResponseEntity<>(res, HttpStatus.OK);
 	}
 
 }

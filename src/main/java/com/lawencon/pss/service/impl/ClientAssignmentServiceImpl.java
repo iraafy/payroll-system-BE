@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.stereotype.Service;
 
 import com.lawencon.pss.constant.Roles;
@@ -90,24 +92,33 @@ public class ClientAssignmentServiceImpl implements ClientAssignmentService {
 	}
 
 	@Override
+	@Transactional
 	public InsertResDto assignPs(ClientAssignmentReqDto request) {
-		final var response = new InsertResDto();
-		final var newAssign = new ClientAssignment();
+		final var response = new InsertResDto();		
 		final var psId = request.getPsId();
 		final var clientId = request.getClientId();
-
-		final var createdBy = principalService.getUserId();
-		final var ps = userRepository.getReferenceById(psId);
-		final var client = userRepository.getReferenceById(clientId);
-
-		newAssign.setClient(client);
-		newAssign.setPs(ps);
-		newAssign.setCreatedBy(createdBy);
-
-		final var result = clientAssignmentRepository.save(newAssign);
-		response.setId(result.getId());
+		final var createdBy = principalService.getUserId(); 
+		final var exist = clientAssignmentRepository.findByClientId(clientId);
+		
+		if (exist.isPresent()) {
+			final var clientAssignment = exist.get();
+			final var newPs = userRepository.getReferenceById(psId);			
+			clientAssignment.setPs(newPs);
+			clientAssignment.setUpdatedBy(createdBy);			
+			final var result = clientAssignmentRepository.save(clientAssignment);			
+			response.setId(result.getId());			
+		} else {
+			final var newAssign = new ClientAssignment();			
+			final var ps = userRepository.getReferenceById(psId);
+			final var client = userRepository.getReferenceById(clientId);			
+			newAssign.setClient(client);
+			newAssign.setPs(ps);
+			newAssign.setCreatedBy(createdBy);
+			final var result = clientAssignmentRepository.save(newAssign);
+			response.setId(result.getId());			
+		}
+		
 		response.setMessage("PS berhasil di-assign ke Client");
-
 		return response;
 	}
 
