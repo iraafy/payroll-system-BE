@@ -1,9 +1,13 @@
 package com.lawencon.pss.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.lawencon.pss.dto.InsertResDto;
 import com.lawencon.pss.dto.notification.NotificationReqDto;
+import com.lawencon.pss.dto.notification.NotificationResDto;
 import com.lawencon.pss.model.Notification;
 import com.lawencon.pss.repository.NotificationRepository;
 import com.lawencon.pss.repository.UserRepository;
@@ -36,6 +40,24 @@ public class NotificationServiceImpl implements NotificationService {
 		response.setMessage("Berhasil membuat pengingat untuk pengguna");
 		
 		return response;
+	}
+
+	@Override
+	public List<NotificationResDto> getNotificationById(String id) {
+		final List<NotificationResDto> responses = new ArrayList<>();
+		final var result = notificationRepository.findByUserId(id);
+		
+		for (Notification notif : result) {
+			final var response = new NotificationResDto();
+			response.setUserId(notif.getUser().getId());
+			response.setContextId(notif.getContextId());
+			response.setContextUrl(notif.getContextUrl());
+			response.setNotificationContent(notif.getNotificationContent());
+			
+			responses.add(response);
+		}
+		
+		return responses;
 	}
 
 }
