@@ -92,6 +92,7 @@ public class PayrollServiceImpl implements PayrollsService {
 			payrollDto.setScheduleDate(payroll.getScheduleDate().toString());			
 		}
 		payrollDto.setTitle(payroll.getTitle());
+		payrollDto.setClientId(payroll.getClientId().getId());
 
 		return payrollDto;
 	}
