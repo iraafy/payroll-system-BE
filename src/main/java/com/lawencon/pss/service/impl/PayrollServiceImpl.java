@@ -25,6 +25,7 @@ import com.lawencon.pss.model.Notification;
 import com.lawencon.pss.model.Payroll;
 import com.lawencon.pss.model.PayrollDetail;
 import com.lawencon.pss.model.User;
+import com.lawencon.pss.repository.CompanyRepository;
 import com.lawencon.pss.repository.NotificationRepository;
 import com.lawencon.pss.repository.PayrollDetailRepository;
 import com.lawencon.pss.repository.PayrollRepository;
@@ -42,6 +43,7 @@ public class PayrollServiceImpl implements PayrollsService {
 	private final PayrollDetailRepository payrollDetailRepository;
 	private final UserRepository userRepository;
 	private final NotificationRepository notificationRepository;
+	private final CompanyRepository companyRepository;
 	
 	private final PrincipalService principalService;
 
@@ -93,6 +95,10 @@ public class PayrollServiceImpl implements PayrollsService {
 		}
 		payrollDto.setTitle(payroll.getTitle());
 		payrollDto.setClientId(payroll.getClientId().getId());
+		
+		final var companyModel = companyRepository.findById(payroll.getClientId().getCompany().getId());
+		
+		payrollDto.setCompanyName(companyModel.get().getCompanyName());
 
 		return payrollDto;
 	}
