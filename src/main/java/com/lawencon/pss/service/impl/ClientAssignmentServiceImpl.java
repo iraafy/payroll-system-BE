@@ -3,6 +3,8 @@ package com.lawencon.pss.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.stereotype.Service;
 
 import com.lawencon.pss.dto.InsertResDto;
@@ -38,38 +40,39 @@ public class ClientAssignmentServiceImpl implements ClientAssignmentService {
 			client.setCompany(company.getCompanyName());
 			client.setName(clientUser.getFullName());
 
-			if (company.getLogoId() != null) {
-//				final var fileContent = company.getLogoId().getFileContent();
-//				final var fileExt = company.getLogoId().getFileExt();
-//				client.setFileContent(fileContent);
-//				client.setFileExt(fileExt);
-				client.setFileId(company.getLogoId().getId());
-			}
-
 			response.add(client);
 		}
 		return response;
 	}
 
 	@Override
+	@Transactional
 	public InsertResDto assignPs(ClientAssignmentReqDto request) {
-		final var response = new InsertResDto();
-		final var newAssign = new ClientAssignment();
+		final var response = new InsertResDto();		
 		final var psId = request.getPsId();
 		final var clientId = request.getClientId();
-
-		final var createdBy = principalService.getUserId();
-		final var ps = userRepository.getReferenceById(psId);
-		final var client = userRepository.getReferenceById(clientId);
-
-		newAssign.setClient(client);
-		newAssign.setPs(ps);
-		newAssign.setCreatedBy(createdBy);
-
-		final var result = clientAssignmentRepository.save(newAssign);
-		response.setId(result.getId());
+		final var createdBy = principalService.getUserId(); 
+		final var exist = clientAssignmentRepository.findByClientId(clientId);
+		
+		if (exist.isPresent()) {
+			final var clientAssignment = exist.get();
+			final var newPs = userRepository.getReferenceById(psId);			
+			clientAssignment.setPs(newPs);
+			clientAssignment.setUpdatedBy(createdBy);			
+			final var result = clientAssignmentRepository.save(clientAssignment);			
+			response.setId(result.getId());			
+		} else {
+			final var newAssign = new ClientAssignment();			
+			final var ps = userRepository.getReferenceById(psId);
+			final var client = userRepository.getReferenceById(clientId);			
+			newAssign.setClient(client);
+			newAssign.setPs(ps);
+			newAssign.setCreatedBy(createdBy);
+			final var result = clientAssignmentRepository.save(newAssign);
+			response.setId(result.getId());			
+		}
+		
 		response.setMessage("PS berhasil di-assign ke Client");
-
 		return response;
 	}
 
