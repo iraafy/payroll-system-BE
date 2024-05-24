@@ -1,5 +1,6 @@
 package com.lawencon.pss.service.impl;
 
+//import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,7 +47,8 @@ public class NotificationServiceImpl implements NotificationService {
 	public List<NotificationResDto> getAllNotification() {
 		final List<NotificationResDto> responses = new ArrayList<>();
 		final var userId = principalService.getUserId();
-		final var result = notificationRepository.findByUserId(userId);
+		final var result = notificationRepository.findByUserIdOrderByCreatedAtDesc(userId);
+//		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm a");
 		
 		for (Notification notif : result) {
 			final var response = new NotificationResDto();
@@ -54,6 +56,8 @@ public class NotificationServiceImpl implements NotificationService {
 			response.setContextId(notif.getContextId());
 			response.setContextUrl(notif.getContextUrl());
 			response.setNotificationContent(notif.getNotificationContent());
+//			final var timeCreated = notif.getCreatedAt().format(formatter);
+			response.setCreatedAt(notif.getCreatedAt().toString());
 			
 			responses.add(response);
 		}
@@ -66,6 +70,7 @@ public class NotificationServiceImpl implements NotificationService {
 		final List<NotificationResDto> responses = new ArrayList<>();
 		final var userId = principalService.getUserId();
 		final var result = notificationRepository.findTop3ByUserIdOrderByCreatedAtDesc(userId);
+//		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm a");
 		
 		for (Notification notif : result) {
 			final var response = new NotificationResDto();
@@ -73,6 +78,8 @@ public class NotificationServiceImpl implements NotificationService {
 			response.setContextId(notif.getContextId());
 			response.setContextUrl(notif.getContextUrl());
 			response.setNotificationContent(notif.getNotificationContent());
+//			final var timeCreated = notif.getCreatedAt().format(formatter);
+			response.setCreatedAt(notif.getCreatedAt().toString());
 			
 			responses.add(response);
 		}
