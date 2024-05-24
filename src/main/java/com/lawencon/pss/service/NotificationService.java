@@ -10,4 +10,5 @@ public interface NotificationService {
 	
 	InsertResDto createNotification(NotificationReqDto request);
 	List<NotificationResDto> getAllNotification();
+	List<NotificationResDto> getTop3Notification();
 }

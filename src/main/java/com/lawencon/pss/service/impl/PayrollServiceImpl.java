@@ -252,7 +252,7 @@ public class PayrollServiceImpl implements PayrollsService {
 
 	@Override
 	public ArrayList<PayrollDetailResDto> getPayrollDetails(String id) {
-		final ArrayList<PayrollDetail> details = payrollDetailRepository.findByPayrollId(id);
+		final ArrayList<PayrollDetail> details = payrollDetailRepository.findByPayrollIdOrderByCreatedAtAsc(id);
 		final ArrayList<PayrollDetailResDto> resDetails = new ArrayList<>();
 		
 		for(PayrollDetail detail : details) {

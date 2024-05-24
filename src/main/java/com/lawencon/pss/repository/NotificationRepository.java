@@ -11,5 +11,6 @@ import com.lawencon.pss.model.Notification;
 public interface NotificationRepository extends JpaRepository<Notification, String>{
 
 	List<Notification> findAll();
-	List<Notification> findByUserId(String id);
+	List<Notification> findByUserIdOrderByCreatedAtDesc(String id);
+	List<Notification> findTop3ByUserIdOrderByCreatedAtDesc(String id);
 }

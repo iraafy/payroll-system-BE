@@ -63,12 +63,29 @@ public class RescheduleController {
 		return new ResponseEntity<>(res, HttpStatus.OK);
 	}
 
-	@GetMapping("/payroll/{payrollId}")
-	public ResponseEntity<ReschedulesResDto> getScheduleByPayrollId(@PathVariable String payrollId) {
+	@GetMapping("/payroll/payrollDetail/{payrollId}")
+	public ResponseEntity<List<ReschedulesResDto>> getReschedulesByPayrollDetailId(@PathVariable String payrollId) {
 		
 		final var res = rescheduleService.getScheduleByPayyrollDetailId(payrollId);
 		
 		return new ResponseEntity<>(res, HttpStatus.OK);
 	}
+	
+	@GetMapping("/payroll/{payrollId}")
+	public ResponseEntity<List<ReschedulesResDto>> getReschedulesByPayrollId(@PathVariable String payrollId) {
+		
+		final var res = rescheduleService.getScheduleByPayyrollId(payrollId);
+		
+		return new ResponseEntity<>(res, HttpStatus.OK);
+	}
+	
+	@GetMapping("/payroll/{payrollDetailId}/lastSchedule")
+	public ResponseEntity<ReschedulesResDto> getLastRescheduleByPayrollDetailId(@PathVariable String payrollDetailId){
+		
+		final var res = rescheduleService.getLastRescheduleByPayrollDetailId(payrollDetailId);
+		
+		return new ResponseEntity<>(res, HttpStatus.OK);
+	}
+	
 
 }
