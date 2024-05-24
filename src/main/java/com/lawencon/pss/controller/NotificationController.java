@@ -35,4 +35,11 @@ public class NotificationController {
 		final var response = notificationService.getAllNotification();
 		return new ResponseEntity<List<NotificationResDto>>(response, HttpStatus.OK);
 	}
+	
+	@GetMapping("top3")
+	public ResponseEntity<List<NotificationResDto>> getTop3Notification() {
+		final var response = notificationService.getTop3Notification();
+		return new ResponseEntity<List<NotificationResDto>>(response, HttpStatus.OK);
+	}
+	
 }
