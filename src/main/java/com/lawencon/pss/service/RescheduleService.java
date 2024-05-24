@@ -17,6 +17,10 @@ public interface RescheduleService {
     
     UpdateResDto updateStatusApproval(String id);
 
-    ReschedulesResDto getScheduleByPayyrollDetailId(String payrollId);
+    List<ReschedulesResDto> getScheduleByPayyrollId(String payrollId);
+    
+    List<ReschedulesResDto> getScheduleByPayyrollDetailId(String payrollId);
+
+	ReschedulesResDto getLastRescheduleByPayrollDetailId(String payrollDetailId);
 
 }
