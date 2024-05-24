@@ -1,6 +1,10 @@
 package com.lawencon.pss.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Optional;
+
+import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
@@ -9,10 +13,12 @@ import com.lawencon.pss.dto.chat.ChatReqDto;
 import com.lawencon.pss.dto.chat.ChatResDto;
 import com.lawencon.pss.model.Chat;
 import com.lawencon.pss.model.Notification;
+import com.lawencon.pss.model.User;
 import com.lawencon.pss.repository.ChatRepository;
 import com.lawencon.pss.repository.NotificationRepository;
 import com.lawencon.pss.repository.UserRepository;
 import com.lawencon.pss.service.ChatService;
+import com.lawencon.pss.service.PrincipalService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -23,18 +29,18 @@ public class ChatServiceImpl implements ChatService {
 	private final ChatRepository chatRepository;
 	private final NotificationRepository notificationRepository;
 	private final UserRepository userRepository;
+	private final PrincipalService principalService;
 	
 	@Override
-	public ArrayList<ChatResDto> seeChats(Long recipientId) {
+	public ArrayList<ChatResDto> seeChats() {
 		final ArrayList<ChatResDto> chatsRes= new ArrayList<>();
-		final ArrayList<Chat> chats = chatRepository.findAll();
+		final ArrayList<Chat> chats = chatRepository.findByRecipientIdOrCreatedBy(principalService.getUserId(), principalService.getUserId());
 		
 		for(Chat chat : chats) {
 			final ChatResDto chatRes = new ChatResDto();
 			chatRes.setMessage(chat.getMessage());
 			chatRes.setCreatedAt(chat.getCreatedAt());
-			chatRes.setCompanyName("Lawencon");
-			chatRes.setUserName("User Dummy");
+			chatRes.setUserName(chat.getRecipientId());
 			chatsRes.add(chatRes);
 		}
 		
@@ -42,30 +48,48 @@ public class ChatServiceImpl implements ChatService {
 	}
 	
 	@Override
+	@Transactional
 	public InsertResDto saveChat(ChatReqDto chatReq) {
+		final Optional<User> currentUser = userRepository.findById(chatReq.getSenderId());
+		final User user = currentUser.get();
 		Chat chat = new Chat();
-		System.out.println("=====================================");
-		System.out.println(chatReq.getMessage());
-		System.out.println("=====================================");
 		chat.setMessage(chatReq.getMessage());
-		chat.setRecipientId("b4817bf9-cf54-4170-b148-187c4f889b3c");
-		chat.setCreatedBy("b4817bf9-cf54-4170-b148-187c4f889b3c");
+		chat.setRecipientId(chatReq.getRecipientId());
+		chat.setCreatedBy(user.getId());
+		chat.setCreatedAt(LocalDateTime.now());
 		chat = chatRepository.save(chat);
 		
-		final var notification = new Notification();
 		
-		notification.setContextId("MESSAGE");
-		final var user = userRepository.findById("b4817bf9-cf54-4170-b148-187c4f889b3c").get();
-		notification.setUser(user);
-		notification.setContextUrl("URL Chat");
+		final Optional<User> recipient = userRepository.findById(chatReq.getRecipientId());
+		Notification notification = new Notification();
+		notification.setContextId("NO CONTEXT ID");
+		notification.setUser(recipient.get());						
+		notification.setContextUrl("NO URL");
 		notification.setNotificationContent("Anda memiliki pesan baru");
-		notification.setCreatedBy("b4817bf9-cf54-4170-b148-187c4f889b3c");
+		notification.setCreatedBy(user.getId());
+		notification.setCreatedAt(LocalDateTime.now());
 		
-		notificationRepository.save(notification);
+		notification = notificationRepository.save(notification);
 		
 		final InsertResDto insertRes = new InsertResDto();
 		insertRes.setId(chat.getId());
 		insertRes.setMessage("Berhasil Menyimpan Data Chat !");
 		return insertRes;
+	}
+	
+	@Override
+	public ChatResDto findChat(String id) {
+		final ChatResDto chatRes = new ChatResDto();
+		final Optional<Chat> chat = chatRepository.findById(id);
+		
+		if(chat.get() != null) {
+			final Chat selectedChat = chat.get();
+			chatRes.setMessage(selectedChat.getMessage());
+			chatRes.setUserName(selectedChat.getRecipientId());
+			chatRes.setCreatedAt(selectedChat.getCreatedAt());
+			return chatRes;
+		}
+		
+		return null;
 	};
 }

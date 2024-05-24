@@ -8,4 +8,5 @@ import lombok.Setter;
 public class ChatReqDto {
 	private String message;
 	private String recipientId;
+	private String senderId;
 }
