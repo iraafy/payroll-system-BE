@@ -12,6 +12,7 @@ import com.lawencon.pss.dto.notification.NotificationResDto;
 import com.lawencon.pss.model.Notification;
 import com.lawencon.pss.repository.NotificationRepository;
 import com.lawencon.pss.repository.UserRepository;
+import com.lawencon.pss.service.EmailService;
 import com.lawencon.pss.service.NotificationService;
 import com.lawencon.pss.service.PrincipalService;
 
@@ -24,18 +25,34 @@ public class NotificationServiceImpl implements NotificationService {
 	private final NotificationRepository notificationRepository;
 	private final UserRepository userRepository;
 	private final PrincipalService principalService;
+	private final EmailService emailService;
 	
 	@Override
 	public InsertResDto createNotification(NotificationReqDto request) {
 		final var response = new InsertResDto();
 		final Notification notif = new Notification();
+		final var recipient = userRepository.findById(request.getUserId()).get();
+		final var recipientEmail = recipient.getEmail();
+		final var reminder = userRepository.findById(principalService.getUserId()).get();
+		final var reminderName = reminder.getFullName();
+		final var fullName = recipient.getFullName();
 		notif.setContextId(request.getContextId());
 		notif.setContextUrl(request.getContextUrl());
 		notif.setNotificationContent(request.getNotificationContent());
-		notif.setUser(userRepository.getReferenceById(request.getUserId()));
+		notif.setUser(recipient);
 		notif.setCreatedBy(principalService.getUserId());
 		
 		final var result = notificationRepository.save(notif);
+		
+		final Runnable runnable = () -> {
+			final var subjectEmail = "Pengingat untuk " + fullName + " !" ;
+			final var bodyEmail = reminderName + " mengingatkan anda untuk menyelesaikan aktivitas berikut";
+			
+			emailService.sendEmail(recipientEmail, subjectEmail, bodyEmail);			
+        };
+        
+        final Thread mailThread = new Thread(runnable);
+        mailThread.start();
 		
 		response.setId(result.getId());
 		response.setMessage("Berhasil membuat pengingat untuk pengguna");
