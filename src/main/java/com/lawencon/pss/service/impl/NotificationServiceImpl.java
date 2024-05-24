@@ -61,4 +61,23 @@ public class NotificationServiceImpl implements NotificationService {
 		return responses;
 	}
 
+	@Override
+	public List<NotificationResDto> getTop3Notification() {
+		final List<NotificationResDto> responses = new ArrayList<>();
+		final var userId = principalService.getUserId();
+		final var result = notificationRepository.findTop3ByUserIdOrderByCreatedAtDesc(userId);
+		
+		for (Notification notif : result) {
+			final var response = new NotificationResDto();
+			response.setUserId(notif.getUser().getId());
+			response.setContextId(notif.getContextId());
+			response.setContextUrl(notif.getContextUrl());
+			response.setNotificationContent(notif.getNotificationContent());
+			
+			responses.add(response);
+		}
+		
+		return responses;
+	}
+
 }
