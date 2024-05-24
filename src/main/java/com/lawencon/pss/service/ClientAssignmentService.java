@@ -8,7 +8,7 @@ import com.lawencon.pss.dto.clientassignment.ClientAssignmentResDto;
 
 public interface ClientAssignmentService {
 	
-	List<ClientAssignmentResDto> getClientByPsId();
+	List<ClientAssignmentResDto> getClientById();
 	InsertResDto assignPs(ClientAssignmentReqDto request);
 
 }
