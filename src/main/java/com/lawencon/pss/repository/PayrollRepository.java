@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.lawencon.pss.model.Payroll;
+import com.lawencon.pss.model.PayrollDetail;
 
 @Repository
 public interface PayrollRepository extends JpaRepository<Payroll, String>{
@@ -33,4 +34,6 @@ public interface PayrollRepository extends JpaRepository<Payroll, String>{
     		+ "(SELECT ca.client.id FROM ClientAssignment as ca "
     		+ "WHERE ca.ps.id = :id) ")
     List<Payroll> findByPsId(@Param("id") String id);
+    
+    
 }
