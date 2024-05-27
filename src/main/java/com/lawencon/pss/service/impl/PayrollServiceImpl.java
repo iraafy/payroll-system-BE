@@ -399,4 +399,36 @@ public class PayrollServiceImpl implements PayrollsService {
 		return payrollsDto;
 
 	}
+
+	@Override
+	public List<PayrollDetailResDto> getPayrollDetailByPsId() {
+		final String id = principalService.getUserId();
+		final List<PayrollDetail> payrollDetailModels = payrollDetailRepository.findPayrollDetailByPsId(id);
+		final List<PayrollDetailResDto> payrollDetailsDto = new ArrayList<>();
+		
+		for(PayrollDetail detail : payrollDetailModels) {
+			final var resDetail = new PayrollDetailResDto();
+			resDetail.setId(detail.getId());
+			resDetail.setDescription(detail.getDescription());
+			
+			if(detail.getFile() != null && detail.getFile().getStoredPath() != null) {
+				resDetail.setFilePath(detail.getFile().getStoredPath());				
+			}
+			
+			if(detail.getFile() != null && detail.getFile().getFileContent() != null) {
+				resDetail.setFileContent(detail.getFile().getFileContent());
+			}
+			
+			resDetail.setForClient(detail.getForClient());
+			resDetail.setClientAcknowledge(detail.getClientAcknowledge());
+			resDetail.setPsAcknowledge(detail.getPsAcknowledge());
+			resDetail.setMaxUploadDate(detail.getMaxUploadDate());
+			
+			payrollDetailsDto.add(resDetail);
+		}
+		
+		return payrollDetailsDto;
+	}
+	
+	
 }

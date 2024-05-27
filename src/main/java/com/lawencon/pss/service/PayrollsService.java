@@ -39,4 +39,6 @@ public interface PayrollsService {
 	List<PayrollDetailResDto> getAllPayrollDetailByClientId(String id);
 	
 	List<PayrollResDto> getPayrollByPsId();
+	
+	List<PayrollDetailResDto> getPayrollDetailByPsId();
 }
