@@ -233,7 +233,7 @@ public class PayrollServiceImpl implements PayrollsService {
 			final var notificationModel = new Notification();
 			
 			notificationModel.setNotificationContent("Ada aktivitas baru untuk anda");
-			notificationModel.setContextUrl("/payroll/"+payroll.get().getId()+"/details/"+newDetail.getId());
+			notificationModel.setContextUrl("/payrolls/"+payroll.get().getId());
 			notificationModel.setContextId(newDetail.getId());
 			notificationModel.setUser(user.get());
 			
