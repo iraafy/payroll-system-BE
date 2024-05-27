@@ -1,10 +1,22 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
 CREATE TABLE tb_m_email_templates (
 	id VARCHAR(36) PRIMARY KEY,
 	email_code VARCHAR(15) NOT NULL,
 	email_subject TEXT NOT NULL,
 	email_body TEXT NOT NULL,
-	email_content TEXT NOT NULL,
+	created_by VARCHAR(36) NOT NULL,
+	created_at TIMESTAMP NOT NULL,
+	updated_by VARCHAR(36),
+	updated_at TIMESTAMP,
+	vrsion INT NOT NULL,
+	is_active BOOLEAN DEFAULT TRUE
+);
+
+CREATE TABLE tb_r_email (
+	id VARCHAR(36) PRIMARY KEY,
+	template_id VARCHAR(36) NOT NULL,
+	email_content TEXT,
 	created_by VARCHAR(36) NOT NULL,
 	created_at TIMESTAMP NOT NULL,
 	updated_by VARCHAR(36),
@@ -44,7 +56,7 @@ CREATE TABLE tb_m_companies (
 CREATE TABLE tb_m_user_roles (
 	id VARCHAR(36) PRIMARY KEY,
 	role_name VARCHAR(25),
-	role_code CHAR(5) NOT NULL,
+	role_code CHAR(3) NOT NULL,
 	created_by VARCHAR(36) NOT NULL,
 	created_at TIMESTAMP NOT NULL,
 	updated_by VARCHAR(36),
@@ -165,12 +177,12 @@ CREATE TABLE tb_r_reschedules (
 );
 
 INSERT INTO tb_m_user_roles (id, role_name, role_code, created_by, created_at, is_active, vrsion) VALUES
-	('b4f6c0bb-ef56-4b5c-b804-9d0d21186394', 'Super Admin', 'SA001', '1', NOW(), TRUE, 0),
-	('1e5b3f28-67c4-4615-b0e0-7e7c90f61608', 'PS', 'PS001', '1', NOW(), TRUE, 0),
-	('8487cf5c-044d-44e9-8e02-e51fd8c8d127', 'Client', 'CLNT1', '1', NOW(), TRUE, 0);
+	('b4f6c0bb-ef56-4b5c-b804-9d0d21186394', 'Super Admin', 'SAD', '1', NOW(), TRUE, 0),
+	('1e5b3f28-67c4-4615-b0e0-7e7c90f61608', 'PS', 'PRS', '1', NOW(), TRUE, 0),
+	('8487cf5c-044d-44e9-8e02-e51fd8c8d127', 'Client', 'CLN', '1', NOW(), TRUE, 0);
 
 INSERT INTO tb_m_companies (id, company_name, logo_id, default_payment_day, created_by, created_at, is_active, vrsion) VALUES
-	('cc8c66d3-96ab-4ecc-bbe9-b984e8562190', 'Lawencon', null, 31, '1', NOW(), TRUE, 0);
+	('cc8c66d3-96ab-4ecc-bbe9-b984e8562190', 'PT Lawencon Internasional', null, 31, '1', NOW(), TRUE, 0);
 
 INSERT INTO tb_m_users (id, full_name, email, pwd, role_id, company_id, created_by, created_at, is_active, vrsion) VALUES 
     (uuid_generate_v4(), 'Asmodeus', 'a@mail.com', '$2y$10$AMf5FaHHEF5cJFBNEDHl9.4b/QjWSfPULHtJQgqyL2NYsfgkVAyIq', '1e5b3f28-67c4-4615-b0e0-7e7c90f61608', 'cc8c66d3-96ab-4ecc-bbe9-b984e8562190','1', NOW(), TRUE, 0),
@@ -184,7 +196,7 @@ INSERT INTO tb_m_users (id, full_name, email, pwd, role_id, company_id, created_
 	(uuid_generate_v4(), 'SUPEEEER Admin', 'example@mail.com', '$2y$10$AMf5FaHHEF5cJFBNEDHl9.4b/QjWSfPULHtJQgqyL2NYsfgkVAyIq', 'b4f6c0bb-ef56-4b5c-b804-9d0d21186394', 'cc8c66d3-96ab-4ecc-bbe9-b984e8562190','1', NOW(), TRUE, 0);
 
 
-DROP TABLE tb_r_reschedules, tb_r_payroll_details, tb_r_payrolls, tb_r_chats, tb_r_client_assignments, tb_m_users, tb_m_user_roles, tb_m_companies, tb_m_files, tb_m_notifications, tb_m_email_templates;
+--DROP TABLE tb_r_reschedules, tb_r_payroll_details, tb_r_payrolls, tb_r_chats, tb_r_client_assignments, tb_m_users, tb_m_user_roles, tb_m_companies, tb_m_files, tb_m_notifications, tb_m_email_templates;
 
 ---------------------------TRUNCATE------------------------------
 --TRUNCATE tb_m_companies RESTART IDENTITY CASCADE;
@@ -204,6 +216,6 @@ DROP TABLE tb_r_reschedules, tb_r_payroll_details, tb_r_payrolls, tb_r_chats, tb
 --SELECT * FROM tb_m_users tmu ;
 --SELECT * FROM tb_r_payroll_details trpd ;
 --SELECT * FROM tb_m_notifications tmn ;
-SELECT * FROM tb_r_reschedules trr ;
+--SELECT * FROM tb_r_reschedules trr ;
 
 --SELECT * FROM tb_r_client_assignments trca RIGHT JOIN tb_m_users tmu ON trca.client_id = tmu.id WHERE tmu.role_id = '8487cf5c-044d-44e9-8e02-e51fd8c8d127';

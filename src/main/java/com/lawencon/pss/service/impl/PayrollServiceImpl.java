@@ -362,5 +362,22 @@ public class PayrollServiceImpl implements PayrollsService {
 		return resDetails;
 	}
 	
-	
+	@Override
+	public List<PayrollResDto> searchPayroll(String value) {
+		List<Payroll> payrollModels = new ArrayList<>();
+		payrollModels.addAll(payrollRepository.searchPayroll(value));
+		
+
+		final List<PayrollResDto> payrollsDto = new ArrayList<>();
+		for (Payroll payroll : payrollModels) {
+			final var payrollDto = new PayrollResDto();
+			payrollDto.setId(payroll.getId());
+			payrollDto.setScheduleDate(payroll.getScheduleDate().toString());
+			payrollDto.setTitle(payroll.getTitle());
+
+			payrollsDto.add(payrollDto);
+		}
+
+		return payrollsDto;
+	}
 }

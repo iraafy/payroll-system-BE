@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.mail.MessagingException;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -123,13 +125,19 @@ public class UserServiceImpl implements UserService {
 		final var result = userRepository.save(user);
 		
 		final Runnable runnable = () -> {
-			final var subjectEmail = "Selamat Datang di Aplikasi Payroll Service System!";
-			final var bodyEmail = "Akun anda telah berhasil di buat!\n\n"
-					+ "email : " + userEmail
-					+ "\npassword : " + password
-					+ "\n\nSelamat mencoba aplikasi kami! :D";
-			
-			emailService.sendEmail(userEmail, subjectEmail, bodyEmail);			
+            final var subjectEmail = "Selamat Datang di Aplikasi Payroll Service System!";
+            Map<String, Object> templateModel = new HashMap<>();
+            templateModel.put("fullName", userFullName);
+            templateModel.put("email", userEmail);
+            templateModel.put("password", password);
+
+            System.out.println("Sending email with templateModel: " + templateModel);
+
+            try {
+                emailService.sendTemplateEmail(userEmail, subjectEmail, "welcome-email", templateModel);
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            }
         };
         
         final Thread mailThread = new Thread(runnable);

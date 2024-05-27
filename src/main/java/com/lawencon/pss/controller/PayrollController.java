@@ -19,6 +19,7 @@ import com.lawencon.pss.dto.payroll.PayrollDetailReqDto;
 import com.lawencon.pss.dto.payroll.PayrollDetailResDto;
 import com.lawencon.pss.dto.payroll.PayrollReqDto;
 import com.lawencon.pss.dto.payroll.PayrollResDto;
+import com.lawencon.pss.model.Payroll;
 import com.lawencon.pss.service.PayrollsService;
 
 import lombok.RequiredArgsConstructor;
@@ -95,6 +96,12 @@ public class PayrollController {
 	public ResponseEntity<UpdateResDto> psAcknowledge(@PathVariable String id) {
 		final UpdateResDto res = payrollsService.psAckPayrollDetails(id);
 		return new ResponseEntity<>(res, HttpStatus.OK);
+	}
+	
+	@GetMapping("search/{value}")
+	public ResponseEntity<List<PayrollResDto>> searchPayroll(@PathVariable String value) {
+		final List<PayrollResDto> payrolls = payrollsService.searchPayroll(value);
+		return new ResponseEntity<>(payrolls, HttpStatus.OK);
 	}
 	
 	@GetMapping("details/client/{id}")
