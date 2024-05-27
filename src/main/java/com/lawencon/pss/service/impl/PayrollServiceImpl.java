@@ -363,9 +363,38 @@ public class PayrollServiceImpl implements PayrollsService {
 	}
 	
 	@Override
-	public List<PayrollResDto> searchPayroll(String value) {
+	public List<PayrollDetailResDto> getAllPayrollDetailByClientId(String id) {
+		final var details = payrollDetailRepository.findByPayrollClientIdId(id);
+		final List<PayrollDetailResDto> resDetails = new ArrayList<>();
+		
+		for(PayrollDetail detail : details) {
+			final PayrollDetailResDto resDetail = new PayrollDetailResDto();
+			resDetail.setId(detail.getId());
+			resDetail.setDescription(detail.getDescription());
+			
+			if(detail.getFile() != null && detail.getFile().getStoredPath() != null) {
+				resDetail.setFilePath(detail.getFile().getStoredPath());				
+			}
+			
+			if(detail.getFile() != null && detail.getFile().getFileContent() != null) {
+				resDetail.setFileContent(detail.getFile().getFileContent());
+			}
+			
+			resDetail.setForClient(detail.getForClient());
+			resDetail.setClientAcknowledge(detail.getClientAcknowledge());
+			resDetail.setPsAcknowledge(detail.getPsAcknowledge());
+			resDetail.setMaxUploadDate(detail.getMaxUploadDate());
+			
+			resDetails.add(resDetail);
+		}
+		
+		return resDetails;
+	}
+	
+	@Override
+	public List<PayrollResDto> searchPayroll(String id, String value) {
 		List<Payroll> payrollModels = new ArrayList<>();
-		payrollModels.addAll(payrollRepository.searchPayroll(value));
+		payrollModels.addAll(payrollRepository.searchPayroll(id, value));
 		
 
 		final List<PayrollResDto> payrollsDto = new ArrayList<>();
