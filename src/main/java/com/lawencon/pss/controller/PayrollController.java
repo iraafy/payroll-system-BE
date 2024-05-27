@@ -98,9 +98,9 @@ public class PayrollController {
 		return new ResponseEntity<>(res, HttpStatus.OK);
 	}
 	
-	@GetMapping("search/{value}")
-	public ResponseEntity<List<PayrollResDto>> searchPayroll(@PathVariable String value) {
-		final List<PayrollResDto> payrolls = payrollsService.searchPayroll(value);
+	@GetMapping("search/{id}/{value}")
+	public ResponseEntity<List<PayrollResDto>> searchPayroll(@PathVariable String id, @PathVariable String value) {
+		final List<PayrollResDto> payrolls = payrollsService.searchPayroll(id, value);
 		return new ResponseEntity<>(payrolls, HttpStatus.OK);
 	}
 }

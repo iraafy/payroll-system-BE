@@ -334,9 +334,9 @@ public class PayrollServiceImpl implements PayrollsService {
 	}
 
 	@Override
-	public List<PayrollResDto> searchPayroll(String value) {
+	public List<PayrollResDto> searchPayroll(String id, String value) {
 		List<Payroll> payrollModels = new ArrayList<>();
-		payrollModels.addAll(payrollRepository.searchPayroll(value));
+		payrollModels.addAll(payrollRepository.searchPayroll(id, value));
 		
 
 		final List<PayrollResDto> payrollsDto = new ArrayList<>();
