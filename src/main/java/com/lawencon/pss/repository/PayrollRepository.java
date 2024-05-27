@@ -26,4 +26,11 @@ public interface PayrollRepository extends JpaRepository<Payroll, String>{
     		+ "OR p.title LIKE %:value% )"
     		+ "AND p.clientId.id = :id ")
     List<Payroll> searchPayroll(@Param("id") String id, @Param("value") String value);
+    
+    @Query("SELECT p from Payroll as p "
+    		+ "WHERE p.clientId.id "
+    		+ "IN "
+    		+ "(SELECT ca.client.id FROM ClientAssignment as ca "
+    		+ "WHERE ca.ps.id = :id) ")
+    List<Payroll> findByPsId(@Param("id") String id);
 }

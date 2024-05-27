@@ -332,35 +332,6 @@ public class PayrollServiceImpl implements PayrollsService {
 		
 		return response;
 	}
-
-	@Override
-	public List<PayrollDetailResDto> getAllPayrollDetailByClientId(String id) {
-		final var details = payrollDetailRepository.findByPayrollClientIdId(id);
-		final List<PayrollDetailResDto> resDetails = new ArrayList<>();
-		
-		for(PayrollDetail detail : details) {
-			final PayrollDetailResDto resDetail = new PayrollDetailResDto();
-			resDetail.setId(detail.getId());
-			resDetail.setDescription(detail.getDescription());
-			
-			if(detail.getFile() != null && detail.getFile().getStoredPath() != null) {
-				resDetail.setFilePath(detail.getFile().getStoredPath());				
-			}
-			
-			if(detail.getFile() != null && detail.getFile().getFileContent() != null) {
-				resDetail.setFileContent(detail.getFile().getFileContent());
-			}
-			
-			resDetail.setForClient(detail.getForClient());
-			resDetail.setClientAcknowledge(detail.getClientAcknowledge());
-			resDetail.setPsAcknowledge(detail.getPsAcknowledge());
-			resDetail.setMaxUploadDate(detail.getMaxUploadDate());
-			
-			resDetails.add(resDetail);
-		}
-		
-		return resDetails;
-	}
 	
 	@Override
 	public List<PayrollDetailResDto> getAllPayrollDetailByClientId(String id) {
@@ -408,5 +379,24 @@ public class PayrollServiceImpl implements PayrollsService {
 		}
 
 		return payrollsDto;
+	}
+	
+	@Override
+	public List<PayrollResDto> getPayrollByPsId() {
+		final String id = principalService.getUserId();
+		final List<Payroll> payrollModels = payrollRepository.findByPsId(id);
+		final List<PayrollResDto> payrollsDto = new ArrayList<>();
+
+		for (Payroll payroll : payrollModels) {
+			final var payrollDto = new PayrollResDto();
+			payrollDto.setId(payroll.getId());
+			payrollDto.setScheduleDate(payroll.getScheduleDate().toString());
+			payrollDto.setTitle(payroll.getTitle());
+
+			payrollsDto.add(payrollDto);
+		}
+
+		return payrollsDto;
+
 	}
 }
