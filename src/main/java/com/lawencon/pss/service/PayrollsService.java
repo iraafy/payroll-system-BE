@@ -35,4 +35,6 @@ public interface PayrollsService {
 	InsertResDto createNewNotificationOnPayrollDetails(NotificationReqDto data);
 	
 	List<PayrollResDto> searchPayroll(String value);
+
+	List<PayrollDetailResDto> getAllPayrollDetailByClientId(String id);
 }

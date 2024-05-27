@@ -165,7 +165,7 @@ CREATE TABLE tb_r_payroll_details (
 CREATE TABLE tb_r_reschedules (
 	id VARCHAR(36) PRIMARY KEY,
 	new_scheduled_date TIMESTAMP NOT NULL,
-	payroll_id VARCHAR(36) NOT NULL,
+	payroll_detail_id VARCHAR(36) NOT NULL,
 	is_approve BOOLEAN,
 	created_by VARCHAR(36) NOT NULL,
 	created_at TIMESTAMP NOT NULL,
@@ -173,7 +173,7 @@ CREATE TABLE tb_r_reschedules (
 	updated_at TIMESTAMP,
 	vrsion INT NOT NULL,
 	is_active BOOLEAN DEFAULT TRUE,
-	CONSTRAINT payroll_fk FOREIGN KEY(payroll_id) REFERENCES tb_r_payrolls(id)
+	CONSTRAINT payroll_fk FOREIGN KEY(payroll_detail_id) REFERENCES tb_r_payroll_details(id)
 );
 
 INSERT INTO tb_m_user_roles (id, role_name, role_code, created_by, created_at, is_active, vrsion) VALUES
@@ -196,7 +196,7 @@ INSERT INTO tb_m_users (id, full_name, email, pwd, role_id, company_id, created_
 	(uuid_generate_v4(), 'SUPEEEER Admin', 'example@mail.com', '$2y$10$AMf5FaHHEF5cJFBNEDHl9.4b/QjWSfPULHtJQgqyL2NYsfgkVAyIq', 'b4f6c0bb-ef56-4b5c-b804-9d0d21186394', 'cc8c66d3-96ab-4ecc-bbe9-b984e8562190','1', NOW(), TRUE, 0);
 
 
---DROP TABLE tb_r_reschedules, tb_r_payroll_details, tb_r_payrolls, tb_r_chats, tb_r_client_assignments, tb_m_users, tb_m_user_roles, tb_m_companies, tb_m_files, tb_m_notifications, tb_m_email_templates;
+DROP TABLE tb_r_reschedules, tb_r_payroll_details, tb_r_payrolls, tb_r_chats, tb_r_client_assignments, tb_m_users, tb_m_user_roles, tb_m_companies, tb_m_files, tb_m_notifications, tb_m_email_templates;
 
 ---------------------------TRUNCATE------------------------------
 --TRUNCATE tb_m_companies RESTART IDENTITY CASCADE;
