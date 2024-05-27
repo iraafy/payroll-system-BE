@@ -134,7 +134,7 @@ public class UserServiceImpl implements UserService {
             System.out.println("Sending email with templateModel: " + templateModel);
 
             try {
-                emailService.sendEmail(userEmail, subjectEmail, "welcome-email", templateModel);
+                emailService.sendTemplateEmail(userEmail, subjectEmail, "welcome-email", templateModel);
             } catch (MessagingException e) {
                 e.printStackTrace();
             }
