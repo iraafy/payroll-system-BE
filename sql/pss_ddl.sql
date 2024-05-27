@@ -182,7 +182,7 @@ INSERT INTO tb_m_user_roles (id, role_name, role_code, created_by, created_at, i
 	('8487cf5c-044d-44e9-8e02-e51fd8c8d127', 'Client', 'CLN', '1', NOW(), TRUE, 0);
 
 INSERT INTO tb_m_companies (id, company_name, logo_id, default_payment_day, created_by, created_at, is_active, vrsion) VALUES
-	('cc8c66d3-96ab-4ecc-bbe9-b984e8562190', 'Lawencon', null, 31, '1', NOW(), TRUE, 0);
+	('cc8c66d3-96ab-4ecc-bbe9-b984e8562190', 'PT Lawencon Internasional', null, 31, '1', NOW(), TRUE, 0);
 
 INSERT INTO tb_m_users (id, full_name, email, pwd, role_id, company_id, created_by, created_at, is_active, vrsion) VALUES 
     (uuid_generate_v4(), 'Asmodeus', 'a@mail.com', '$2y$10$AMf5FaHHEF5cJFBNEDHl9.4b/QjWSfPULHtJQgqyL2NYsfgkVAyIq', '1e5b3f28-67c4-4615-b0e0-7e7c90f61608', 'cc8c66d3-96ab-4ecc-bbe9-b984e8562190','1', NOW(), TRUE, 0),
