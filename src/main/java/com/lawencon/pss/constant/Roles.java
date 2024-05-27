@@ -2,9 +2,9 @@ package com.lawencon.pss.constant;
 
 public enum Roles {
 	
-	SA("SA001", "Super Admin"),
-	PS("PS001", "Payroll Service"),
-	CL("CLNT1", "Client");
+	SA("SAD", "Super Admin"),
+	PS("PRS", "Payroll Service"),
+	CL("CLN", "Client");
 	
 	private String code;
 	private String name;
