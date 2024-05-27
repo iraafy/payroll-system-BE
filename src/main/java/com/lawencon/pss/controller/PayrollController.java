@@ -31,7 +31,7 @@ public class PayrollController {
 
 	private final PayrollsService payrollsService;
 
-	@GetMapping
+	@GetMapping("/all")
 	public ResponseEntity<List<PayrollResDto>> getAllPayrolls() {
 
 		final var res = payrollsService.getAllPayRolls();
@@ -46,6 +46,14 @@ public class PayrollController {
 		
 		return new ResponseEntity<>(res, HttpStatus.OK);
 
+	}
+	
+	@GetMapping
+	public ResponseEntity<List<PayrollResDto>> getPayrollByPs() {
+		
+		final var res = payrollsService.getPayrollByPsId();
+		
+		return new ResponseEntity<>(res, HttpStatus.OK);
 	}
 	
 	@GetMapping("/client/{clientId}")
