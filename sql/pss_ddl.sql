@@ -203,6 +203,7 @@ DROP TABLE tb_r_reschedules, tb_r_payroll_details, tb_r_payrolls, tb_r_chats, tb
 --SELECT * FROM tb_r_client_assignments trca ;
 --SELECT * FROM tb_m_users tmu ;
 --SELECT * FROM tb_r_payroll_details trpd ;
-SELECT * FROM tb_m_notifications tmn ;
+--SELECT * FROM tb_m_notifications tmn ;
+SELECT * FROM tb_r_reschedules trr ;
 
 --SELECT * FROM tb_r_client_assignments trca RIGHT JOIN tb_m_users tmu ON trca.client_id = tmu.id WHERE tmu.role_id = '8487cf5c-044d-44e9-8e02-e51fd8c8d127';
