@@ -1,7 +1,10 @@
 package com.lawencon.pss.service.impl;
 
-import com.lawencon.pss.service.EmailService;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.Map;
+
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -32,11 +35,12 @@ public class EmailServiceImpl implements EmailService {
     
     @Override
     public void sendTemplateEmail(String to, String subject, String templateName, Map<String, Object> templateModel) throws MessagingException {
-        MimeMessage message = emailSender.createMimeMessage();
+    	MimeMessage message = emailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
         Context context = new Context();
         context.setVariables(templateModel);
+
         String htmlBody = templateEngine.process(templateName, context);
 
         System.out.println();
