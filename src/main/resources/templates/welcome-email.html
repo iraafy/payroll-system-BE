@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" xmlns:th="http://thymeleaf.org">
 	<head>
 		<meta charset="UTF-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -21,7 +21,7 @@
 					</tr>
 					<tr>
 						<td style="padding: 24px 0;" colspan="3">
-							<p style="margin: 0; font-size: 18px; line-height: 28px; font-weight: bold;">Halo ${fullName},</p>
+							<p style="margin: 0; font-size: 18px; line-height: 28px; font-weight: bold;">Halo [[${fullName}]],</p>
 						</td>
 					</tr>
 					<tr>
@@ -40,7 +40,7 @@
                         </td>
                         <td width="60%">
                             <p style="word-break: break-all; padding-top: 20px; color: #212121; font-size: 16px; line-height: 24px; font-weight: 700; margin: 0;">
-                                ${fullName}
+                                [[${fullName}]]
                             </p>
                         </td>
                     </tr>
@@ -53,7 +53,7 @@
                         </td>
                         <td width="60%">
                             <p style="word-break: break-all; color: #212121; font-size: 16px; line-height: 24px; font-weight: 700; margin: 0;">
-                                ${email}
+                                [[${email}]]
                             </p>
                         </td>
                     </tr>
@@ -66,7 +66,7 @@
                         </td>
                         <td width="60%">
                             <p style="word-break: break-all; color: #212121; font-size: 16px; line-height: 24px; font-weight: 700; margin: 0;">
-                                ${password}
+                                [[${password}]]
                             </p>
                         </td>
                     </tr>
