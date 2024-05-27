@@ -21,7 +21,6 @@ public interface PayrollRepository extends JpaRepository<Payroll, String>{
     List<Payroll> findAll();
     
     @Query("SELECT p from Payroll as p "
-    		+ "WHERE p.title LIKE %:value% "
-    		+ "OR p.scheduleDate LIKE %:value%")
+    		+ "WHERE p.title LIKE %:value% ")
     List<Payroll> searchPayroll(@Param("value") String value);
 }
