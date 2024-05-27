@@ -11,5 +11,6 @@ public class NotificationResDto {
 	private String contextId;
 	private String contextUrl;
 	private String notificationContent;
+	private String createdAt;
 	
 }

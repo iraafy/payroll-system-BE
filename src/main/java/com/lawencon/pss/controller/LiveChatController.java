@@ -5,6 +5,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
+import com.lawencon.pss.dto.InsertResDto;
 import com.lawencon.pss.dto.chat.ChatReqDto;
 import com.lawencon.pss.dto.chat.ChatResDto;
 import com.lawencon.pss.service.ChatService;
@@ -20,13 +21,11 @@ public class LiveChatController {
 	
 	@MessageMapping("/chat/{roomId}")
     public ChatReqDto send(@DestinationVariable String roomId,  ChatReqDto message) {
-		final ChatResDto chatRes = new ChatResDto();
-		chatRes.setMessage(message.getMessage());
-		chatRes.setUserName(message.getRecipientId());
-//		chatService.saveChat(message);
-//		final Chat chat = chatService.seeChats(null)
-//		chatReq.setMessage(message.get)
-        simpMessagingTemplate.convertAndSend("/send/chat/"+roomId, chatRes);
+		final InsertResDto insertRes = chatService.saveChat(message);
+		
+		final ChatResDto chatRes = chatService.findChat(insertRes.getId());
+        
+		simpMessagingTemplate.convertAndSend("/send/chat/"+roomId, chatRes);
         return message;
     }
 }

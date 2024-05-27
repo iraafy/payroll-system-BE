@@ -10,6 +10,5 @@ import lombok.Setter;
 public class ChatResDto {
 	private String message;
 	private LocalDateTime createdAt;
-	private String companyName;
 	private String userName;
 }

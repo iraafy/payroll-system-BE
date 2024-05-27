@@ -8,6 +8,8 @@ import lombok.Setter;
 public class ReschedulesResDto {
 
     private String id;
+    private String payrollDetailDescription;
+    private String oldScheduleDate;
     private String newScheduleDate;
     private String payrollDetailId;
     private Boolean isApproved;

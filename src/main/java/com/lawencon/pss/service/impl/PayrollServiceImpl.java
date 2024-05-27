@@ -233,7 +233,7 @@ public class PayrollServiceImpl implements PayrollsService {
 			final var notificationModel = new Notification();
 			
 			notificationModel.setNotificationContent("Ada aktivitas baru untuk anda");
-			notificationModel.setContextUrl("/payroll/"+payroll.get().getId()+"/details/"+newDetail.getId());
+			notificationModel.setContextUrl("/payrolls/"+payroll.get().getId());
 			notificationModel.setContextId(newDetail.getId());
 			notificationModel.setUser(user.get());
 			
@@ -252,7 +252,7 @@ public class PayrollServiceImpl implements PayrollsService {
 
 	@Override
 	public ArrayList<PayrollDetailResDto> getPayrollDetails(String id) {
-		final ArrayList<PayrollDetail> details = payrollDetailRepository.findByPayrollId(id);
+		final ArrayList<PayrollDetail> details = payrollDetailRepository.findByPayrollIdOrderByCreatedAtAsc(id);
 		final ArrayList<PayrollDetailResDto> resDetails = new ArrayList<>();
 		
 		for(PayrollDetail detail : details) {
@@ -331,6 +331,25 @@ public class PayrollServiceImpl implements PayrollsService {
 		response.setMessage("Notifikasi untuk " + data.getContextUrl() + " berhasil terbuat");
 		
 		return response;
+	}
+
+	@Override
+	public List<PayrollResDto> searchPayroll(String value) {
+		List<Payroll> payrollModels = new ArrayList<>();
+		payrollModels.addAll(payrollRepository.searchPayroll(value));
+		
+
+		final List<PayrollResDto> payrollsDto = new ArrayList<>();
+		for (Payroll payroll : payrollModels) {
+			final var payrollDto = new PayrollResDto();
+			payrollDto.setId(payroll.getId());
+			payrollDto.setScheduleDate(payroll.getScheduleDate().toString());
+			payrollDto.setTitle(payroll.getTitle());
+
+			payrollsDto.add(payrollDto);
+		}
+
+		return payrollsDto;
 	}
 	
 	

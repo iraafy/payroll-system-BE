@@ -25,8 +25,8 @@ public class ChatController {
 	private final ChatService chatService;
 	
 	@GetMapping("")
-	public ResponseEntity<ArrayList<ChatResDto>> ChatContents(Long recipientId) {
-		final ArrayList<ChatResDto> chatsRes = chatService.seeChats(recipientId);
+	public ResponseEntity<ArrayList<ChatResDto>> ChatContents() {
+		final ArrayList<ChatResDto> chatsRes = chatService.seeChats();
 		return new ResponseEntity<>(chatsRes, HttpStatus.OK);
 	}
 	

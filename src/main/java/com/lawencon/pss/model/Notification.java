@@ -26,6 +26,6 @@ public class Notification extends BaseModel{
 	
 	@ManyToOne
 	@JoinColumn(name = "user_id", nullable = false)
-	private User User;
+	private User user;
 
 }
