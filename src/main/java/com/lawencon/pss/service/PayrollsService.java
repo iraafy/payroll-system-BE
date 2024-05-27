@@ -33,4 +33,6 @@ public interface PayrollsService {
 	UpdateResDto clientAckPayrollDetails(String id);
 	
 	InsertResDto createNewNotificationOnPayrollDetails(NotificationReqDto data);
+
+	List<PayrollDetailResDto> getAllPayrollDetailByClientId(String id);
 }

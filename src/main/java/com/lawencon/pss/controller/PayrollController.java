@@ -52,7 +52,7 @@ public class PayrollController {
 		
 		final var res = payrollsService.getPayrollByClientId(clientId);
 		
-		return new ResponseEntity<List<PayrollResDto>>(res, HttpStatus.OK);
+		return new ResponseEntity<>(res, HttpStatus.OK);
 		
 	}
 	
@@ -94,6 +94,13 @@ public class PayrollController {
 	@PatchMapping("*/details/{id}")
 	public ResponseEntity<UpdateResDto> psAcknowledge(@PathVariable String id) {
 		final UpdateResDto res = payrollsService.psAckPayrollDetails(id);
+		return new ResponseEntity<>(res, HttpStatus.OK);
+	}
+	
+	@GetMapping("details/client/{id}")
+	public ResponseEntity<List<PayrollDetailResDto>> getAllPayrollDetailByClientId(@PathVariable String id){
+		final var res = payrollsService.getAllPayrollDetailByClientId(id);
+		
 		return new ResponseEntity<>(res, HttpStatus.OK);
 	}
 }
