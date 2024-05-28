@@ -31,7 +31,7 @@ public class PayrollController {
 
 	private final PayrollsService payrollsService;
 
-	@GetMapping
+	@GetMapping("/all")
 	public ResponseEntity<List<PayrollResDto>> getAllPayrolls() {
 
 		final var res = payrollsService.getAllPayRolls();
@@ -46,6 +46,14 @@ public class PayrollController {
 		
 		return new ResponseEntity<>(res, HttpStatus.OK);
 
+	}
+	
+	@GetMapping
+	public ResponseEntity<List<PayrollResDto>> getPayrollByPs() {
+		
+		final var res = payrollsService.getPayrollByPsId();
+		
+		return new ResponseEntity<>(res, HttpStatus.OK);
 	}
 	
 	@GetMapping("/client/{clientId}")
@@ -107,6 +115,13 @@ public class PayrollController {
 	@GetMapping("details/client/{id}")
 	public ResponseEntity<List<PayrollDetailResDto>> getAllPayrollDetailByClientId(@PathVariable String id){
 		final var res = payrollsService.getAllPayrollDetailByClientId(id);
+		
+		return new ResponseEntity<>(res, HttpStatus.OK);
+	}
+	
+	@GetMapping("payroll-details")
+	public ResponseEntity<List<PayrollDetailResDto>> getAllPayrollDetailByPsId(){
+		final var res = payrollsService.getPayrollDetailByPsId();
 		
 		return new ResponseEntity<>(res, HttpStatus.OK);
 	}
