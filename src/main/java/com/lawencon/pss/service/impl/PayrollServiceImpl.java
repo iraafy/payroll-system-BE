@@ -26,6 +26,7 @@ import com.lawencon.pss.model.Payroll;
 import com.lawencon.pss.model.PayrollDetail;
 import com.lawencon.pss.model.User;
 import com.lawencon.pss.repository.CompanyRepository;
+import com.lawencon.pss.repository.FileRepository;
 import com.lawencon.pss.repository.NotificationRepository;
 import com.lawencon.pss.repository.PayrollDetailRepository;
 import com.lawencon.pss.repository.PayrollRepository;
@@ -44,6 +45,7 @@ public class PayrollServiceImpl implements PayrollsService {
 	private final UserRepository userRepository;
 	private final NotificationRepository notificationRepository;
 	private final CompanyRepository companyRepository;
+	private final FileRepository fileRepository;
 	
 	private final PrincipalService principalService;
 
@@ -428,6 +430,50 @@ public class PayrollServiceImpl implements PayrollsService {
 		}
 		
 		return resDetails;
+	}
+
+	@Override
+	public PayrollDetailResDto getPayrollDetailById(String id) {
+		final var payrollDetailModel = payrollDetailRepository.findById(id);
+		final var payrollDetail = payrollDetailModel.get();
+		
+		final PayrollDetailResDto resDetail = new PayrollDetailResDto();
+		resDetail.setId(payrollDetail.getId());
+		resDetail.setDescription(payrollDetail.getDescription());
+		
+		if(payrollDetail.getFile() != null && payrollDetail.getFile().getStoredPath() != null) {
+			resDetail.setFilePath(payrollDetail.getFile().getStoredPath());				
+		}
+		
+		if(payrollDetail.getFile() != null && payrollDetail.getFile().getFileContent() != null) {
+			resDetail.setFileContent(payrollDetail.getFile().getFileContent());
+		}
+		
+		resDetail.setForClient(payrollDetail.getForClient());
+		resDetail.setClientAcknowledge(payrollDetail.getClientAcknowledge());
+		resDetail.setPsAcknowledge(payrollDetail.getPsAcknowledge());
+		resDetail.setMaxUploadDate(payrollDetail.getMaxUploadDate());
+		
+		
+		return resDetail;
+	}
+
+	@Override
+	public UpdateResDto setPayrollDetailFile(String detailId, String fileId) {
+		final var fileModel = fileRepository.findById(fileId);
+		final var file = fileModel.get();
+		
+		final var payrollDetailModel = payrollDetailRepository.findById(detailId);
+		final var payrollDetail = payrollDetailModel.get();
+		
+		payrollDetail.setFile(file);
+		
+		final var updatedDetail = payrollDetailRepository.save(payrollDetail);
+		final var res = new UpdateResDto();
+		res.setVer(updatedDetail.getVer());
+		res.setMessage("Berhasil set File pada aktivitas " + payrollDetail.getDescription());
+		
+		return res;
 	}
 
 	

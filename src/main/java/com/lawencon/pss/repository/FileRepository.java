@@ -10,4 +10,6 @@ import com.lawencon.pss.model.File;
 @Repository
 public interface FileRepository extends JpaRepository <File, String> {
 	Optional<File> findById(String id);
+	
+	Optional<File> findByfileName(String fileName);
 }

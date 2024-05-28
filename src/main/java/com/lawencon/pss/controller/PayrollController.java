@@ -125,4 +125,12 @@ public class PayrollController {
 		
 		return new ResponseEntity<>(res, HttpStatus.OK);
 	}
+	
+	@PatchMapping("{detailId}/set-file/{fileId}")
+	public ResponseEntity<UpdateResDto> updateFilePayrollDetail(@PathVariable String detailId, @PathVariable String fileId ){
+		final var res = payrollsService.setPayrollDetailFile(detailId, fileId);
+		
+		return new ResponseEntity<>(res, HttpStatus.OK);
+	}
+	
 }
