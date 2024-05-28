@@ -119,7 +119,7 @@ public class PayrollController {
 		return new ResponseEntity<>(res, HttpStatus.OK);
 	}
 	
-	@GetMapping("payroll-details/")
+	@GetMapping("payroll-details")
 	public ResponseEntity<List<PayrollDetailResDto>> getAllPayrollDetailByPsId(){
 		final var res = payrollsService.getPayrollDetailByPsId();
 		
