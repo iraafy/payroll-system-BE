@@ -25,10 +25,10 @@ public class PayrollDetail extends BaseModel {
 	private LocalDateTime maxUploadDate;
 	
 	@Column(name = "ps_acknowledge")
-	private Boolean psAcknowledge;
+	private String psAcknowledge;
 	
 	@Column(name = "client_acknowledge")
-	private Boolean clientAcknowledge;
+	private String clientAcknowledge;
 	
 	@Column(name = "for_client")
 	private Boolean forClient;
