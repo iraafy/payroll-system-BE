@@ -10,5 +10,7 @@ public class ClientDropdownResDto {
 	private String id;
 	private String clientName;
 	private String psName;
+	private String psId;
+	private String companyLogo;
 
 }
