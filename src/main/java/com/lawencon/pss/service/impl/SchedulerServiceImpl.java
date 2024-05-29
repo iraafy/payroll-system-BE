@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.lawencon.pss.job.ReminderData;
 import com.lawencon.pss.job.ReminderJob;
 import com.lawencon.pss.service.SchedulerService;
 import com.lawencon.pss.util.TimerUtil;
@@ -45,9 +46,9 @@ public class SchedulerServiceImpl implements SchedulerService {
 	}
 
 	@Override
-	public void schedule(@SuppressWarnings("rawtypes") Class jobClass) {
-		final JobDetail jobDetail = TimerUtil.buildJobDetail(jobClass);
-		final Trigger trigger = TimerUtil.buildTrigger(jobClass);
+	public void schedule(@SuppressWarnings("rawtypes") Class jobClass, ReminderData reminder) {
+		final JobDetail jobDetail = TimerUtil.buildJobDetail(jobClass, reminder);
+		final Trigger trigger = TimerUtil.buildTrigger(jobClass, reminder);
 		
 		try {
 			scheduler.scheduleJob(jobDetail, trigger);
@@ -57,8 +58,8 @@ public class SchedulerServiceImpl implements SchedulerService {
 	}
 
 	@Override
-	public void runReminderJob() {
-		this.schedule(ReminderJob.class);
+	public void runReminderJob(ReminderData reminder) {
+		this.schedule(ReminderJob.class, reminder);
 	}
 
 }
