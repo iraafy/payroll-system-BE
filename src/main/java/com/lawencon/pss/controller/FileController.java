@@ -20,6 +20,7 @@ import com.lawencon.pss.dto.ftp.FtpReqDto;
 import com.lawencon.pss.model.File;
 import com.lawencon.pss.repository.FileRepository;
 import com.lawencon.pss.service.FileService;
+import com.lawencon.pss.service.PayrollsService;
 import com.lawencon.pss.util.FtpUtil;
 
 import lombok.RequiredArgsConstructor;
@@ -32,52 +33,65 @@ public class FileController {
 	private final FtpUtil ftpUtil;
 	private final FileService fileServices;
 	private final FileRepository fileRepository;
+	private final PayrollsService payrollService;
 
 	@PostMapping()
 	public ResponseEntity<InsertResDto> addEmployee(@RequestBody FileReqDto data) {
-        final InsertResDto res = fileServices.addNewFile(data);
-        return new ResponseEntity<>(res, HttpStatus.CREATED);
-    }
-	
+		final InsertResDto res = fileServices.addNewFile(data);
+		return new ResponseEntity<>(res, HttpStatus.CREATED);
+	}
+
 	@GetMapping("{id}")
 	public ResponseEntity<FileResDto> getFile(@PathVariable("id") String id) {
-	    final var file = fileServices.getFileById(id);
-	    if (file == null) {
-	        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-	    }
-	    
-	    FileResDto resDto = new FileResDto();
-	    resDto.setId(file.getId());
-	    resDto.setStoredPath(file.getStoredPath());
-	    return new ResponseEntity<>(resDto, HttpStatus.OK);
+		final var file = fileServices.getFileById(id);
+		if (file == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+		FileResDto resDto = new FileResDto();
+		resDto.setId(file.getId());
+		resDto.setStoredPath(file.getStoredPath());
+		return new ResponseEntity<>(resDto, HttpStatus.OK);
 	}
-	
+
 	@PostMapping("ftp")
 	public ResponseEntity<InsertResDto> addFile(@RequestBody FtpReqDto request) {
 		final var response = fileServices.addNewFileFtp(request);
 		return new ResponseEntity<InsertResDto>(response, HttpStatus.CREATED);
 	}
-	
+
 	@GetMapping("ftp/{name}")
 	public ResponseEntity<?> getFileFromFTP(@PathVariable String name) {
 		System.out.println(name);
-		final byte[] fileBytes = ftpUtil.getFile("/ftp_server/"+name);
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + name)
-                .body(fileBytes);
+		final var file = fileServices.getFtpFileByFileName(name);
+		final var fileName = payrollService.getPayrollDetailById(name).getDescription();
+		final byte[] fileBytes = ftpUtil.getFile("/ftp_server/" + file.getStoredPath());
+		return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
+				"attachment; filename=" + fileName + "." + file.getFileExt()).body(fileBytes);
+	}
+
+	@GetMapping("file/{id}")
+	public ResponseEntity<?> getFileById(@PathVariable("id") String id) {
+		File file = null;
+		final Optional<File> fileCheck = fileRepository.findById(id);
+		
+		if (fileCheck.isPresent()) {
+			file = fileCheck.get();
+		}
+		final String fileName = "attachment";
+		final byte[] fileBytes = Base64.getDecoder().decode(file.getFileContent());
+		return ResponseEntity.ok()
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileName + "." + file.getFileExt())
+				.body(fileBytes);
 	}
 	
-	@GetMapping("file/{id}")
-    public ResponseEntity<?> getFileById(@PathVariable("id") String id) {
-		File file = null; 
-        final Optional<File> fileCheck = fileRepository.findById(id);
-        if (fileCheck.isPresent()) {
-        	file = fileCheck.get();
-        }
-        final String fileName = "attachment";
-        final byte[] fileBytes = Base64.getDecoder().decode(file.getFileContent());
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileName + "." + file.getFileExt())
-                .body(fileBytes);
+	@GetMapping("search/{fileName}")
+	public Boolean isExistOnDb(@PathVariable("fileName") String fileName){
+		final var file = fileServices.getFtpFileByFileName(fileName);
+		if(file != null) {
+			return true;
+		}else {
+			return false;
+		}
 	}
 }
