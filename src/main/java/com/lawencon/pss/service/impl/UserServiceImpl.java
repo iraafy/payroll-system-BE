@@ -195,12 +195,15 @@ public class UserServiceImpl implements UserService {
     		final var user = new ClientDropdownResDto();
     		user.setId(u.getId());
     		user.setClientName(u.getFullName());
+    		user.setCompanyLogo(u.getCompany().getLogoId().getId());
     		final var clientAssignmentOpt = clientAssignmentRepository.findByClientId(u.getId());
     		
     		if (clientAssignmentOpt.isPresent()) {    			
     			final var clientAssignment = clientAssignmentOpt.get();
     			final var psName = clientAssignment.getPs().getFullName();
+    			final var psId = clientAssignment.getPs().getId();
     			user.setPsName(psName);
+    			user.setId(psId);
     		}
     		
     		response.add(user);

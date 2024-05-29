@@ -1,11 +1,13 @@
 package com.lawencon.pss.service.impl;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.TextStyle;
 import java.time.temporal.ChronoField;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -21,6 +23,7 @@ import com.lawencon.pss.dto.payroll.PayrollDetailReqDto;
 import com.lawencon.pss.dto.payroll.PayrollDetailResDto;
 import com.lawencon.pss.dto.payroll.PayrollReqDto;
 import com.lawencon.pss.dto.payroll.PayrollResDto;
+import com.lawencon.pss.job.ReminderData;
 import com.lawencon.pss.model.Notification;
 import com.lawencon.pss.model.Payroll;
 import com.lawencon.pss.model.PayrollDetail;
@@ -33,6 +36,7 @@ import com.lawencon.pss.repository.PayrollRepository;
 import com.lawencon.pss.repository.UserRepository;
 import com.lawencon.pss.service.PayrollsService;
 import com.lawencon.pss.service.PrincipalService;
+import com.lawencon.pss.service.SchedulerService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -46,6 +50,7 @@ public class PayrollServiceImpl implements PayrollsService {
 	private final NotificationRepository notificationRepository;
 	private final CompanyRepository companyRepository;
 	private final FileRepository fileRepository;
+	private final SchedulerService schedulerService;
 	
 	private final PrincipalService principalService;
 
@@ -220,7 +225,7 @@ public class PayrollServiceImpl implements PayrollsService {
 		final InsertResDto res = new InsertResDto();
 		
 		if(payroll.get() != null) {
-			final Optional<User> user = userRepository.findById(payroll.get().getClientId().getId());
+			final User user = userRepository.findById(payroll.get().getClientId().getId()).get();
 			PayrollDetail newDetail = new PayrollDetail();
 			newDetail.setDescription(data.getDescription());
 			newDetail.setForClient(data.getForClient());
@@ -237,7 +242,7 @@ public class PayrollServiceImpl implements PayrollsService {
 			notificationModel.setNotificationContent("Ada aktivitas baru untuk anda");
 			notificationModel.setContextUrl("/payrolls/"+payroll.get().getId());
 			notificationModel.setContextId(newDetail.getId());
-			notificationModel.setUser(user.get());
+			notificationModel.setUser(user);
 			
 			notificationModel.setCreatedBy(principalService.getUserId());
 			notificationModel.setCreatedAt(LocalDateTime.now());
@@ -245,6 +250,18 @@ public class PayrollServiceImpl implements PayrollsService {
 			notificationModel.setIsActive(true);
 			
 			notificationRepository.save(notificationModel);
+			
+			final var reminder = new ReminderData();
+			final var triggerLocalDateTime = LocalDateTime.of(data.getMaxUploadDate().minusDays(2), LocalTime.NOON.minusHours(5));
+			final Date triggerDate = Timestamp.valueOf(triggerLocalDateTime);
+			
+			reminder.setActivityLink("/payrolls/"+payroll.get().getId());
+			reminder.setDate(triggerDate);
+			reminder.setFullName(user.getFullName());
+			reminder.setEmail(user.getEmail());
+			reminder.setMessage(data.getDescription());
+			
+			schedulerService.runReminderJob(reminder);
 			
 		}else {
 			res.setMessage("Payroll tidak ditemukan !");
@@ -311,29 +328,29 @@ public class PayrollServiceImpl implements PayrollsService {
 		return updateRes;
 	}
 
-	@Override
-	public InsertResDto createNewNotificationOnPayrollDetails(NotificationReqDto data) {
-		final Optional<User> user = userRepository.findById(data.getUserId());
-		final var notificationModel = new Notification();
-		
-		notificationModel.setNotificationContent("Ada aktivitas baru untuk anda");
-		notificationModel.setContextUrl(data.getContextUrl());
-		notificationModel.setContextId(data.getContextId());
-		notificationModel.setUser(user.get());
-		
-		notificationModel.setCreatedBy(principalService.getUserId());
-		notificationModel.setCreatedAt(LocalDateTime.now());
-		notificationModel.setVer(0L);
-		notificationModel.setIsActive(true);
-		
-		final var newNotification = notificationRepository.save(notificationModel);
-		
-		final var response = new InsertResDto();
-		response.setId(newNotification.getId());
-		response.setMessage("Notifikasi untuk " + data.getContextUrl() + " berhasil terbuat");
-		
-		return response;
-	}
+//	@Override
+//	public InsertResDto createNewNotificationOnPayrollDetails(NotificationReqDto data) {
+//		final Optional<User> user = userRepository.findById(data.getUserId());
+//		final var notificationModel = new Notification();
+//		
+//		notificationModel.setNotificationContent("Ada aktivitas baru untuk anda");
+//		notificationModel.setContextUrl(data.getContextUrl());
+//		notificationModel.setContextId(data.getContextId());
+//		notificationModel.setUser(user.get());
+//		
+//		notificationModel.setCreatedBy(principalService.getUserId());
+//		notificationModel.setCreatedAt(LocalDateTime.now());
+//		notificationModel.setVer(0L);
+//		notificationModel.setIsActive(true);
+//		
+//		final var newNotification = notificationRepository.save(notificationModel);
+//		
+//		final var response = new InsertResDto();
+//		response.setId(newNotification.getId());
+//		response.setMessage("Notifikasi untuk " + data.getContextUrl() + " berhasil terbuat");
+//		
+//		return response;
+//	}
 	
 	@Override
 	public List<PayrollResDto> searchPayroll(String id, String value) {
