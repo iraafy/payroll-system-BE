@@ -1,5 +1,7 @@
 package com.lawencon.pss.dto.companies;
 
+import java.io.ByteArrayInputStream;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,9 +10,9 @@ import lombok.Setter;
 public class CompanyResDto {
 
 	private String id;
-
-	private String companyName;
-	
-	private Byte payrollDate;
+    private String companyName;
+    private Byte payrollDate;
+    private String logoBase64Content;
+    private ByteArrayInputStream logoContent;
 
 }

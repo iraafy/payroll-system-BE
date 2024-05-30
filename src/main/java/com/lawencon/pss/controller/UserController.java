@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lawencon.pss.dto.InsertResDto;
 import com.lawencon.pss.dto.UpdateResDto;
 import com.lawencon.pss.dto.user.ChangePasswordReqDto;
+import com.lawencon.pss.dto.user.ChangeProfilePicReqDto;
 import com.lawencon.pss.dto.user.ClientDropdownResDto;
 import com.lawencon.pss.dto.user.CreateUserReqDto;
 import com.lawencon.pss.dto.user.LoginReqDto;
@@ -89,6 +90,20 @@ public class UserController {
 	@GetMapping("{psId}/clients")
 	public ResponseEntity<List<UserResDto>> getClientsByPsId(@PathVariable String psId){
 		final var res = userService.getClientsByPsId(psId);
+		
+		return new ResponseEntity<>(res, HttpStatus.OK);
+	}
+	
+	@PatchMapping("changeProfilePicture")
+	public ResponseEntity<UpdateResDto> changeUserPhotoProfile(@RequestBody ChangeProfilePicReqDto request){
+		final var res = userService.updateProfilePicture(request);
+		
+		return new ResponseEntity<>(res, HttpStatus.OK);
+	}
+	
+	@PatchMapping("changeUserName/{newName}")
+	public ResponseEntity<UpdateResDto> changeUserName(@PathVariable String newName){
+		final var res = userService.updateName(newName);
 		
 		return new ResponseEntity<>(res, HttpStatus.OK);
 	}
