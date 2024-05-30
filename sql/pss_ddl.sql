@@ -124,8 +124,8 @@ CREATE TABLE tb_r_payroll_details (
 	description TEXT,
 	file_id VARCHAR(36),
 	max_upload_date TIMESTAMP NOT NULL,
-	ps_acknowledge BOOLEAN,
-	client_acknowledge BOOLEAN,
+	ps_acknowledge TEXT,
+	client_acknowledge TEXT,
 	for_client Boolean NOT NULL,
 	created_by VARCHAR(36) NOT NULL,
 	created_at TIMESTAMP NOT NULL,
@@ -194,6 +194,8 @@ INSERT INTO tb_m_users (id, full_name, email, pwd, role_id, company_id, created_
     (uuid_generate_v4(), 'Jirjat', 'e@mail.com', '$2y$10$AMf5FaHHEF5cJFBNEDHl9.4b/QjWSfPULHtJQgqyL2NYsfgkVAyIq', '8487cf5c-044d-44e9-8e02-e51fd8c8d127', 'cc8c66d3-96ab-4ecc-bbe9-b984e8562190','1', NOW(), TRUE, 0, '89012345-6789-0abc-def1-234567890abc'),
     (uuid_generate_v4(), 'Memei', 'f@mail.com', '$2y$10$AMf5FaHHEF5cJFBNEDHl9.4b/QjWSfPULHtJQgqyL2NYsfgkVAyIq', '8487cf5c-044d-44e9-8e02-e51fd8c8d127', 'cc8c66d3-96ab-4ecc-bbe9-b984e8562190','1', NOW(), TRUE, 0, '90123456-7890-1bcd-ef23-456789012345');
 
+INSERT INTO tb_m_users (id, full_name, email, pwd, role_id, company_id, created_by, created_at, is_active, vrsion) VALUES 
+	(uuid_generate_v4(), 'SUPEEEER Admin', 'example@mail.com', '$2y$10$AMf5FaHHEF5cJFBNEDHl9.4b/QjWSfPULHtJQgqyL2NYsfgkVAyIq', 'b4f6c0bb-ef56-4b5c-b804-9d0d21186394', 'cc8c66d3-96ab-4ecc-bbe9-b984e8562190','1', NOW(), TRUE, 0);
 
 ---------------------------DROP ALL TABLE------------------------------
 --DROP TABLE 

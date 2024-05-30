@@ -25,4 +25,5 @@ public interface UserService extends UserDetailsService {
     UpdateResDto updatePassword(ChangePasswordReqDto request);
     List<RoleResDto> getAllRoles();
     UserResDto getUserById(String id);
+    List<UserResDto> getClientsByPsId(String psId);
 }
