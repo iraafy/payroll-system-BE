@@ -85,5 +85,12 @@ public class UserController {
 		
 		return new ResponseEntity<>(res, HttpStatus.OK);
 	}
+	
+	@GetMapping("{psId}/clients")
+	public ResponseEntity<List<UserResDto>> getClientsByPsId(@PathVariable String psId){
+		final var res = userService.getClientsByPsId(psId);
+		
+		return new ResponseEntity<>(res, HttpStatus.OK);
+	}
 
 }

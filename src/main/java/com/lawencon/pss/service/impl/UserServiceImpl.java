@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import com.lawencon.pss.constant.Roles;
 import com.lawencon.pss.dto.InsertResDto;
 import com.lawencon.pss.dto.UpdateResDto;
+import com.lawencon.pss.dto.clientassignment.ClientAssignmentResDto;
 import com.lawencon.pss.dto.role.RoleResDto;
 import com.lawencon.pss.dto.user.ChangePasswordReqDto;
 import com.lawencon.pss.dto.user.ClientDropdownResDto;
@@ -23,6 +24,7 @@ import com.lawencon.pss.dto.user.CreateUserReqDto;
 import com.lawencon.pss.dto.user.LoginReqDto;
 import com.lawencon.pss.dto.user.LoginResDto;
 import com.lawencon.pss.dto.user.UserResDto;
+import com.lawencon.pss.model.ClientAssignment;
 import com.lawencon.pss.model.File;
 import com.lawencon.pss.model.Role;
 //import com.lawencon.pss.model.File;
@@ -284,6 +286,44 @@ public class UserServiceImpl implements UserService {
 			user.setPath(userModel.getFile().getStoredPath());
 		}
 		return user;
+	}
+
+	@Override
+	public List<UserResDto> getClientsByPsId(String psId) {
+		final var clientAssignments = clientAssignmentRepository.findByPsId(psId);
+		
+//		final List<User> clients = new ArrayList<>();
+		final List<UserResDto> clientsDto = new ArrayList<>();
+		
+		for(ClientAssignment assignment : clientAssignments) {
+			final var userRepo = userRepository.findById(assignment.getClient().getId());
+			final User userModel = userRepo.get();
+			
+			final var user = new UserResDto();
+			user.setId(userModel.getId());
+			user.setFullName(userModel.getFullName());
+			user.setRoleName(userModel.getRole().getRoleName());
+			user.setCompanyName(userModel.getCompany().getCompanyName());
+			if(userModel.getFile() != null) {
+				user.setPath(userModel.getFile().getStoredPath());
+			}
+			
+			clientsDto.add(user);
+		}
+		
+//		final var userRepo = userRepository.findById(id);
+//		final User userModel = userRepo.get();
+//		
+//		final var user = new UserResDto();
+//		user.setId(userModel.getId());
+//		user.setFullName(userModel.getFullName());
+//		user.setRoleName(userModel.getRole().getRoleName());
+//		user.setCompanyName(userModel.getCompany().getCompanyName());
+//		if(userModel.getFile() != null) {
+//			user.setPath(userModel.getFile().getStoredPath());
+//		}
+		
+		return clientsDto;
 	}
 
     
