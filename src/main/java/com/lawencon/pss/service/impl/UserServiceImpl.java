@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import com.lawencon.pss.constant.Roles;
 import com.lawencon.pss.dto.InsertResDto;
 import com.lawencon.pss.dto.UpdateResDto;
-import com.lawencon.pss.dto.clientassignment.ClientAssignmentResDto;
 import com.lawencon.pss.dto.role.RoleResDto;
 import com.lawencon.pss.dto.user.ChangePasswordReqDto;
 import com.lawencon.pss.dto.user.ClientDropdownResDto;
@@ -191,28 +190,23 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<ClientDropdownResDto> getAllClient() {
-    	final List<ClientDropdownResDto> response = new ArrayList<>();
-    	final var results = userRepository.findByRoleRoleCode(Roles.CL.getCode());
-    	for (User u: results) {
-    		final var user = new ClientDropdownResDto();
-    		user.setId(u.getId());
-    		user.setClientName(u.getFullName());
-    		if (u.getCompany().getLogoId() != null) {    			
-    			user.setCompanyLogo(u.getCompany().getLogoId().getId());
-    		}
-    		final var clientAssignmentOpt = clientAssignmentRepository.findByClientId(u.getId());
+    	final List<ClientDropdownResDto> responses = new ArrayList<>();
+    	final var result = userRepository.findClientWithPs(Roles.CL.getCode());
+
+    	result.forEach(resObj -> {
+    		final Object[] resObjArr = (Object[]) resObj;
+    		final var response = new ClientDropdownResDto();
     		
-    		if (clientAssignmentOpt.isPresent()) {    			
-    			final var clientAssignment = clientAssignmentOpt.get();
-    			final var psName = clientAssignment.getPs().getFullName();
-    			final var psId = clientAssignment.getPs().getId();
-    			user.setPsName(psName);
-    			user.setId(psId);
+    		response.setId(resObjArr[0].toString());
+    		response.setClientName(resObjArr[1].toString());
+    		if (resObjArr[2] != null) {    			
+    			response.setPsName(resObjArr[2].toString());
     		}
     		
-    		response.add(user);
-    	}
-        return response;
+    		responses.add(response);
+    	});
+
+        return responses;
     }
 
     @Override

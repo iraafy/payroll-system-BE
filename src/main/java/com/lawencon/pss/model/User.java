@@ -35,5 +35,5 @@ public class User extends BaseModel {
     @ManyToOne
     @JoinColumn(name = "company_id")
     private Company company;
-
+    
 }
