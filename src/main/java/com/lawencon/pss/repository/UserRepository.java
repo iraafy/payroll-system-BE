@@ -13,9 +13,13 @@ import com.lawencon.pss.model.User;
 @Repository
 public interface UserRepository extends JpaRepository<User,String> {
     Optional<User> findByEmail(String email);
+    
     Optional<User> findById(String id);
+    
     List<User> findAll();
+    
     List<User> findByRoleRoleCode(String roleCode);
+    
     @Query(value = 
     		"SELECT u FROM User AS u"
     		+ " WHERE u.role.roleCode = :roleCode"
@@ -23,4 +27,13 @@ public interface UserRepository extends JpaRepository<User,String> {
     		+ " (SELECT ca.client.id"
     		+ " FROM ClientAssignment AS ca)")
     List<User> findAvailableClient(@Param("roleCode") String roleCode);
+	
+    @Query(value = 
+    		"SELECT u.id, u.fullName as clientName, u2.fullName as psName "
+    		+ "FROM User AS u "
+    		+ "LEFT JOIN ClientAssignment AS ca ON ca.client.id = u.id "
+    		+ "LEFT JOIN User AS u2 ON ca.ps.id = u2.id "
+    		+ "WHERE u.role.roleCode = :roleCode"
+    		)
+    List<?> findClientWithPs(@Param("roleCode") String roleCode);
 }

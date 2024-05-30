@@ -49,8 +49,6 @@ public class FtpUtil {
 			System.out.println(server);
 			System.out.println(port);
 			
-            // Creates a directory
-            String dirToCreate = "/upload123";
             final var success = ftpClient.makeDirectory(dirName);
             showServerReply(ftpClient);
             if (success) {
@@ -87,6 +85,7 @@ public class FtpUtil {
 			System.out.println(server);
 			System.out.println(port);
 			System.out.println("======> Uploading file");
+			System.out.println(remoteFile);
 			final OutputStream outputStream = ftpClient.storeFileStream(remoteFile);
 			final byte[] data = Base64.getDecoder().decode(fileBase64);
 

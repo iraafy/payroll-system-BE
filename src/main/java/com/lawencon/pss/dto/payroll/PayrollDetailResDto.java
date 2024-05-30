@@ -13,7 +13,7 @@ public class PayrollDetailResDto {
 	private String fileContent;
 	private String filePath;
 	private LocalDateTime maxUploadDate;
-	private Boolean psAcknowledge;
-	private Boolean clientAcknowledge;
+	private String psAcknowledge;
+	private String clientAcknowledge;
 	private Boolean forClient;
 }

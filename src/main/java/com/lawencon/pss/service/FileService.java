@@ -2,6 +2,7 @@ package com.lawencon.pss.service;
 
 import com.lawencon.pss.dto.InsertResDto;
 import com.lawencon.pss.dto.file.FileReqDto;
+import com.lawencon.pss.dto.file.FileResDto;
 import com.lawencon.pss.dto.ftp.FtpReqDto;
 import com.lawencon.pss.model.File;
 
@@ -10,4 +11,5 @@ public interface FileService {
 	InsertResDto addNewFileFtp(FtpReqDto request);
 	File getFileById(String id);
 	File getFtpFileById(String fileName);
+	FileResDto getFtpFileByFileName(String fileName);
 }

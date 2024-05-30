@@ -23,6 +23,7 @@ import com.lawencon.pss.dto.user.CreateUserReqDto;
 import com.lawencon.pss.dto.user.LoginReqDto;
 import com.lawencon.pss.dto.user.LoginResDto;
 import com.lawencon.pss.dto.user.UserResDto;
+import com.lawencon.pss.model.ClientAssignment;
 import com.lawencon.pss.model.File;
 import com.lawencon.pss.model.Role;
 //import com.lawencon.pss.model.File;
@@ -189,23 +190,23 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<ClientDropdownResDto> getAllClient() {
-    	final List<ClientDropdownResDto> response = new ArrayList<>();
-    	final var results = userRepository.findByRoleRoleCode(Roles.CL.getCode());
-    	for (User u: results) {
-    		final var user = new ClientDropdownResDto();
-    		user.setId(u.getId());
-    		user.setClientName(u.getFullName());
-    		final var clientAssignmentOpt = clientAssignmentRepository.findByClientId(u.getId());
+    	final List<ClientDropdownResDto> responses = new ArrayList<>();
+    	final var result = userRepository.findClientWithPs(Roles.CL.getCode());
+
+    	result.forEach(resObj -> {
+    		final Object[] resObjArr = (Object[]) resObj;
+    		final var response = new ClientDropdownResDto();
     		
-    		if (clientAssignmentOpt.isPresent()) {    			
-    			final var clientAssignment = clientAssignmentOpt.get();
-    			final var psName = clientAssignment.getPs().getFullName();
-    			user.setPsName(psName);
+    		response.setId(resObjArr[0].toString());
+    		response.setClientName(resObjArr[1].toString());
+    		if (resObjArr[2] != null) {    			
+    			response.setPsName(resObjArr[2].toString());
     		}
     		
-    		response.add(user);
-    	}
-        return response;
+    		responses.add(response);
+    	});
+
+        return responses;
     }
 
     @Override
@@ -279,6 +280,44 @@ public class UserServiceImpl implements UserService {
 			user.setPath(userModel.getFile().getStoredPath());
 		}
 		return user;
+	}
+
+	@Override
+	public List<UserResDto> getClientsByPsId(String psId) {
+		final var clientAssignments = clientAssignmentRepository.findByPsId(psId);
+		
+//		final List<User> clients = new ArrayList<>();
+		final List<UserResDto> clientsDto = new ArrayList<>();
+		
+		for(ClientAssignment assignment : clientAssignments) {
+			final var userRepo = userRepository.findById(assignment.getClient().getId());
+			final User userModel = userRepo.get();
+			
+			final var user = new UserResDto();
+			user.setId(userModel.getId());
+			user.setFullName(userModel.getFullName());
+			user.setRoleName(userModel.getRole().getRoleName());
+			user.setCompanyName(userModel.getCompany().getCompanyName());
+			if(userModel.getFile() != null) {
+				user.setPath(userModel.getFile().getStoredPath());
+			}
+			
+			clientsDto.add(user);
+		}
+		
+//		final var userRepo = userRepository.findById(id);
+//		final User userModel = userRepo.get();
+//		
+//		final var user = new UserResDto();
+//		user.setId(userModel.getId());
+//		user.setFullName(userModel.getFullName());
+//		user.setRoleName(userModel.getRole().getRoleName());
+//		user.setCompanyName(userModel.getCompany().getCompanyName());
+//		if(userModel.getFile() != null) {
+//			user.setPath(userModel.getFile().getStoredPath());
+//		}
+		
+		return clientsDto;
 	}
 
     

@@ -10,8 +10,10 @@ import org.springframework.stereotype.Service;
 
 import com.lawencon.pss.constant.Roles;
 import com.lawencon.pss.dto.InsertResDto;
+import com.lawencon.pss.dto.clientassignment.AllAssignmentResDto;
 import com.lawencon.pss.dto.clientassignment.ClientAssignmentReqDto;
 import com.lawencon.pss.dto.clientassignment.ClientAssignmentResDto;
+import com.lawencon.pss.dto.user.ClientResDto;
 import com.lawencon.pss.model.ClientAssignment;
 import com.lawencon.pss.model.User;
 import com.lawencon.pss.repository.ClientAssignmentRepository;
@@ -52,10 +54,6 @@ public class ClientAssignmentServiceImpl implements ClientAssignmentService {
 					client.setName(clientUser.getFullName());
 
 					if (company.getLogoId() != null) {
-//						final var fileContent = company.getLogoId().getFileContent();
-//						final var fileExt = company.getLogoId().getFileExt();
-//						client.setFileContent(fileContent);
-//						client.setFileExt(fileExt);
 						client.setFileId(company.getLogoId().getId());
 					}
 
@@ -76,10 +74,6 @@ public class ClientAssignmentServiceImpl implements ClientAssignmentService {
 					client.setName(psUser.getFullName());
 
 					if (company.getLogoId() != null) {
-//						final var fileContent = company.getLogoId().getFileContent();
-//						final var fileExt = company.getLogoId().getFileExt();
-//						client.setFileContent(fileContent);
-//						client.setFileExt(fileExt);
 						client.setFileId(company.getLogoId().getId());
 					}
 					response.add(client);
@@ -120,6 +114,35 @@ public class ClientAssignmentServiceImpl implements ClientAssignmentService {
 		
 		response.setMessage("PS berhasil di-assign ke Client");
 		return response;
+	}
+
+	@Override
+	public List<AllAssignmentResDto> getAllAssignment() {
+		final List<AllAssignmentResDto> responses = new ArrayList<>();
+		final var psList = userRepository.findByRoleRoleCode(Roles.PS.getCode());
+		final var assignments = clientAssignmentRepository.findAll();
+		
+		for (User ps : psList) {
+			final var response = new AllAssignmentResDto();
+			final List<ClientResDto> clients = new ArrayList<>(); 
+			
+			response.setPsName(ps.getFullName());
+			
+			for (ClientAssignment ca : assignments) {
+				if (ca.getPs().getFullName().equals(ps.getFullName())) {
+					final var client = new ClientResDto();
+					final var clientFound = ca.getClient();
+					client.setFullName(clientFound.getFullName());
+					client.setCompanyName(clientFound.getCompany().getCompanyName());
+					if (clientFound.getCompany().getLogoId() != null) {
+						client.setCompanyLogo(clientFound.getCompany().getLogoId().getId());
+					}
+					
+					clients.add(client);
+				}
+			}
+		}
+		return responses;
 	}
 
 }

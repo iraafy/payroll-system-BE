@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.lawencon.pss.dto.InsertResDto;
 import com.lawencon.pss.dto.UpdateResDto;
-import com.lawencon.pss.dto.notification.NotificationReqDto;
 import com.lawencon.pss.dto.payroll.PayrollDetailReqDto;
 import com.lawencon.pss.dto.payroll.PayrollDetailResDto;
 import com.lawencon.pss.dto.payroll.PayrollReqDto;
@@ -32,8 +31,6 @@ public interface PayrollsService {
 	
 	UpdateResDto clientAckPayrollDetails(String id);
 	
-	InsertResDto createNewNotificationOnPayrollDetails(NotificationReqDto data);
-	
 	List<PayrollResDto> searchPayroll(String id, String value);
 
 	List<PayrollDetailResDto> getAllPayrollDetailByClientId(String id);
@@ -41,4 +38,8 @@ public interface PayrollsService {
 	List<PayrollResDto> getPayrollByPsId();
 	
 	List<PayrollDetailResDto> getPayrollDetailByPsId();
+	
+	PayrollDetailResDto getPayrollDetailById(String id);
+	
+	UpdateResDto setPayrollDetailFile(String detailId, String fileId);
 }

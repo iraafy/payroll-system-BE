@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.lawencon.pss.dto.InsertResDto;
 import com.lawencon.pss.dto.file.FileReqDto;
+import com.lawencon.pss.dto.file.FileResDto;
 import com.lawencon.pss.dto.ftp.FtpReqDto;
 import com.lawencon.pss.model.File;
 import com.lawencon.pss.repository.FileRepository;
@@ -62,9 +63,9 @@ public class FileServiceImpl implements FileService {
 		final var response = new InsertResDto();
 		
 		final var detailId = request.getDetailId();
-		final var payrollId = payrollDetailRepository.findById(detailId).get().getId();
+		final var payroll = payrollDetailRepository.findById(detailId);
 		final var fileExt = request.getFileExt();
-		final var newDir = "/" + payrollId;
+		final var newDir = "/" + payroll.get().getPayroll().getId();
 		final var storedPath = newDir + "/" + detailId + "." + fileExt;
 				
 		ftpUtil.makeDir(newDir);
@@ -89,4 +90,19 @@ public class FileServiceImpl implements FileService {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public FileResDto getFtpFileByFileName(String fileName) {
+		final var fileModel = fileRepository.findByfileName(fileName);
+		final var file = fileModel.get();
+		
+		final var fileDto = new FileResDto();
+		fileDto.setId(file.getId());
+		fileDto.setStoredPath(file.getStoredPath());
+		fileDto.setFileExt(file.getFileExt());
+		
+		return fileDto;
+	}
+	
+	
 }

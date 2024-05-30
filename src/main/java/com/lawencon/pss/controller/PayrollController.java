@@ -19,7 +19,6 @@ import com.lawencon.pss.dto.payroll.PayrollDetailReqDto;
 import com.lawencon.pss.dto.payroll.PayrollDetailResDto;
 import com.lawencon.pss.dto.payroll.PayrollReqDto;
 import com.lawencon.pss.dto.payroll.PayrollResDto;
-import com.lawencon.pss.model.Payroll;
 import com.lawencon.pss.service.PayrollsService;
 
 import lombok.RequiredArgsConstructor;
@@ -125,4 +124,12 @@ public class PayrollController {
 		
 		return new ResponseEntity<>(res, HttpStatus.OK);
 	}
+	
+	@PatchMapping("{detailId}/set-file/{fileId}")
+	public ResponseEntity<UpdateResDto> updateFilePayrollDetail(@PathVariable String detailId, @PathVariable String fileId ){
+		final var res = payrollsService.setPayrollDetailFile(detailId, fileId);
+		
+		return new ResponseEntity<>(res, HttpStatus.OK);
+	}
+	
 }

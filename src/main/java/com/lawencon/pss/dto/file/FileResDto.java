@@ -8,4 +8,5 @@ import lombok.Setter;
 public class FileResDto {
     private String id;
     private String storedPath;
+    private String fileExt;
 }

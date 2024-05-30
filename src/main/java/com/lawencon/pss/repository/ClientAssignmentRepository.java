@@ -12,7 +12,7 @@ import com.lawencon.pss.model.ClientAssignment;
 public interface ClientAssignmentRepository extends JpaRepository<ClientAssignment, String>{
 
 	List<ClientAssignment> findByPsId(String id);
+	
 	Optional<ClientAssignment> findByClientId(String id);
-	
-	
+
 }
