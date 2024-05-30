@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.lawencon.pss.model.ClientAssignment;
-import com.lawencon.pss.model.User;
 
 @Repository
 public interface ClientAssignmentRepository extends JpaRepository<ClientAssignment, String>{
