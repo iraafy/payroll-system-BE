@@ -23,4 +23,8 @@ public interface UserRepository extends JpaRepository<User,String> {
     		+ " (SELECT ca.client.id"
     		+ " FROM ClientAssignment AS ca)")
     List<User> findAvailableClient(@Param("roleCode") String roleCode);
+    
+    
+    
+    
 }
