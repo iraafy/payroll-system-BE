@@ -234,8 +234,14 @@ INSERT INTO tb_m_users (id, full_name, email, pwd, role_id, company_id, created_
 --SELECT * FROM tb_r_reschedules trr ;
 --SELECT * FROM tb_m_user_roles tmur ;
 --SELECT * FROM tb_r_client_assignments trca RIGHT JOIN tb_m_users tmu ON trca.client_id = tmu.id WHERE tmu.role_id = '8487cf5c-044d-44e9-8e02-e51fd8c8d127';
---SELECT tmu.id, tmu.full_name, tmu2.full_name  
---FROM tb_m_users tmu 
---LEFT JOIN tb_r_client_assignments trca ON tmu.id = trca.client_id
---LEFT JOIN tb_m_users tmu2 ON trca.ps_id = tmu2.id 
---WHERE tmu.role_id = '8487cf5c-044d-44e9-8e02-e51fd8c8d127';
+SELECT tmu.id, tmu.full_name, tmu2.full_name  
+FROM tb_m_users tmu 
+LEFT JOIN tb_r_client_assignments trca ON tmu.id = trca.client_id
+LEFT JOIN tb_m_users tmu2 ON trca.ps_id = tmu2.id
+LEFT JOIN tb_m_user_roles tmur ON tmu.role_id = tmur.id 
+WHERE tmur.role_code = 'CLN';
+
+SELECT * FROM tb_r_client_assignments trca 
+RIGHT JOIN tb_m_users tmu ON trca.client_id = tmu.id
+WHERE tmu.role_id = '8487cf5c-044d-44e9-8e02-e51fd8c8d127'
+;
