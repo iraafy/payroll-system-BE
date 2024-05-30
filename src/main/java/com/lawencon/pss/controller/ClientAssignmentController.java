@@ -36,5 +36,4 @@ public class ClientAssignmentController {
 		final var response = clientAssignmentService.assignPs(request);
 		return new ResponseEntity<InsertResDto>(response, HttpStatus.CREATED);
 	}
-	
 }
