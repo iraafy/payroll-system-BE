@@ -51,10 +51,10 @@ public class FtpUtil {
 			
             // Creates a directory
             String dirToCreate = "/upload123";
-            final var success = ftpClient.makeDirectory(dirToCreate);
+            final var success = ftpClient.makeDirectory(dirName);
             showServerReply(ftpClient);
             if (success) {
-                System.out.println("Successfully created directory: " + dirToCreate);
+                System.out.println("Successfully created directory: " + dirName);
             } else {
                 System.out.println("Failed to create directory. See server's reply.");
             }

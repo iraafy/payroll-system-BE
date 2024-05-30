@@ -13,6 +13,7 @@ import com.lawencon.pss.model.File;
 import com.lawencon.pss.repository.FileRepository;
 import com.lawencon.pss.repository.PayrollDetailRepository;
 import com.lawencon.pss.service.FileService;
+import com.lawencon.pss.service.PrincipalService;
 import com.lawencon.pss.util.FtpUtil;
 
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ public class FileServiceImpl implements FileService {
 	private final FileRepository fileRepository;
 	private final PayrollDetailRepository payrollDetailRepository;
 	private final FtpUtil ftpUtil;
+	private final PrincipalService principalService;
 	
 	
 	@Override
@@ -72,6 +74,7 @@ public class FileServiceImpl implements FileService {
 		file.setFileName(detailId);
 		file.setFileExt(request.getFileExt());
 		file.setStoredPath(storedPath);
+		file.setCreatedBy(principalService.getUserId());
 		
 		final var result = fileRepository.save(file);
 		
