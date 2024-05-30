@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lawencon.pss.dto.InsertResDto;
+import com.lawencon.pss.dto.clientassignment.AllAssignmentResDto;
 import com.lawencon.pss.dto.clientassignment.ClientAssignmentReqDto;
 import com.lawencon.pss.dto.clientassignment.ClientAssignmentResDto;
 import com.lawencon.pss.service.ClientAssignmentService;
@@ -29,6 +30,12 @@ public class ClientAssignmentController {
 	public ResponseEntity<List<ClientAssignmentResDto>> getClientPs() {
 		final var response = clientAssignmentService.getClientById();
 		return new ResponseEntity<List<ClientAssignmentResDto>>(response, HttpStatus.OK);
+	}
+	
+	@GetMapping("all")
+	public ResponseEntity<List<AllAssignmentResDto>> getAllAssignment() {
+		final var response = clientAssignmentService.getAllAssignment();
+		return new ResponseEntity<List<AllAssignmentResDto>>(response, HttpStatus.OK);
 	}
 	
 	@PostMapping()
