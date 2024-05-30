@@ -12,5 +12,7 @@ public class CompanyResDto {
 	private String companyName;
 	
 	private Byte payrollDate;
+	
+	private String logoId;
 
 }

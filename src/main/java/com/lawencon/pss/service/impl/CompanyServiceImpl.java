@@ -42,6 +42,7 @@ public class CompanyServiceImpl implements CompanyService {
             companyDto.setId(company.getId());
             companyDto.setCompanyName(company.getCompanyName());
             companyDto.setPayrollDate(company.getDefaultPaymentDay());
+            companyDto.setLogoId(company.getLogoId().getId());
 
             companies.add(companyDto);
         }
