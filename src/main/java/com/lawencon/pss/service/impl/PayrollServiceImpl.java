@@ -325,30 +325,6 @@ public class PayrollServiceImpl implements PayrollsService {
 		}
 		return updateRes;
 	}
-
-//	@Override
-//	public InsertResDto createNewNotificationOnPayrollDetails(NotificationReqDto data) {
-//		final Optional<User> user = userRepository.findById(data.getUserId());
-//		final var notificationModel = new Notification();
-//		
-//		notificationModel.setNotificationContent("Ada aktivitas baru untuk anda");
-//		notificationModel.setContextUrl(data.getContextUrl());
-//		notificationModel.setContextId(data.getContextId());
-//		notificationModel.setUser(user.get());
-//		
-//		notificationModel.setCreatedBy(principalService.getUserId());
-//		notificationModel.setCreatedAt(LocalDateTime.now());
-//		notificationModel.setVer(0L);
-//		notificationModel.setIsActive(true);
-//		
-//		final var newNotification = notificationRepository.save(notificationModel);
-//		
-//		final var response = new InsertResDto();
-//		response.setId(newNotification.getId());
-//		response.setMessage("Notifikasi untuk " + data.getContextUrl() + " berhasil terbuat");
-//		
-//		return response;
-//	}
 	
 	@Override
 	public List<PayrollResDto> searchPayroll(String id, String value) {
