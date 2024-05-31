@@ -32,9 +32,9 @@ public class ChatServiceImpl implements ChatService {
 	private final PrincipalService principalService;
 	
 	@Override
-	public ArrayList<ChatResDto> seeChats() {
+	public ArrayList<ChatResDto> seeChats(String id) {
 		final ArrayList<ChatResDto> chatsRes= new ArrayList<>();
-		final ArrayList<Chat> chats = chatRepository.findByRecipientIdOrCreatedBy(principalService.getUserId(), principalService.getUserId());
+		final ArrayList<Chat> chats = chatRepository.findByRecipientIdOrCreatedBy(principalService.getUserId(), id);
 		
 		for(Chat chat : chats) {
 			final ChatResDto chatRes = new ChatResDto();
