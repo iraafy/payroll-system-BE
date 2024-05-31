@@ -29,7 +29,7 @@ public class ConverterUtil {
         String filename = StringUtils.substringAfterLast(source, File.separator);
         LOG.info("start converting {} to pdf", filename);
         String suffix = source.substring(source.lastIndexOf(".") + 1).toLowerCase();
-        Converter converter = pool.get("xlsx");
+        Converter converter = pool.get(suffix);
 
         long start = System.currentTimeMillis();
         boolean flag = converter != null && converter.convert(source, target);
