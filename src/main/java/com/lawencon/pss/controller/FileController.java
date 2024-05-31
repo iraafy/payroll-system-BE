@@ -41,6 +41,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("files")
+@CrossOrigin("*")
 public class FileController {
 
 	private final FtpUtil ftpUtil;
@@ -88,7 +89,6 @@ public class FileController {
 	}
 	
 	@GetMapping("ftp/preview/{name}")
-	@CrossOrigin("*")
 	public ResponseEntity<?> getPreviewFromFtp(@PathVariable String name) {
 		System.out.println(name);
 		
@@ -101,27 +101,30 @@ public class FileController {
 		java.io.File pdfFile = null;
         try {
             boolean flag = convertUtil.convert(localPath, target);
-            if (!flag) {
-                throw new ConvertException("fail to convert " + name);
-            }
-
             pdfFile = new java.io.File(target);
             
+            if (!flag) {
+            	return ResponseEntity.ok()
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + pdfFile.getName())
+                        .body(pdfFile);
+            }
+            
             return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + pdfFile.getName() + ".pdf")
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + pdfFile.getName())
                     .body(pdfFile);
         } catch (Exception e) {
             return ResponseEntity.internalServerError()
             		.body(e.getMessage());
-        } finally {
-          java.io.File localFile = new java.io.File(localPath);
-          if (localFile != null) {
-              localFile.delete();
-          }
-          if (pdfFile != null) {
-              pdfFile.delete();
-          }
-      }
+        } 
+//        finally {
+//          java.io.File localFile = new java.io.File(localPath);
+//          if (localFile != null) {
+//              localFile.delete();
+//          }
+//          if (pdfFile != null) {
+//              pdfFile.delete();
+//          }
+//      }
 	}
 
 	@GetMapping("file/{id}")
