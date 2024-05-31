@@ -8,6 +8,7 @@ import com.lawencon.pss.dto.InsertResDto;
 import com.lawencon.pss.dto.UpdateResDto;
 import com.lawencon.pss.dto.role.RoleResDto;
 import com.lawencon.pss.dto.user.ChangePasswordReqDto;
+import com.lawencon.pss.dto.user.ChangeProfilePicReqDto;
 import com.lawencon.pss.dto.user.ClientDropdownResDto;
 import com.lawencon.pss.dto.user.CreateUserReqDto;
 import com.lawencon.pss.dto.user.LoginReqDto;
@@ -26,4 +27,6 @@ public interface UserService extends UserDetailsService {
     List<RoleResDto> getAllRoles();
     UserResDto getUserById(String id);
     List<UserResDto> getClientsByPsId(String psId);
+    UpdateResDto updateName(String newName);
+    UpdateResDto updateProfilePicture(ChangeProfilePicReqDto request);
 }

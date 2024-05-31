@@ -141,6 +141,8 @@ public class ClientAssignmentServiceImpl implements ClientAssignmentService {
 					clients.add(client);
 				}
 			}
+			response.setClients(clients);
+			responses.add(response);
 		}
 		return responses;
 	}

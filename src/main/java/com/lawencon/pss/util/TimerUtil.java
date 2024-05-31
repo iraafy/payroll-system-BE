@@ -20,7 +20,6 @@ public class TimerUtil {
 		
 		return JobBuilder
 				.newJob(jobClass)
-				.withIdentity(jobClass.getSimpleName())
 				.setJobData(jobDataMap)
 				.build();
 	}
@@ -30,7 +29,6 @@ public class TimerUtil {
 		
 		return TriggerBuilder
 				.newTrigger()
-				.withIdentity(jobClass.getSimpleName())
 				.withSchedule(builder)
 				.startAt(reminder.getDate())
 				.build();

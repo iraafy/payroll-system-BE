@@ -1,8 +1,10 @@
 package com.lawencon.pss.service.impl;
 
+import java.io.ByteArrayInputStream;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Base64;
 
 import javax.transaction.Transactional;
 
@@ -35,7 +37,7 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public List<CompanyResDto> getAllCompanies() {
 
-        final List<Company> companiesModel = companyRepository.findAll();
+    	final List<Company> companiesModel = companyRepository.findAll();
         final List<CompanyResDto> companies = new ArrayList<>();
         for (Company company : companiesModel) {
             final var companyDto = new CompanyResDto();
@@ -43,9 +45,18 @@ public class CompanyServiceImpl implements CompanyService {
             companyDto.setCompanyName(company.getCompanyName());
             companyDto.setPayrollDate(company.getDefaultPaymentDay());
 
+            String base64Content = company.getLogoId().getFileContent();
+            companyDto.setLogoBase64Content(base64Content);
+
+            // Decode base64 string to Byte array
+            byte[] decodedBytes = Base64.getDecoder().decode(base64Content);
+
+            // Convert byte array to InputStream
+            ByteArrayInputStream inputStream = new ByteArrayInputStream(decodedBytes);
+            companyDto.setLogoContent(inputStream);
+
             companies.add(companyDto);
         }
-
         return companies;
     }
 
