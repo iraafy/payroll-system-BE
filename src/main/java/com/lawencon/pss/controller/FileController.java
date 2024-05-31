@@ -11,6 +11,7 @@ import java.util.Optional;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.tomcat.util.http.fileupload.ByteArrayOutputStream;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -103,15 +104,16 @@ public class FileController {
             boolean flag = convertUtil.convert(localPath, target);
             pdfFile = new java.io.File(target);
             
+            byte[] bytes = FileUtils.readFileToByteArray(pdfFile);
             if (!flag) {
             	return ResponseEntity.ok()
                         .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + pdfFile.getName())
-                        .body(pdfFile);
+                        .body(bytes);
             }
             
             return ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + pdfFile.getName())
-                    .body(pdfFile);
+                    .body(bytes);
         } catch (Exception e) {
             return ResponseEntity.internalServerError()
             		.body(e.getMessage());
