@@ -227,7 +227,7 @@ public class PayrollServiceImpl implements PayrollsService {
 			PayrollDetail newDetail = new PayrollDetail();
 			newDetail.setDescription(data.getDescription());
 			newDetail.setForClient(data.getForClient());
-			newDetail.setMaxUploadDate(LocalDateTime.of(data.getMaxUploadDate(), LocalTime.MIN.minusSeconds(1)));
+			newDetail.setMaxUploadDate(LocalDateTime.of(data.getMaxUploadDate(), LocalTime.MAX.minusSeconds(1)));
 			newDetail.setPayroll(payroll.get());
 			newDetail.setCreatedBy(principalService.getUserId());
 

@@ -194,9 +194,6 @@ INSERT INTO tb_m_users (id, full_name, email, pwd, role_id, company_id, created_
     (uuid_generate_v4(), 'Jirjat', 'e@mail.com', '$2y$10$AMf5FaHHEF5cJFBNEDHl9.4b/QjWSfPULHtJQgqyL2NYsfgkVAyIq', '8487cf5c-044d-44e9-8e02-e51fd8c8d127', 'cc8c66d3-96ab-4ecc-bbe9-b984e8562190','1', NOW(), TRUE, 0, '89012345-6789-0abc-def1-234567890abc'),
     (uuid_generate_v4(), 'Memei', 'f@mail.com', '$2y$10$AMf5FaHHEF5cJFBNEDHl9.4b/QjWSfPULHtJQgqyL2NYsfgkVAyIq', '8487cf5c-044d-44e9-8e02-e51fd8c8d127', 'cc8c66d3-96ab-4ecc-bbe9-b984e8562190','1', NOW(), TRUE, 0, '90123456-7890-1bcd-ef23-456789012345');
 
-INSERT INTO tb_m_users (id, full_name, email, pwd, role_id, company_id, created_by, created_at, is_active, vrsion) VALUES 
-	(uuid_generate_v4(), 'SUPEEEER Admin', 'example@mail.com', '$2y$10$AMf5FaHHEF5cJFBNEDHl9.4b/QjWSfPULHtJQgqyL2NYsfgkVAyIq', 'b4f6c0bb-ef56-4b5c-b804-9d0d21186394', 'cc8c66d3-96ab-4ecc-bbe9-b984e8562190','1', NOW(), TRUE, 0);
-
 ---------------------------DROP ALL TABLE------------------------------
 --DROP TABLE 
 --tb_r_reschedules, 
@@ -234,14 +231,14 @@ INSERT INTO tb_m_users (id, full_name, email, pwd, role_id, company_id, created_
 --SELECT * FROM tb_r_reschedules trr ;
 --SELECT * FROM tb_m_user_roles tmur ;
 --SELECT * FROM tb_r_client_assignments trca RIGHT JOIN tb_m_users tmu ON trca.client_id = tmu.id WHERE tmu.role_id = '8487cf5c-044d-44e9-8e02-e51fd8c8d127';
-SELECT tmu.id, tmu.full_name, tmu2.full_name  
-FROM tb_m_users tmu 
-LEFT JOIN tb_r_client_assignments trca ON tmu.id = trca.client_id
-LEFT JOIN tb_m_users tmu2 ON trca.ps_id = tmu2.id
-LEFT JOIN tb_m_user_roles tmur ON tmu.role_id = tmur.id 
-WHERE tmur.role_code = 'CLN';
-
-SELECT * FROM tb_r_client_assignments trca 
-RIGHT JOIN tb_m_users tmu ON trca.client_id = tmu.id
-WHERE tmu.role_id = '8487cf5c-044d-44e9-8e02-e51fd8c8d127'
-;
+--SELECT tmu.id, tmu.full_name, tmu2.full_name  
+--FROM tb_m_users tmu 
+--LEFT JOIN tb_r_client_assignments trca ON tmu.id = trca.client_id
+--LEFT JOIN tb_m_users tmu2 ON trca.ps_id = tmu2.id
+--LEFT JOIN tb_m_user_roles tmur ON tmu.role_id = tmur.id 
+--WHERE tmur.role_code = 'CLN';
+--
+--SELECT * FROM tb_r_client_assignments trca 
+--RIGHT JOIN tb_m_users tmu ON trca.client_id = tmu.id
+--WHERE tmu.role_id = '8487cf5c-044d-44e9-8e02-e51fd8c8d127'
+--;
