@@ -12,5 +12,5 @@ public class NotificationResDto {
 	private String contextUrl;
 	private String notificationContent;
 	private String createdAt;
-	
+	private Boolean isActive;
 }
