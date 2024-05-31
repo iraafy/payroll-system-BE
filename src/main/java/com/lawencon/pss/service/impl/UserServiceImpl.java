@@ -163,10 +163,9 @@ public class UserServiceImpl implements UserService {
 				user.setId(u.getId());
 				user.setFullName(u.getFullName());
 				user.setRoleName(u.getRole().getRoleName());
-				user.setEmail(u.getEmail());
 				user.setCompanyName(u.getCompany().getCompanyName());
 				if (u.getFile() != null) {
-					user.setPath(u.getFile().getStoredPath());
+					user.setFileId(u.getFile().getId());
 				}
 				response.add(user);				
 			}
@@ -185,7 +184,7 @@ public class UserServiceImpl implements UserService {
 			user.setRoleName(u.getRole().getRoleName());
 			user.setCompanyName(u.getCompany().getCompanyName());
 			if (u.getFile() != null) {
-				user.setPath(u.getFile().getStoredPath());
+				user.setFileId(u.getFile().getId());
 			}
 			response.add(user);
 		}
@@ -283,7 +282,7 @@ public class UserServiceImpl implements UserService {
 		user.setRoleName(userModel.getRole().getRoleName());
 		user.setCompanyName(userModel.getCompany().getCompanyName());
 		if (userModel.getFile() != null) {
-			user.setPath(userModel.getFile().getStoredPath());
+			user.setFileId(userModel.getFile().getId());
 		}
 		return user;
 	}
@@ -304,7 +303,7 @@ public class UserServiceImpl implements UserService {
 			user.setRoleName(userModel.getRole().getRoleName());
 			user.setCompanyName(userModel.getCompany().getCompanyName());
 			if (userModel.getFile() != null) {
-				user.setPath(userModel.getFile().getStoredPath());
+				user.setFileId(userModel.getFile().getId());
 			}
 
 			clientsDto.add(user);
