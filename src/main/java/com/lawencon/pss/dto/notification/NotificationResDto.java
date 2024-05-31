@@ -7,6 +7,7 @@ import lombok.Setter;
 @Getter
 public class NotificationResDto {
 
+	private String id;
 	private String userId;
 	private String contextId;
 	private String contextUrl;

@@ -5,12 +5,15 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lawencon.pss.dto.InsertResDto;
+import com.lawencon.pss.dto.UpdateResDto;
 import com.lawencon.pss.dto.notification.NotificationReqDto;
 import com.lawencon.pss.dto.notification.NotificationResDto;
 import com.lawencon.pss.service.NotificationService;
@@ -40,6 +43,12 @@ public class NotificationController {
 	public ResponseEntity<List<NotificationResDto>> getTop3Notification() {
 		final var response = notificationService.getTop3Notification();
 		return new ResponseEntity<List<NotificationResDto>>(response, HttpStatus.OK);
+	}
+	
+	@PatchMapping("{id}/read")
+	public ResponseEntity<UpdateResDto> readNotification(@PathVariable String id){
+		final var response = notificationService.readNotification(id);
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
 }
