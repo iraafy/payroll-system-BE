@@ -87,7 +87,6 @@ public class NotificationServiceImpl implements NotificationService {
 		final List<NotificationResDto> responses = new ArrayList<>();
 		final var userId = principalService.getUserId();
 		final var result = notificationRepository.findTop3ByUserIdOrderByCreatedAtDesc(userId);
-//		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm a");
 		
 		for (Notification notif : result) {
 			final var response = new NotificationResDto();
@@ -95,8 +94,8 @@ public class NotificationServiceImpl implements NotificationService {
 			response.setContextId(notif.getContextId());
 			response.setContextUrl(notif.getContextUrl());
 			response.setNotificationContent(notif.getNotificationContent());
-//			final var timeCreated = notif.getCreatedAt().format(formatter);
 			response.setCreatedAt(notif.getCreatedAt().toString());
+			response.setIsActive(notif.getIsActive());
 			
 			responses.add(response);
 		}
