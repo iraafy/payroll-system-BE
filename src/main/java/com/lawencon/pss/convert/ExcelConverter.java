@@ -1,4 +1,4 @@
-package com.lawencon.pss.covert;
+package com.lawencon.pss.convert;
 
 import com.jacob.activeX.ActiveXComponent;
 import com.jacob.com.ComThread;

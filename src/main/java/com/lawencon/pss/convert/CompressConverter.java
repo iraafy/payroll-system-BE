@@ -1,4 +1,4 @@
-package com.lawencon.pss.covert;
+package com.lawencon.pss.convert;
 
 import com.lawencon.pss.util.ConverterUtil;
 import com.lawencon.pss.util.DecompressUtils;

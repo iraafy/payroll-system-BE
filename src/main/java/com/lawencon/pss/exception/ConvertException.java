@@ -1,4 +1,4 @@
-package com.lawencon.pss.covert;
+package com.lawencon.pss.exception;
 
 public class ConvertException extends Exception {
     public ConvertException(String message) {

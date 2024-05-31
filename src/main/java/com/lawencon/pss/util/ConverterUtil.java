@@ -1,10 +1,11 @@
 package com.lawencon.pss.util;
 
-import com.lawencon.pss.covert.Converter;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
+import com.lawencon.pss.convert.Converter;
 
 import java.io.File;
 import java.util.HashMap;
@@ -28,7 +29,7 @@ public class ConverterUtil {
         String filename = StringUtils.substringAfterLast(source, File.separator);
         LOG.info("start converting {} to pdf", filename);
         String suffix = source.substring(source.lastIndexOf(".") + 1).toLowerCase();
-        Converter converter = pool.get(suffix);
+        Converter converter = pool.get("xlsx");
 
         long start = System.currentTimeMillis();
         boolean flag = converter != null && converter.convert(source, target);

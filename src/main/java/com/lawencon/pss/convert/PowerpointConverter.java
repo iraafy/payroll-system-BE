@@ -1,10 +1,9 @@
-package com.lawencon.pss.covert;
+package com.lawencon.pss.convert;
 
 import com.jacob.activeX.ActiveXComponent;
 import com.jacob.com.ComThread;
 import com.jacob.com.Dispatch;
 import com.lawencon.pss.util.ConverterUtil;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -14,40 +13,38 @@ import java.io.File;
 
 /**
  * Created by zhangshichen on 2017/8/3.
+ * https://msdn.microsoft.com/en-us/library/office/ff747146(v=office.14).aspx
  */
 @Component
-public class WordConverter implements Converter {
+public class PowerpointConverter implements Converter {
     private final Logger LOG = LoggerFactory.getLogger(this.getClass());
 
     @PostConstruct
     public void init() {
-        ConverterUtil.register("doc", this);
-        ConverterUtil.register("docx", this);
-        ConverterUtil.register("docm", this);
+        ConverterUtil.register("ppt", this);
+        ConverterUtil.register("pptx", this);
     }
 
     public boolean convert(String source, String target) {
         ComThread.InitSTA();
         ActiveXComponent app = null;
         try {
-            app = new ActiveXComponent("Word.Application");
-            app.setProperty("Visible", false);
-
-            Dispatch docs = app.getProperty("Documents").toDispatch();
-            Dispatch doc = Dispatch.call(docs, "Open", source, false, true).toDispatch();
+            app = new ActiveXComponent("Powerpoint.Application");
+            Dispatch presentations = app.getProperty("Presentations").toDispatch();
+            Dispatch presentation = Dispatch.call(presentations, "Open", source, true).toDispatch();
 
             File tofile = new File(target);
             if (tofile.exists()) {
                 tofile.delete();
             }
-            Dispatch.call(doc, "SaveAs", target, docSaveAsPDF);
-            Dispatch.call(doc, "Close", false);
+            Dispatch.call(presentation, "SaveAs", target, pptSaveAsPDF);
+            Dispatch.call(presentation, "Close");
         } catch (Exception e) {
             LOG.error("convert exception:", e);
             return false;
         } finally {
             if (app != null)
-                app.invoke("Quit", wdNotSaveChanges);
+                app.invoke("Quit");
             ComThread.Release();
         }
         return true;
