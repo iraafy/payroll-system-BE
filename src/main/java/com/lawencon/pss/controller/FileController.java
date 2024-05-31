@@ -108,7 +108,7 @@ public class FileController {
             if (!flag) {
             	return ResponseEntity.ok()
                         .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + pdfFile.getName())
-                        .body(bytes);
+                        .body(fileBytes);
             }
             
             return ResponseEntity.ok()
@@ -117,16 +117,15 @@ public class FileController {
         } catch (Exception e) {
             return ResponseEntity.internalServerError()
             		.body(e.getMessage());
-        } 
-//        finally {
-//          java.io.File localFile = new java.io.File(localPath);
-//          if (localFile != null) {
-//              localFile.delete();
-//          }
-//          if (pdfFile != null) {
-//              pdfFile.delete();
-//          }
-//      }
+        } finally {
+          java.io.File localFile = new java.io.File(localPath);
+          if (localFile != null) {
+              localFile.delete();
+          }
+          if (pdfFile != null) {
+              pdfFile.delete();
+          }
+      }
 	}
 
 	@GetMapping("file/{id}")
