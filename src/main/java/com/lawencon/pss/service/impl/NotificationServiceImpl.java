@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.lawencon.pss.dto.InsertResDto;
+import com.lawencon.pss.dto.UpdateResDto;
 import com.lawencon.pss.dto.notification.NotificationReqDto;
 import com.lawencon.pss.dto.notification.NotificationResDto;
 import com.lawencon.pss.model.Notification;
@@ -65,7 +66,6 @@ public class NotificationServiceImpl implements NotificationService {
 		final List<NotificationResDto> responses = new ArrayList<>();
 		final var userId = principalService.getUserId();
 		final var result = notificationRepository.findByUserIdOrderByCreatedAtDesc(userId);
-//		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm a");
 		
 		for (Notification notif : result) {
 			final var response = new NotificationResDto();
@@ -73,7 +73,6 @@ public class NotificationServiceImpl implements NotificationService {
 			response.setContextId(notif.getContextId());
 			response.setContextUrl(notif.getContextUrl());
 			response.setNotificationContent(notif.getNotificationContent());
-//			final var timeCreated = notif.getCreatedAt().format(formatter);
 			response.setCreatedAt(notif.getCreatedAt().toString());
 			
 			responses.add(response);
@@ -86,22 +85,36 @@ public class NotificationServiceImpl implements NotificationService {
 	public List<NotificationResDto> getTop3Notification() {
 		final List<NotificationResDto> responses = new ArrayList<>();
 		final var userId = principalService.getUserId();
-		final var result = notificationRepository.findTop3ByUserIdOrderByCreatedAtDesc(userId);
-//		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm a");
+		final var result = notificationRepository.findTop3ByUserIdAndIsActiveOrderByCreatedAtDesc(userId, true);
 		
 		for (Notification notif : result) {
 			final var response = new NotificationResDto();
+			response.setId(notif.getId());
 			response.setUserId(notif.getUser().getId());
-			response.setContextId(notif.getContextId());
+			response.setContextId(notif.getContextId());	
 			response.setContextUrl(notif.getContextUrl());
 			response.setNotificationContent(notif.getNotificationContent());
-//			final var timeCreated = notif.getCreatedAt().format(formatter);
 			response.setCreatedAt(notif.getCreatedAt().toString());
 			
 			responses.add(response);
 		}
 		
 		return responses;
+	}
+
+	@Override
+	public UpdateResDto readNotification(String id) {
+		final var notificationModel = notificationRepository.findById(id);
+		final var notification = notificationModel.get();
+		
+		notification.setIsActive(false);
+		final var result = notificationRepository.save(notification);
+		
+		final var res = new UpdateResDto();
+		res.setVer(result.getVer());
+		res.setMessage("notifikasi sudah di baca");
+		
+		return res;
 	}
 
 }

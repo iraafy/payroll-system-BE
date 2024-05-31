@@ -12,5 +12,5 @@ public interface NotificationRepository extends JpaRepository<Notification, Stri
 
 	List<Notification> findAll();
 	List<Notification> findByUserIdOrderByCreatedAtDesc(String id);
-	List<Notification> findTop3ByUserIdOrderByCreatedAtDesc(String id);
+	List<Notification> findTop3ByUserIdAndIsActiveOrderByCreatedAtDesc(String id, Boolean isActive);
 }
