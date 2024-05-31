@@ -74,6 +74,7 @@ public class NotificationServiceImpl implements NotificationService {
 			response.setContextUrl(notif.getContextUrl());
 			response.setNotificationContent(notif.getNotificationContent());
 			response.setCreatedAt(notif.getCreatedAt().toString());
+			response.setIsActive(notif.getIsActive());
 			
 			responses.add(response);
 		}
@@ -85,7 +86,7 @@ public class NotificationServiceImpl implements NotificationService {
 	public List<NotificationResDto> getTop3Notification() {
 		final List<NotificationResDto> responses = new ArrayList<>();
 		final var userId = principalService.getUserId();
-		final var result = notificationRepository.findTop3ByUserIdAndIsActiveOrderByCreatedAtDesc(userId, true);
+		final var result = notificationRepository.findTop3ByUserIdOrderByCreatedAtDesc(userId);
 		
 		for (Notification notif : result) {
 			final var response = new NotificationResDto();
@@ -95,6 +96,7 @@ public class NotificationServiceImpl implements NotificationService {
 			response.setContextUrl(notif.getContextUrl());
 			response.setNotificationContent(notif.getNotificationContent());
 			response.setCreatedAt(notif.getCreatedAt().toString());
+			response.setIsActive(notif.getIsActive());
 			
 			responses.add(response);
 		}

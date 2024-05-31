@@ -158,16 +158,17 @@ public class UserServiceImpl implements UserService {
 		final List<UserResDto> response = new ArrayList<>();
 		final var results = userRepository.findAll();
 		for (User u : results) {
-			final var user = new UserResDto();
-			user.setId(u.getId());
-			user.setFullName(u.getFullName());
-			user.setRoleName(u.getRole().getRoleName());
-			user.setEmail(u.getEmail());
-			user.setCompanyName(u.getCompany().getCompanyName());
-			if (u.getFile() != null) {
-				user.setPath(u.getFile().getStoredPath());
+			if (!u.getRole().getRoleCode().equals(Roles.SA.getCode())) {
+				final var user = new UserResDto();
+				user.setId(u.getId());
+				user.setFullName(u.getFullName());
+				user.setRoleName(u.getRole().getRoleName());
+				user.setCompanyName(u.getCompany().getCompanyName());
+				if (u.getFile() != null) {
+					user.setFileId(u.getFile().getId());
+				}
+				response.add(user);				
 			}
-			response.add(user);
 		}
 		return response;
 	}
@@ -183,7 +184,7 @@ public class UserServiceImpl implements UserService {
 			user.setRoleName(u.getRole().getRoleName());
 			user.setCompanyName(u.getCompany().getCompanyName());
 			if (u.getFile() != null) {
-				user.setPath(u.getFile().getStoredPath());
+				user.setFileId(u.getFile().getId());
 			}
 			response.add(user);
 		}
@@ -259,11 +260,13 @@ public class UserServiceImpl implements UserService {
 		List<Role> roles = roleRepository.findAll();
 		List<RoleResDto> rolesRes = new ArrayList<RoleResDto>();
 		for (Role role : roles) {
-			final RoleResDto roleRes = new RoleResDto();
-			roleRes.setId(role.getId());
-			roleRes.setRoleCode(role.getRoleCode());
-			roleRes.setRoleName(role.getRoleName());
-			rolesRes.add(roleRes);
+			if (!role.getRoleCode().equals(Roles.SA.getCode())) {
+				final RoleResDto roleRes = new RoleResDto();
+				roleRes.setId(role.getId());
+				roleRes.setRoleCode(role.getRoleCode());
+				roleRes.setRoleName(role.getRoleName());
+				rolesRes.add(roleRes);				
+			}
 		}
 		return rolesRes;
 	}
@@ -279,7 +282,7 @@ public class UserServiceImpl implements UserService {
 		user.setRoleName(userModel.getRole().getRoleName());
 		user.setCompanyName(userModel.getCompany().getCompanyName());
 		if (userModel.getFile() != null) {
-			user.setPath(userModel.getFile().getStoredPath());
+			user.setFileId(userModel.getFile().getId());
 		}
 		return user;
 	}
@@ -300,7 +303,7 @@ public class UserServiceImpl implements UserService {
 			user.setRoleName(userModel.getRole().getRoleName());
 			user.setCompanyName(userModel.getCompany().getCompanyName());
 			if (userModel.getFile() != null) {
-				user.setPath(userModel.getFile().getStoredPath());
+				user.setFileId(userModel.getFile().getId());
 			}
 
 			clientsDto.add(user);
