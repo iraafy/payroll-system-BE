@@ -51,6 +51,7 @@ public class SecurityConfig {
 		matchers.add(new AntPathRequestMatcher("/chat/**", HttpMethod.POST.name()));
 		matchers.add(new AntPathRequestMatcher("/send/chat/**", HttpMethod.GET.name()));
 		matchers.add(new AntPathRequestMatcher("/send/chat/**", HttpMethod.POST.name()));
+		matchers.add(new AntPathRequestMatcher("/reports/**", HttpMethod.GET.name()));
 		return matchers; 
 	}
 	
