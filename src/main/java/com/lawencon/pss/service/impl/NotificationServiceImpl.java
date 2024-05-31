@@ -74,6 +74,7 @@ public class NotificationServiceImpl implements NotificationService {
 			response.setContextUrl(notif.getContextUrl());
 			response.setNotificationContent(notif.getNotificationContent());
 			response.setCreatedAt(notif.getCreatedAt().toString());
+			response.setIsActive(notif.getIsActive());
 			
 			responses.add(response);
 		}
