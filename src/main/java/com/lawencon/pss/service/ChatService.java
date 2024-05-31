@@ -7,7 +7,7 @@ import com.lawencon.pss.dto.chat.ChatReqDto;
 import com.lawencon.pss.dto.chat.ChatResDto;
 
 public interface ChatService {
-	ArrayList<ChatResDto> seeChats();
+	ArrayList<ChatResDto> seeChats(String id);
 	InsertResDto saveChat(ChatReqDto chatReq);
 	ChatResDto findChat(String id);
 }
