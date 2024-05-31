@@ -119,4 +119,11 @@ public class NotificationServiceImpl implements NotificationService {
 		return res;
 	}
 
+	@Override
+	public Integer getUnreadCount() {
+		final var user = principalService.getUserId();
+		final var count = notificationRepository.getUnreadCount(user);
+		return count;
+	}
+
 }
