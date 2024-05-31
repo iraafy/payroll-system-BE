@@ -1,5 +1,6 @@
 package com.lawencon.pss.service.impl;
 
+import java.lang.reflect.Array;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Optional;
@@ -34,9 +35,10 @@ public class ChatServiceImpl implements ChatService {
 	@Override
 	public ArrayList<ChatResDto> seeChats(String id) {
 		final ArrayList<ChatResDto> chatsRes= new ArrayList<>();
-		final ArrayList<Chat> chats = chatRepository.findByRecipientIdOrCreatedBy(principalService.getUserId(), id);
+		final ArrayList<Chat> chatsIn = chatRepository.findByRecipientIdOrCreatedBy(principalService.getUserId(), id);
+		final ArrayList<Chat> chatsOut = chatRepository.findByRecipientIdOrCreatedBy(id, principalService.getUserId());
 		
-		for(Chat chat : chats) {
+		for(Chat chat : chatsIn) {
 			final ChatResDto chatRes = new ChatResDto();
 			chatRes.setMessage(chat.getMessage());
 			chatRes.setCreatedAt(chat.getCreatedAt());
@@ -44,7 +46,17 @@ public class ChatServiceImpl implements ChatService {
 			chatsRes.add(chatRes);
 		}
 		
-		return chatsRes;
+		for(Chat chat : chatsOut) {
+			final ChatResDto chatRes = new ChatResDto();
+			chatRes.setMessage(chat.getMessage());
+			chatRes.setCreatedAt(chat.getCreatedAt());
+			chatRes.setUserName(chat.getRecipientId());
+			chatsRes.add(chatRes);
+		}
+		
+		chatsRes.sort((chat1, chat2) -> chat1.getCreatedAt().compareTo(chat2.getCreatedAt()));
+	    
+	    return chatsRes;
 	}
 	
 	@Override
