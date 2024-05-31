@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,9 +25,9 @@ public class ChatController {
 	
 	private final ChatService chatService;
 	
-	@GetMapping("")
-	public ResponseEntity<ArrayList<ChatResDto>> ChatContents() {
-		final ArrayList<ChatResDto> chatsRes = chatService.seeChats();
+	@GetMapping("{id}")
+	public ResponseEntity<ArrayList<ChatResDto>> ChatContents(@PathVariable String id) {
+		final ArrayList<ChatResDto> chatsRes = chatService.seeChats(id);
 		return new ResponseEntity<>(chatsRes, HttpStatus.OK);
 	}
 	

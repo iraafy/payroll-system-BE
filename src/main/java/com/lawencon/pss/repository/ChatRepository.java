@@ -18,7 +18,7 @@ public interface ChatRepository extends JpaRepository<Chat, String>{
 	@Query(value = 
     		"SELECT c FROM Chat AS c "
     		+ "WHERE c.recipientId = :recipientId "
-    		+ "OR c.createdBy = :createdBy "
+    		+ "AND c.createdBy = :createdBy "
     		+ "ORDER BY c.createdAt ASC")
     ArrayList<Chat> findByRecipientIdOrCreatedBy(@Param("recipientId") String id, @Param("createdBy") String createdBy);
 }

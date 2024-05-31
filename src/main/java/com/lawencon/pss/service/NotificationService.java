@@ -13,4 +13,5 @@ public interface NotificationService {
 	List<NotificationResDto> getAllNotification();
 	List<NotificationResDto> getTop3Notification();
 	UpdateResDto readNotification(String id);
+	Integer getUnreadCount();
 }
