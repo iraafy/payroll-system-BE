@@ -34,31 +34,25 @@ public class ChatServiceImpl implements ChatService {
 		final ArrayList<Chat> chatsIn = chatRepository.findByRecipientIdOrCreatedBy(principalService.getUserId(), id);
 		final ArrayList<Chat> chatsOut = chatRepository.findByRecipientIdOrCreatedBy(id, principalService.getUserId());
 		
-		if (chatsIn != null) {			
-			for(Chat chat : chatsIn) {
-				final ChatResDto chatRes = new ChatResDto();
-				chatRes.setMessage(chat.getMessage());
-				chatRes.setCreatedAt(chat.getCreatedAt());
-				chatRes.setUserName(chat.getRecipientId());
-				chatsRes.add(chatRes);
-			}
+		for(Chat chat : chatsIn) {
+			final ChatResDto chatRes = new ChatResDto();
+			chatRes.setMessage(chat.getMessage());
+			chatRes.setCreatedAt(chat.getCreatedAt());
+			chatRes.setUserName(chat.getRecipientId());
+			chatsRes.add(chatRes);
 		}
 		
-		if (chatsOut != null) {			
-			for(Chat chat : chatsOut) {
-				final ChatResDto chatRes = new ChatResDto();
-				chatRes.setMessage(chat.getMessage());
-				chatRes.setCreatedAt(chat.getCreatedAt());
-				chatRes.setUserName(chat.getRecipientId());
-				chatsRes.add(chatRes);
-			}
+		for(Chat chat : chatsOut) {
+			final ChatResDto chatRes = new ChatResDto();
+			chatRes.setMessage(chat.getMessage());
+			chatRes.setCreatedAt(chat.getCreatedAt());
+			chatRes.setUserName(chat.getRecipientId());
+			chatsRes.add(chatRes);
 		}
 		
-		if (chatsRes != null) {
-			chatsRes.sort((chat1, chat2) -> chat1.getCreatedAt().compareTo(chat2.getCreatedAt()));			
-		}
-	    
-	    return chatsRes;
+		chatsRes.sort((chat1, chat2) -> chat1.getCreatedAt().compareTo(chat2.getCreatedAt()));			
+
+		return chatsRes;
 	}
 	
 	@Override
