@@ -69,6 +69,7 @@ public class NotificationServiceImpl implements NotificationService {
 		
 		for (Notification notif : result) {
 			final var response = new NotificationResDto();
+			response.setId(notif.getId());
 			response.setUserId(notif.getUser().getId());
 			response.setContextId(notif.getContextId());
 			response.setContextUrl(notif.getContextUrl());
