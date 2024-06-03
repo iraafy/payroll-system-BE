@@ -19,6 +19,7 @@ import com.lawencon.pss.dto.payroll.PayrollDetailReqDto;
 import com.lawencon.pss.dto.payroll.PayrollDetailResDto;
 import com.lawencon.pss.dto.payroll.PayrollReqDto;
 import com.lawencon.pss.dto.payroll.PayrollResDto;
+import com.lawencon.pss.dto.payroll.SignatureReqDto;
 import com.lawencon.pss.service.PayrollsService;
 
 import lombok.RequiredArgsConstructor;
@@ -132,4 +133,9 @@ public class PayrollController {
 		return new ResponseEntity<>(res, HttpStatus.OK);
 	}
 	
+	@PatchMapping("{detailId}/sign")
+	public ResponseEntity<UpdateResDto> signPayrollDetail(@PathVariable String detailId, @RequestBody SignatureReqDto signature ){
+		final var res = payrollsService.signPayrollDetail(detailId, signature);
+		return new ResponseEntity<>(res, HttpStatus.OK);
+	}
 }
