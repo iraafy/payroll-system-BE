@@ -9,6 +9,7 @@ import com.lawencon.pss.dto.payroll.PayrollDetailReqDto;
 import com.lawencon.pss.dto.payroll.PayrollDetailResDto;
 import com.lawencon.pss.dto.payroll.PayrollReqDto;
 import com.lawencon.pss.dto.payroll.PayrollResDto;
+import com.lawencon.pss.dto.payroll.SignatureReqDto;
 
 
 public interface PayrollsService {
@@ -42,4 +43,6 @@ public interface PayrollsService {
 	PayrollDetailResDto getPayrollDetailById(String id);
 	
 	UpdateResDto setPayrollDetailFile(String detailId, String fileId);
+	
+	UpdateResDto signPayrollDetail(String detailId, SignatureReqDto signature);
 }
