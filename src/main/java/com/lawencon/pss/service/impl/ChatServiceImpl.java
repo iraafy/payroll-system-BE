@@ -12,10 +12,8 @@ import com.lawencon.pss.dto.InsertResDto;
 import com.lawencon.pss.dto.chat.ChatReqDto;
 import com.lawencon.pss.dto.chat.ChatResDto;
 import com.lawencon.pss.model.Chat;
-import com.lawencon.pss.model.Notification;
 import com.lawencon.pss.model.User;
 import com.lawencon.pss.repository.ChatRepository;
-import com.lawencon.pss.repository.NotificationRepository;
 import com.lawencon.pss.repository.UserRepository;
 import com.lawencon.pss.service.ChatService;
 import com.lawencon.pss.service.PrincipalService;
@@ -27,7 +25,6 @@ import lombok.RequiredArgsConstructor;
 public class ChatServiceImpl implements ChatService {
 	
 	private final ChatRepository chatRepository;
-	private final NotificationRepository notificationRepository;
 	private final UserRepository userRepository;
 	private final PrincipalService principalService;
 	
@@ -80,17 +77,7 @@ public class ChatServiceImpl implements ChatService {
 			chat = chatRepository.save(chat);
 			insertRes.setId(chat.getId());
 		}
-				
-//		final Optional<User> recipient = userRepository.findById(chatReq.getRecipientId());
-//		Notification notification = new Notification();
-//		notification.setContextId("NO CONTEXT ID");
-//		notification.setUser(recipient.get());						
-//		notification.setContextUrl("NO URL");
-//		notification.setNotificationContent("Anda memiliki pesan baru");
-//		notification.setCreatedBy(user.getId());
-//		notification.setCreatedAt(LocalDateTime.now());		
-//		notification = notificationRepository.save(notification);
-		
+
 		insertRes.setMessage("Berhasil Menyimpan Data Chat !");
 		return insertRes;
 	}
