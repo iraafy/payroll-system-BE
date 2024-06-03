@@ -1,6 +1,5 @@
 package com.lawencon.pss.service.impl;
 
-import java.lang.reflect.Array;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Optional;
@@ -38,23 +37,29 @@ public class ChatServiceImpl implements ChatService {
 		final ArrayList<Chat> chatsIn = chatRepository.findByRecipientIdOrCreatedBy(principalService.getUserId(), id);
 		final ArrayList<Chat> chatsOut = chatRepository.findByRecipientIdOrCreatedBy(id, principalService.getUserId());
 		
-		for(Chat chat : chatsIn) {
-			final ChatResDto chatRes = new ChatResDto();
-			chatRes.setMessage(chat.getMessage());
-			chatRes.setCreatedAt(chat.getCreatedAt());
-			chatRes.setUserName(chat.getRecipientId());
-			chatsRes.add(chatRes);
+		if (chatsIn != null) {			
+			for(Chat chat : chatsIn) {
+				final ChatResDto chatRes = new ChatResDto();
+				chatRes.setMessage(chat.getMessage());
+				chatRes.setCreatedAt(chat.getCreatedAt());
+				chatRes.setUserName(chat.getRecipientId());
+				chatsRes.add(chatRes);
+			}
 		}
 		
-		for(Chat chat : chatsOut) {
-			final ChatResDto chatRes = new ChatResDto();
-			chatRes.setMessage(chat.getMessage());
-			chatRes.setCreatedAt(chat.getCreatedAt());
-			chatRes.setUserName(chat.getRecipientId());
-			chatsRes.add(chatRes);
+		if (chatsOut != null) {			
+			for(Chat chat : chatsOut) {
+				final ChatResDto chatRes = new ChatResDto();
+				chatRes.setMessage(chat.getMessage());
+				chatRes.setCreatedAt(chat.getCreatedAt());
+				chatRes.setUserName(chat.getRecipientId());
+				chatsRes.add(chatRes);
+			}
 		}
 		
-		chatsRes.sort((chat1, chat2) -> chat1.getCreatedAt().compareTo(chat2.getCreatedAt()));
+		if (chatsRes != null) {
+			chatsRes.sort((chat1, chat2) -> chat1.getCreatedAt().compareTo(chat2.getCreatedAt()));			
+		}
 	    
 	    return chatsRes;
 	}
@@ -63,28 +68,29 @@ public class ChatServiceImpl implements ChatService {
 	@Transactional
 	public InsertResDto saveChat(ChatReqDto chatReq) {
 		final Optional<User> currentUser = userRepository.findById(chatReq.getSenderId());
-		final User user = currentUser.get();
-		Chat chat = new Chat();
-		chat.setMessage(chatReq.getMessage());
-		chat.setRecipientId(chatReq.getRecipientId());
-		chat.setCreatedBy(user.getId());
-		chat.setCreatedAt(LocalDateTime.now());
-		chat = chatRepository.save(chat);
-		
-		
-		final Optional<User> recipient = userRepository.findById(chatReq.getRecipientId());
-		Notification notification = new Notification();
-		notification.setContextId("NO CONTEXT ID");
-		notification.setUser(recipient.get());						
-		notification.setContextUrl("NO URL");
-		notification.setNotificationContent("Anda memiliki pesan baru");
-		notification.setCreatedBy(user.getId());
-		notification.setCreatedAt(LocalDateTime.now());
-		
-		notification = notificationRepository.save(notification);
-		
 		final InsertResDto insertRes = new InsertResDto();
-		insertRes.setId(chat.getId());
+
+		if (currentUser.isPresent()) {			
+			final User user = currentUser.get();
+			Chat chat = new Chat();
+			chat.setMessage(chatReq.getMessage());
+			chat.setRecipientId(chatReq.getRecipientId());
+			chat.setCreatedBy(user.getId());
+			chat.setCreatedAt(LocalDateTime.now());
+			chat = chatRepository.save(chat);
+			insertRes.setId(chat.getId());
+		}
+				
+//		final Optional<User> recipient = userRepository.findById(chatReq.getRecipientId());
+//		Notification notification = new Notification();
+//		notification.setContextId("NO CONTEXT ID");
+//		notification.setUser(recipient.get());						
+//		notification.setContextUrl("NO URL");
+//		notification.setNotificationContent("Anda memiliki pesan baru");
+//		notification.setCreatedBy(user.getId());
+//		notification.setCreatedAt(LocalDateTime.now());		
+//		notification = notificationRepository.save(notification);
+		
 		insertRes.setMessage("Berhasil Menyimpan Data Chat !");
 		return insertRes;
 	}
