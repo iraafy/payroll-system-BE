@@ -24,6 +24,7 @@ import com.lawencon.pss.dto.payroll.PayrollDetailResDto;
 import com.lawencon.pss.dto.payroll.PayrollReqDto;
 import com.lawencon.pss.dto.payroll.PayrollResDto;
 import com.lawencon.pss.dto.payroll.SignatureReqDto;
+import com.lawencon.pss.dto.report.PayrollDetailsReportResDto;
 import com.lawencon.pss.job.ReminderData;
 import com.lawencon.pss.model.Notification;
 import com.lawencon.pss.model.Payroll;
@@ -496,6 +497,24 @@ public class PayrollServiceImpl implements PayrollsService {
 		res.setMessage("Berhasil menandatangani File untuk aktivitas " + payrollDetail.getDescription());
 		
 		return res;
+	}
+
+	@Override
+	public List<PayrollDetailsReportResDto> getPayrollDetailsForReport(String id) {
+		final ArrayList<PayrollDetail> details = payrollDetailRepository.findByPayrollIdOrderByCreatedAtAsc(id);
+		final ArrayList<PayrollDetailsReportResDto> resDetails = new ArrayList<>();
+
+		for (PayrollDetail detail : details) {
+			final PayrollDetailsReportResDto resDetail = new PayrollDetailsReportResDto();
+			resDetail.setId(detail.getId());
+			resDetail.setActivityName(detail.getDescription());
+			resDetail.setMaxUpload(detail.getMaxUploadDate().toLocalDate().toString());
+			resDetail.setUploadedDate(detail.getUpdatedAt().toLocalDate().toString());
+			
+			resDetails.add(resDetail);
+		}
+
+		return resDetails;
 	}
 
 }
