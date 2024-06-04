@@ -46,4 +46,6 @@ public interface PayrollsService {
 	UpdateResDto setPayrollDetailFile(String detailId, String fileId);
 	
 	UpdateResDto signPayrollDetail(String detailId, SignatureReqDto signature);
+
+	List<PayrollDetailsReportResDto> getPayrollDetailsForReport(String id);
 }
