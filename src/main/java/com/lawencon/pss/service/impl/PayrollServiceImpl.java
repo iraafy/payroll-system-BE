@@ -16,12 +16,14 @@ import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
+import com.lawencon.pss.constant.Roles;
 import com.lawencon.pss.dto.InsertResDto;
 import com.lawencon.pss.dto.UpdateResDto;
 import com.lawencon.pss.dto.payroll.PayrollDetailReqDto;
 import com.lawencon.pss.dto.payroll.PayrollDetailResDto;
 import com.lawencon.pss.dto.payroll.PayrollReqDto;
 import com.lawencon.pss.dto.payroll.PayrollResDto;
+import com.lawencon.pss.dto.payroll.SignatureReqDto;
 import com.lawencon.pss.dto.report.PayrollDetailsReportResDto;
 import com.lawencon.pss.job.ReminderData;
 import com.lawencon.pss.model.Notification;
@@ -463,6 +465,37 @@ public class PayrollServiceImpl implements PayrollsService {
 		res.setVer(updatedDetail.getVer());
 		res.setMessage("Berhasil set File pada aktivitas " + payrollDetail.getDescription());
 
+		return res;
+	}
+
+	@Override
+	@Transactional
+	public UpdateResDto signPayrollDetail(String detailId, SignatureReqDto signature) {
+		final var payrollDetailModel = payrollDetailRepository.findById(detailId);
+		var payrollDetail = payrollDetailModel.get();
+		
+		final var currentUser = principalService.getUserId();
+		final var user = userRepository.findById(currentUser);
+		
+		if(user.get() != null) {
+			if(Roles.CL.getCode().equals(user.get().getRole().getRoleCode())) {
+				payrollDetail.setClientAcknowledge(signature.getSignatureBase64());
+				payrollDetail = payrollDetailRepository.save(payrollDetail);
+			}else {
+				payrollDetail.setPsAcknowledge(signature.getSignatureBase64());
+				payrollDetail = payrollDetailRepository.save(payrollDetail);
+			}
+		}
+		
+		payrollDetail = payrollDetailRepository.save(payrollDetail);
+		
+		System.out.println(payrollDetail.getClientAcknowledge());
+		System.out.println(payrollDetail.getClientAcknowledge());
+		
+		final var res = new UpdateResDto();
+		res.setVer(payrollDetail.getVer());
+		res.setMessage("Berhasil menandatangani File untuk aktivitas " + payrollDetail.getDescription());
+		
 		return res;
 	}
 
