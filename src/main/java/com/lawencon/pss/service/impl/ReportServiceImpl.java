@@ -68,7 +68,6 @@ public class ReportServiceImpl implements ReportService {
 		
 		final File file = ResourceUtils.getFile("classpath:payrollReport.jasper");
 		
-		
 		JRBeanCollectionDataSource detailsData = new JRBeanCollectionDataSource(payrollDetails);
 		
 		Map<String, Object> parameters = new HashMap<>();

@@ -10,7 +10,9 @@ import org.springframework.data.repository.query.Param;
 import com.lawencon.pss.model.PayrollDetail;
 
 public interface PayrollDetailRepository extends JpaRepository<PayrollDetail, String> {
-	ArrayList<PayrollDetail> findByPayrollIdOrderByCreatedAtAsc(String id);
+	List<PayrollDetail> findByPayrollIdOrderByCreatedAtAsc(String id);
+	
+	List<PayrollDetail> findByPayrollIdAndForClientOrderByCreatedAtAsc(String id, Boolean isTrue);
 	
 	List<PayrollDetail> findByPayrollClientIdId(String id);
 	
