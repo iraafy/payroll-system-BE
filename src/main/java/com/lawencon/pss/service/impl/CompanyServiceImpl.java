@@ -6,11 +6,13 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.lawencon.pss.dto.InsertResDto;
 import com.lawencon.pss.dto.companies.CompanyResDto;
 import com.lawencon.pss.dto.companies.CreateCompanyReqDto;
+import com.lawencon.pss.exception.ValidateException;
 import com.lawencon.pss.model.Company;
 import com.lawencon.pss.model.File;
 import com.lawencon.pss.model.User;
@@ -65,10 +67,14 @@ public class CompanyServiceImpl implements CompanyService {
 	@Override
 	public InsertResDto createCompany(CreateCompanyReqDto data) {
 
+		this.validate(data);
+		
 		final var companyModel = new Company();
 
 		companyModel.setCompanyName(data.getCompanyName());
 		companyModel.setDefaultPaymentDay(data.getDefaultPaymentDay());
+		companyModel.setAddress(data.getAddress());
+		companyModel.setPhone(data.getPhone());
 
 		final var file = new File();
 		file.setFileContent(data.getFileContent());
@@ -76,9 +82,6 @@ public class CompanyServiceImpl implements CompanyService {
 		file.setFileName("Company Logo");
 
 		file.setCreatedBy(principalService.getUserId());
-		file.setCreatedAt(LocalDateTime.now());
-		file.setVer(0L);
-		file.setIsActive(true);
 
 		final var newFile = fileRepository.save(file);
 		companyModel.setLogoId(newFile);
@@ -114,5 +117,28 @@ public class CompanyServiceImpl implements CompanyService {
 		companyDto.setPayrollDate(companyModel.getDefaultPaymentDay());
 
 		return companyDto;
+	}
+	
+	private void validate(CreateCompanyReqDto request) {
+		
+		final var name = request.getCompanyName();
+		final var date = request.getDefaultPaymentDay();
+		final var count = companyRepository.countByCompanyName(name);
+		
+		if (name == null || name.isBlank()) {
+			throw new ValidateException("Nama company tidak boleh kosong", HttpStatus.BAD_REQUEST);
+		}
+		
+		if (count > 0) {
+			throw new ValidateException("Company sudah dibuat", HttpStatus.BAD_REQUEST);
+		}
+		
+		if (date == null) {
+			throw new ValidateException("Payment date tidak boleh kosong", HttpStatus.BAD_REQUEST);
+		}
+		
+		if (date < 1 || date > 31) { 
+			throw new ValidateException("Tanggal payment date tidak sesuai", HttpStatus.BAD_REQUEST);
+		}
 	}
 }
