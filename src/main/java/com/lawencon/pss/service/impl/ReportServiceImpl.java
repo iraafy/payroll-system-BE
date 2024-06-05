@@ -1,9 +1,7 @@
 package com.lawencon.pss.service.impl;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,9 +69,6 @@ public class ReportServiceImpl implements ReportService {
 		
 		final File file = ResourceUtils.getFile("classpath:payrollReport.jasper");
 		
-		final String base64Content = OurLogo.LOGO.getBase64();
-		byte[] decodedBytes = Base64.getDecoder().decode(base64Content);
-		ByteArrayInputStream inputStream = new ByteArrayInputStream(decodedBytes);
 		
 		JRBeanCollectionDataSource detailsData = new JRBeanCollectionDataSource(payrollDetails);
 		
@@ -82,7 +77,6 @@ public class ReportServiceImpl implements ReportService {
 		parameters.put("title", finalReport.getTitle());
 		parameters.put("scheduleDate", finalReport.getScheduleDate());
 		parameters.put("payrollDetailsDataset", detailsData);
-		parameters.put("ourLogo", inputStream);
 		
 		final JasperPrint jasperPrint = JasperFillManager.fillReport(file.getAbsolutePath(), parameters, new JREmptyDataSource());
 		

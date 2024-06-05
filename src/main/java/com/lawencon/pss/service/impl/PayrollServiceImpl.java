@@ -122,8 +122,8 @@ public class PayrollServiceImpl implements PayrollsService {
 
 			if (company != null) {
 				final Byte defaultPaymentDay = company.getDefaultPaymentDay();
-				System.out.print(defaultPaymentDay);
-				LocalDate convertedDate = LocalDate.now();
+				System.out.println(defaultPaymentDay);
+				LocalDate convertedDate = LocalDate.parse(data.getScheduledDate());
 
 				convertedDate = convertedDate
 						.withDayOfMonth(convertedDate.getMonth().length(convertedDate.isLeapYear()));
@@ -141,7 +141,7 @@ public class PayrollServiceImpl implements PayrollsService {
 						payrollModel.setScheduleDate(dateTime.minusDays(2));
 						System.out.println(payrollModel.getScheduleDate());
 					} else {
-						payrollModel.setScheduleDate(LocalDateTime.of(convertedDate, LocalTime.MAX));
+						payrollModel.setScheduleDate(LocalDateTime.of(convertedDate, LocalTime.MIN));
 					}
 
 				} else {
@@ -509,7 +509,11 @@ public class PayrollServiceImpl implements PayrollsService {
 			resDetail.setId(detail.getId());
 			resDetail.setActivityName(detail.getDescription());
 			resDetail.setMaxUpload(detail.getMaxUploadDate().toLocalDate().toString());
-			resDetail.setUploadedDate(detail.getUpdatedAt().toLocalDate().toString());
+			if(detail.getUpdatedAt() != null) {
+				resDetail.setUploadedDate(detail.getUpdatedAt().toLocalDate().toString());				
+			}else {
+				resDetail.setUploadedDate("-");								
+			}
 			
 			resDetails.add(resDetail);
 		}
