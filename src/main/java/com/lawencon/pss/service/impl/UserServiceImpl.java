@@ -102,6 +102,7 @@ public class UserServiceImpl implements UserService {
 		
 		final var userEmail = request.getEmail();
 		final var userFullName = request.getFullName();
+		final var phone = request.getPhone();
 		final var roleId = request.getRoleId();
 		final var companyId = request.getCompanyId();
 		final var fileContent = request.getFileContent();
@@ -129,6 +130,7 @@ public class UserServiceImpl implements UserService {
 		user.setEmail(userEmail);
 		user.setPassword(encodedPassword);
 		user.setFullName(userFullName);
+		user.setPhone(phone);
 		user.setRole(role);
 		user.setCompany(company);
 		user.setCreatedBy(createdBy);

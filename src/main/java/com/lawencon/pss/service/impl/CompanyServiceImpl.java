@@ -73,6 +73,8 @@ public class CompanyServiceImpl implements CompanyService {
 
 		companyModel.setCompanyName(data.getCompanyName());
 		companyModel.setDefaultPaymentDay(data.getDefaultPaymentDay());
+		companyModel.setAddress(data.getAddress());
+		companyModel.setPhone(data.getPhone());
 
 		final var file = new File();
 		file.setFileContent(data.getFileContent());
@@ -80,9 +82,6 @@ public class CompanyServiceImpl implements CompanyService {
 		file.setFileName("Company Logo");
 
 		file.setCreatedBy(principalService.getUserId());
-		file.setCreatedAt(LocalDateTime.now());
-		file.setVer(0L);
-		file.setIsActive(true);
 
 		final var newFile = fileRepository.save(file);
 		companyModel.setLogoId(newFile);
