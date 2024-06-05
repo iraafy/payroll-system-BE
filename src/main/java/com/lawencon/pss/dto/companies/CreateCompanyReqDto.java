@@ -8,8 +8,6 @@ import lombok.Setter;
 public class CreateCompanyReqDto {
 
     private String companyName;
-    private String phone;
-    private String address;
     private Byte defaultPaymentDay;
     private String fileContent;
     private String fileExtension;
