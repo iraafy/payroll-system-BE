@@ -20,6 +20,12 @@ public class Company extends BaseModel {
     
     @Column(name = "default_payment_day", nullable = false)
     private Byte defaultPaymentDay;
+    
+    @Column(name = "address")
+    private String address;
+    
+    @Column(name = "phone")
+    private String phone;
 
     @ManyToOne
     @JoinColumn(name = "logo_id")

@@ -23,6 +23,9 @@ public class User extends BaseModel {
 
     @Column(name = "full_name")
     private String fullName;
+    
+    @Column(name = "phone")
+    private String phone;
 
     @ManyToOne
     @JoinColumn(name = "file_id")
