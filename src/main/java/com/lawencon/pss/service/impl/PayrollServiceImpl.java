@@ -255,7 +255,7 @@ public class PayrollServiceImpl implements PayrollsService {
 			final var triggerLocalDateTime = LocalDateTime.of(data.getMaxUploadDate().minusDays(2), LocalTime.NOON.minusHours(5));
 			final Date triggerDate = Timestamp.valueOf(triggerLocalDateTime);
 			
-			reminder.setActivityLink("/payrolls/"+payroll.get().getId());
+			reminder.setActivityLink("http://localhost:4200/payrolls/"+payroll.get().getId());
 			reminder.setDate(triggerDate);
 			reminder.setFullName(user.getFullName());
 			reminder.setEmail(user.getEmail());
