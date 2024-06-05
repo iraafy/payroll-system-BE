@@ -14,7 +14,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 //import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.lawencon.pss.constant.OurLogo;
 import com.lawencon.pss.constant.Roles;
 import com.lawencon.pss.dto.InsertResDto;
 import com.lawencon.pss.dto.UpdateResDto;
@@ -135,8 +134,6 @@ public class UserServiceImpl implements UserService {
 			templateModel.put("fullName", userFullName);
 			templateModel.put("email", userEmail);
 			templateModel.put("password", password);
-			templateModel.put("logo", OurLogo.LOGOTYPE);
-			templateModel.put("header", OurLogo.HEADER);
 
 			try {
 				emailService.sendTemplateEmail(userEmail, subjectEmail, "create-user", templateModel);

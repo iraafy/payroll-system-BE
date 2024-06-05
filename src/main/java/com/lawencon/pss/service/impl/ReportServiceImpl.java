@@ -9,7 +9,6 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 
-import com.lawencon.pss.constant.OurLogo;
 import com.lawencon.pss.dto.companies.CompanyResDto;
 import com.lawencon.pss.dto.report.ReportResDto;
 import com.lawencon.pss.repository.PayrollRepository;

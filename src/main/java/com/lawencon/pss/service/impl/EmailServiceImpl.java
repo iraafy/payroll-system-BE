@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 
-import com.lawencon.pss.constant.OurLogo;
 import com.lawencon.pss.service.EmailService;
 
 import lombok.RequiredArgsConstructor;
