@@ -1,5 +1,6 @@
 package com.lawencon.pss.service.impl;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 //import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.lawencon.pss.constant.OurLogo;
 import com.lawencon.pss.constant.Roles;
 import com.lawencon.pss.dto.InsertResDto;
 import com.lawencon.pss.dto.UpdateResDto;
@@ -133,12 +135,14 @@ public class UserServiceImpl implements UserService {
 			templateModel.put("fullName", userFullName);
 			templateModel.put("email", userEmail);
 			templateModel.put("password", password);
-
-			System.out.println("Sending email with templateModel: " + templateModel);
+			templateModel.put("logo", OurLogo.LOGOTYPE);
+			templateModel.put("header", OurLogo.HEADER);
 
 			try {
-				emailService.sendTemplateEmail(userEmail, subjectEmail, "welcome-email", templateModel);
+				emailService.sendTemplateEmail(userEmail, subjectEmail, "create-user", templateModel);
 			} catch (MessagingException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		};

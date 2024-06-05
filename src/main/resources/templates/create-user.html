@@ -28,19 +28,55 @@
 				<tr>
 					<td colspan="3">
 						<p style="margin: 0 20px; font-size: 14px; line-height: 21px;">
-							Anda belum mengirimkan file yang dibutuhkan pada aktivitas [[${message}]]
-							yang akan berakhir dalam 2 hari lagi.
-							Silahkan unggah file yang dibutuhkan sebelum tenggat waktu berakhir.
-							Anda dapat mengunggah file dengan mengklik tombol di bawah ini. Terima kasih.
+							Berikut adalah informasi akun yang telah dibuat untuk Anda. Silahkan gunakan informasi ini untuk masuk ke sistem kami. Terima kasih.
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td width="30%;" style="padding: 0 20px;">
+						<p style="color: #212121; padding-top: 20px; font-size: 16px; line-height: 24px; font-weight: 700; margin: 0;">Nama Lengkap</p>
+					</td>
+					<td width="10%">
+						<p style="color: #212121; padding-top: 20px; font-size: 16px; line-height: 24px; font-weight: 700; margin: 0;">:</p>
+					</td>
+					<td width="60%">
+						<p style="word-break: break-all; padding-top: 20px; color: #212121; font-size: 16px; line-height: 24px; font-weight: 700; margin: 0;">
+							[[${fullName}]]
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td width="30%;" style="padding: 0 20px;">
+						<p style="color: #212121; padding-top: 10px; font-size: 16px; line-height: 24px; font-weight: 700; margin: 0;">Email</p>
+					</td>
+					<td width="10%">
+						<p style="color: #212121; padding-top: 10px; font-size: 16px; line-height: 24px; font-weight: 700; margin: 0;">:</p>
+					</td>
+					<td width="60%">
+						<p style="word-break: break-all; color: #212121; padding-top: 10px; font-size: 16px; line-height: 24px; font-weight: 700; margin: 0;">
+							[[${email}]]
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td width="30%;" style="padding: 0 20px;">
+						<p style="color: #212121; padding-top: 10px; font-size: 16px; line-height: 24px; font-weight: 700; margin: 0;">Password</p>
+					</td>
+					<td width="10%">
+						<p style="color: #212121; padding-top: 10px; font-size: 16px; line-height: 24px; font-weight: 700; margin: 0;">:</p>
+					</td>
+					<td width="60%">
+						<p style="word-break: break-all; color: #212121; padding-top: 10px; font-size: 16px; line-height: 24px; font-weight: 700; margin: 0;">
+							[[${password}]]
 						</p>
 					</td>
 				</tr>
 				<tr>
 					<td style="padding: 40px 20px;" colspan="3">
-						<a th:href="@{${activityLink}}" style="text-decoration: none; display: inline-block; padding: 8px 12px; border-radius: 8px; background-color: #0E8DC4; border: unset; margin: 0 auto;">
+						<a href="http://localhost:4200/login" style="text-decoration: none; display: inline-block; padding: 8px 28px; border-radius: 8px; background-color: #0E8DC4; border: unset; margin: 0 auto;">
 							<p
 								style="margin: 0; font-size: 16px; line-height: 24px; font-weight: bold; color: #fff; font-family: 'Nunito Sans', sans-serif;">
-								Unggah Sekarang
+								Masuk Sekarang
 							</p>
 						</a>
 					</td>

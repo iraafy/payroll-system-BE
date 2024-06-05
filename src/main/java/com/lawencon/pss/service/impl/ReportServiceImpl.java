@@ -11,7 +11,7 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 
-import com.lawencon.pss.constant.ourLogo;
+import com.lawencon.pss.constant.OurLogo;
 import com.lawencon.pss.dto.companies.CompanyResDto;
 import com.lawencon.pss.dto.report.ReportResDto;
 import com.lawencon.pss.repository.PayrollRepository;
@@ -71,7 +71,7 @@ public class ReportServiceImpl implements ReportService {
 		
 		final File file = ResourceUtils.getFile("classpath:payrollReport.jasper");
 		
-		final String base64Content = ourLogo.LOGO.getBase64();
+		final String base64Content = OurLogo.LOGO.getBase64();
 		byte[] decodedBytes = Base64.getDecoder().decode(base64Content);
 		ByteArrayInputStream inputStream = new ByteArrayInputStream(decodedBytes);
 		

@@ -1,5 +1,6 @@
 package com.lawencon.pss.job;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,6 +37,8 @@ public class ReminderJob implements Job {
 			try {
 				emailService.sendTemplateEmail(email, subject, "reminder-email", templateModel);
 			} catch (MessagingException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		};
