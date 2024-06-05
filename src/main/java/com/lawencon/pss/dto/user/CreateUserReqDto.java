@@ -13,5 +13,6 @@ public class CreateUserReqDto {
 	private String companyId;
 	private String fileContent;
 	private String fileExt;
+	private String phone;
 
 }

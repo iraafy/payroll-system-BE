@@ -10,4 +10,6 @@ import com.lawencon.pss.model.Role;
 @Repository
 public interface RoleRepository extends JpaRepository<Role, String> {
     Optional<Role> findById(Long id);
+    
+    long countById(String id);
 }

@@ -11,5 +11,7 @@ public class CreateCompanyReqDto {
     private Byte defaultPaymentDay;
     private String fileContent;
     private String fileExtension;
+    private String phone;
+    private String address;
     
 }
