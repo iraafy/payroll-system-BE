@@ -11,5 +11,6 @@ public class PayrollDetailsReportResDto {
 	private String activityName;
 	private String maxUpload;
 	private String uploadedDate;
+	private String description;
 	
 }

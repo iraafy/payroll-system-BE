@@ -1,5 +1,6 @@
 package com.lawencon.pss.service.impl;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -144,11 +145,11 @@ public class UserServiceImpl implements UserService {
 			templateModel.put("email", userEmail);
 			templateModel.put("password", password);
 
-			System.out.println("Sending email with templateModel: " + templateModel);
-
 			try {
-				emailService.sendTemplateEmail(userEmail, subjectEmail, "welcome-email", templateModel);
+				emailService.sendTemplateEmail(userEmail, subjectEmail, "create-user", templateModel);
 			} catch (MessagingException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		};
