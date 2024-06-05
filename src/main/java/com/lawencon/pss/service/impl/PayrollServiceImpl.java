@@ -509,7 +509,11 @@ public class PayrollServiceImpl implements PayrollsService {
 			resDetail.setId(detail.getId());
 			resDetail.setActivityName(detail.getDescription());
 			resDetail.setMaxUpload(detail.getMaxUploadDate().toLocalDate().toString());
-			resDetail.setUploadedDate(detail.getUpdatedAt().toLocalDate().toString());
+			if(detail.getUpdatedAt() != null) {
+				resDetail.setUploadedDate(detail.getUpdatedAt().toLocalDate().toString());				
+			}else {
+				resDetail.setUploadedDate("-");								
+			}
 			
 			resDetails.add(resDetail);
 		}

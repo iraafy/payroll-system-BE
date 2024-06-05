@@ -47,21 +47,8 @@ public class ReportController {
 
 		byte fileBytes[] = JasperExportManager.exportReportToPdf(jasperPrint);
 
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("Content-Disposition", "inline; filename=report.pdf");
-
-		return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=companies.pdf")
+		return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=final_report.pdf")
 				.body(fileBytes);
 
 	}
-
-//	@GetMapping("{id}")
-//	public ResponseEntity<ReportResDto> printReport(@PathVariable String id) throws FileNotFoundException, JRException {
-//
-//		final var res = reportService.exportReport(id);
-//
-//		return new ResponseEntity<>(res, HttpStatus.OK);
-//
-//	}
-
 }
