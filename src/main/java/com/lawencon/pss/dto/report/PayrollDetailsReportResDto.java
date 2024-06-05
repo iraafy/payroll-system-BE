@@ -1,7 +1,5 @@
 package com.lawencon.pss.dto.report;
 
-import java.time.LocalDateTime;
-
 import lombok.Getter;
 import lombok.Setter;
 
