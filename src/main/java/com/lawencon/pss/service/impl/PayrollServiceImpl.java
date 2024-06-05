@@ -272,7 +272,7 @@ public class PayrollServiceImpl implements PayrollsService {
 
 	@Override
 	public ArrayList<PayrollDetailResDto> getPayrollDetails(String id) {
-		final ArrayList<PayrollDetail> details = payrollDetailRepository.findByPayrollIdOrderByCreatedAtAsc(id);
+		final var details = payrollDetailRepository.findByPayrollIdOrderByCreatedAtAsc(id);
 		final ArrayList<PayrollDetailResDto> resDetails = new ArrayList<>();
 
 		for (PayrollDetail detail : details) {
@@ -501,23 +501,32 @@ public class PayrollServiceImpl implements PayrollsService {
 
 	@Override
 	public List<PayrollDetailsReportResDto> getPayrollDetailsForReport(String id) {
-		final ArrayList<PayrollDetail> details = payrollDetailRepository.findByPayrollIdOrderByCreatedAtAsc(id);
+		final var details = payrollDetailRepository.findByPayrollIdAndForClientOrderByCreatedAtAsc(id, true);
 		final ArrayList<PayrollDetailsReportResDto> resDetails = new ArrayList<>();
 
 		for (PayrollDetail detail : details) {
 			final PayrollDetailsReportResDto resDetail = new PayrollDetailsReportResDto();
 			resDetail.setId(detail.getId());
 			resDetail.setActivityName(detail.getDescription());
-			resDetail.setMaxUpload(detail.getMaxUploadDate().toLocalDate().toString());
+			
 			if(detail.getUpdatedAt() != null) {
-				resDetail.setUploadedDate(detail.getUpdatedAt().toLocalDate().toString());				
+				resDetail.setMaxUpload(detail.getMaxUploadDate().toLocalDate().toString());
+				resDetail.setUploadedDate(detail.getUpdatedAt().toLocalDate().toString());
+				
+				if(detail.getUpdatedAt().isBefore(detail.getMaxUploadDate())) {
+					resDetail.setDescription("Tepat Waktu");
+				}else {
+					resDetail.setDescription("Terlambat");					
+				}
+				
 			}else {
-				resDetail.setUploadedDate("-");								
+				resDetail.setMaxUpload("-");
+				resDetail.setUploadedDate(detail.getMaxUploadDate().toLocalDate().toString());								
+				resDetail.setDescription("Dokumen yang dikirim PS");
 			}
 			
 			resDetails.add(resDetail);
 		}
-
 		return resDetails;
 	}
 
