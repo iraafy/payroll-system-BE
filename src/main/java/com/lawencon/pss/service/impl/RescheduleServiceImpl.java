@@ -137,7 +137,7 @@ public class RescheduleServiceImpl implements RescheduleService {
 
 	@Transactional
 	@Override
-	public UpdateResDto updateStatusApproval(String id) {
+	public UpdateResDto acceptStatusApproval(String id) {
 
 		final var rescheduleModel = reschedulesRepository.findById(id);
 		final var reschedule = rescheduleModel.get();
@@ -176,8 +176,31 @@ public class RescheduleServiceImpl implements RescheduleService {
 		mailThread.start();
 
 		res.setVer(updatedReschedule.getVer());
-		res.setMessage("aktivitas disetujui untuk di reschedule");
+		res.setMessage("Permintaan untuk pemindahan tanggal aktivitas berhasil disetujui");
 
+		return res;
+	}
+	
+	@Override
+	@Transactional
+	public UpdateResDto rejectStatusApproval(String id) {
+		
+		final var rescheduleModel = reschedulesRepository.findById(id);
+		final Reschedule reschedule = rescheduleModel.get();
+		
+		reschedule.setIsApprove(null);
+		
+		final var payrollDetail = payrollDetailRepository.findById(reschedule.getPayrollDetailId().getId());
+		final var payrollDetailModel = payrollDetail.get();
+		payrollDetailModel.setMaxUploadDate(reschedule.getNewScheduleDate());
+		payrollDetailRepository.save(payrollDetailModel);
+		
+		final var updatedReschedule = reschedulesRepository.save(reschedule);
+		final var res = new UpdateResDto();
+		
+		res.setVer(updatedReschedule.getVer());
+		res.setMessage("Permintaan untuk pemindahan tanggal aktivitas berhasil ditolak");
+		
 		return res;
 	}
 

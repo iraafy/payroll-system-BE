@@ -1,7 +1,5 @@
 package com.lawencon.pss.dto.report;
 
-import java.time.LocalDateTime;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,5 +11,6 @@ public class PayrollDetailsReportResDto {
 	private String activityName;
 	private String maxUpload;
 	private String uploadedDate;
+	private String description;
 	
 }

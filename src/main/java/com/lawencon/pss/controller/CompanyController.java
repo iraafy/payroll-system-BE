@@ -35,7 +35,7 @@ public class CompanyController {
 
     @PostMapping("/new")
     public ResponseEntity<InsertResDto> createCompany(@RequestBody CreateCompanyReqDto data) {
-
+    	
         final var res = companyService.createCompany(data);
 
         return new ResponseEntity<>(res, HttpStatus.CREATED);

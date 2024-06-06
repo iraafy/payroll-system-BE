@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.mail.MessagingException;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,6 +26,7 @@ import com.lawencon.pss.dto.user.CreateUserReqDto;
 import com.lawencon.pss.dto.user.LoginReqDto;
 import com.lawencon.pss.dto.user.LoginResDto;
 import com.lawencon.pss.dto.user.UserResDto;
+import com.lawencon.pss.exception.ValidateException;
 import com.lawencon.pss.model.ClientAssignment;
 import com.lawencon.pss.model.File;
 import com.lawencon.pss.model.Role;
@@ -94,36 +96,44 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public InsertResDto createUser(CreateUserReqDto request) {
+		
+		this.validate(request);
+		
 		final var user = new User();
+		
 		final var userEmail = request.getEmail();
 		final var userFullName = request.getFullName();
+		final var phone = request.getPhone();
 		final var roleId = request.getRoleId();
 		final var companyId = request.getCompanyId();
 		final var fileContent = request.getFileContent();
 		final var fileExt = request.getFileExt();
-		final var roleOpt = roleRepository.findById(roleId);
-		final var role = roleOpt.get();
-		final var companyOpt = companyRepository.findById(companyId);
-		final var company = companyOpt.get();
+		
+		final var role = roleRepository.findById(roleId).get();
+		final var company = companyRepository.findById(companyId).get();
+		
 		final var password = GeneratorUtil.randomString();
-		final var createdBy = principalService.getUserId();
-		System.out.println(createdBy);
-
 		final var encodedPassword = passwordEncoder.encode(password);
+		
+		final var createdBy = principalService.getUserId();
 
-		final File file = new File();
-		file.setFileContent(fileContent);
-		file.setFileExt(fileExt);
-		file.setFileName("Profile Picture");
-		file.setCreatedBy(createdBy);
-		final var fileResult = fileRepository.save(file);
+		if (fileContent != null) {			
+			final File file = new File();
+			file.setFileContent(fileContent);
+			file.setFileExt(fileExt);
+			file.setFileName("Profile Picture");
+			file.setCreatedBy(createdBy);
+			final var fileResult = fileRepository.save(file);
+			
+			user.setFile(fileResult);
+		}
 
 		user.setEmail(userEmail);
 		user.setPassword(encodedPassword);
 		user.setFullName(userFullName);
+		user.setPhone(phone);
 		user.setRole(role);
 		user.setCompany(company);
-		user.setFile(fileResult);
 		user.setCreatedBy(createdBy);
 
 		final var result = userRepository.save(user);
@@ -163,6 +173,7 @@ public class UserServiceImpl implements UserService {
 				final var user = new UserResDto();
 				user.setId(u.getId());
 				user.setFullName(u.getFullName());
+				user.setEmail(u.getEmail());
 				user.setRoleName(u.getRole().getRoleName());
 				user.setCompanyName(u.getCompany().getCompanyName());
 				if (u.getFile() != null) {
@@ -249,7 +260,7 @@ public class UserServiceImpl implements UserService {
 				response.setMessage("Berhasil mengubah kata sandi!");
 
 			} else {
-				response.setMessage("Gagal mengubah kata sandi :(");
+				throw new ValidateException("Kata sandi lama salah", HttpStatus.BAD_REQUEST);
 			}
 		}
 
@@ -315,49 +326,90 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UpdateResDto updateName(String newName) {
-		final var response = new UpdateResDto();
-		final var updatedBy = principalService.getUserId();
-		final var userFound = userRepository.findById(updatedBy);
-
-		if (userFound.isPresent()) {
-			final var user = userFound.get();
-
-			user.setFullName(newName);
-			final var result = userRepository.save(user);
-
-			response.setVer(result.getVer());
-			response.setMessage("Berhasil mengubah nama");
+		if (newName.isBlank() || newName == null) {
+			throw new ValidateException("Nama baru tidak boleh kosong", HttpStatus.BAD_REQUEST);
+		} else {			
+			final var response = new UpdateResDto();
+			final var updatedBy = principalService.getUserId();
+			final var userFound = userRepository.findById(updatedBy);
+			
+			if (userFound.isPresent()) {
+				final var user = userFound.get();
+				
+				user.setFullName(newName);
+				final var result = userRepository.save(user);
+				
+				response.setVer(result.getVer());
+				response.setMessage("Berhasil mengubah nama");
+			}
+			
+			return response;
 		}
-
-		return response;
 	}
 
 	@Override
 	public UpdateResDto updateProfilePicture(ChangeProfilePicReqDto request) {
-		final var response = new UpdateResDto();
-		final var updatedBy = principalService.getUserId();
-		final var userFound = userRepository.findById(updatedBy);
-
-		if (userFound.isPresent()) {
-			final var user = userFound.get();
-
-			final var fileContent = request.getFileContent();
-			final var fileExt = request.getFileExt();
-
-			final File file = new File();
-			file.setFileContent(fileContent);
-			file.setFileExt(fileExt);
-			file.setFileName("Profile Picture");
-			file.setCreatedBy(updatedBy);
-			final var fileResult = fileRepository.save(file);
-
-			user.setFile(fileResult);
-
-			final var result = userRepository.save(user);
-
-			response.setVer(result.getVer());
-			response.setMessage("Berhasil mengubah foto profile");
+		if (request.getFileContent().isBlank() || request.getFileContent() == null) {
+			throw new ValidateException("Foto profil baru tidak boleh kosong", HttpStatus.BAD_REQUEST);
+		} else {			
+			final var response = new UpdateResDto();
+			final var updatedBy = principalService.getUserId();
+			final var userFound = userRepository.findById(updatedBy);
+			
+			if (userFound.isPresent()) {
+				final var user = userFound.get();
+				
+				final var fileContent = request.getFileContent();
+				final var fileExt = request.getFileExt();
+				
+				final File file = new File();
+				file.setFileContent(fileContent);
+				file.setFileExt(fileExt);
+				file.setFileName("Profile Picture");
+				file.setCreatedBy(updatedBy);
+				final var fileResult = fileRepository.save(file);
+				
+				user.setFile(fileResult);
+				
+				final var result = userRepository.save(user);
+				
+				response.setVer(result.getVer());
+				response.setMessage("Berhasil mengubah foto profile");
+			}
+			return response;
 		}
-		return response;
+	}
+	
+	private void validate(CreateUserReqDto data) {
+		final var fullName = data.getFullName();
+		final var email = data.getEmail();
+		final var companyId = data.getCompanyId();
+		final var roleId = data.getRoleId();
+		final var companyCount = companyRepository.countById(companyId);
+		final var roleCount = roleRepository.countById(roleId);
+		
+		if (fullName.isBlank() || fullName == null) {
+			throw new ValidateException("Nama tidak boleh kosong", HttpStatus.BAD_REQUEST);
+		}
+		
+		if (email.isBlank() || email == null) {
+			throw new ValidateException("Email tidak boleh kosong", HttpStatus.BAD_REQUEST);
+		}
+		
+		if (companyId.isBlank() || companyId == null) {
+			throw new ValidateException("Company tidak boleh kosong", HttpStatus.BAD_REQUEST);
+		}
+		
+		if (companyCount < 1) {
+			throw new ValidateException("Company tidak ditemukan", HttpStatus.BAD_REQUEST);
+		}
+		
+		if (roleId.isBlank() || roleId == null) {
+			throw new ValidateException("Role tidak boleh kosong", HttpStatus.BAD_REQUEST);
+		}
+		
+		if (roleCount < 1) { 
+			throw new ValidateException("Role tidak ditemukan", HttpStatus.BAD_REQUEST);
+		}
 	}
 }

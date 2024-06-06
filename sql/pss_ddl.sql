@@ -17,6 +17,8 @@ CREATE TABLE tb_m_files (
 CREATE TABLE tb_m_companies (
 	id VARCHAR(36) PRIMARY KEY,
 	company_name VARCHAR(50) NOT NULL,
+	phone VARCHAR(15),
+	address TEXT,
 	logo_id VARCHAR(36),
 	default_payment_day SMALLINT NOT NULL,
 	created_by VARCHAR(36) NOT NULL,
@@ -48,6 +50,7 @@ CREATE TABLE tb_m_users (
 	company_id VARCHAR(36) NOT NULL,
 	file_id VARCHAR(36),
 	full_name VARCHAR(100),
+	phone VARCHAR(15),
 	email VARCHAR(50) NOT NULL,
 	pwd TEXT NOT NULL,
 	created_by VARCHAR(36) NOT NULL,
@@ -164,6 +167,9 @@ CREATE TABLE tb_r_reschedules (
 --	is_active BOOLEAN DEFAULT TRUE,
 --	CONSTRAINT recipient_fk FOREIGN KEY(recipient_id) REFERENCES tb_m_users(id)
 --);
+
+ALTER TABLE tb_m_companies 
+ADD CONSTRAINT company_name_bk UNIQUE(company_name);
 
 ------------------------------INSERT---------------------------------
 
