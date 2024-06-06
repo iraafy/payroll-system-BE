@@ -87,7 +87,7 @@ public class FileServiceImpl implements FileService {
 		file.setCreatedBy(principalService.getUserId());
 		
 		final var result = fileRepository.save(file);
-		final var client = userRepository.findById(principalService.getUserId());
+		final var client = userRepository.findById(payroll.get().getPayroll().getClientId().getId());
 		final var payrollService = clientAssignmentRepository.findByClientId(client.get().getId());
 		final var userEmail = payrollService.get().getPs().getEmail();
 		
