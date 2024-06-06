@@ -1,6 +1,5 @@
 package com.lawencon.pss.service.impl;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,21 +75,19 @@ public class CompanyServiceImpl implements CompanyService {
 		companyModel.setAddress(data.getAddress());
 		companyModel.setPhone(data.getPhone());
 
-		final var file = new File();
-		file.setFileContent(data.getFileContent());
-		file.setFileExt(data.getFileExtension());
-		file.setFileName("Company Logo");
-
-		file.setCreatedBy(principalService.getUserId());
-
-		final var newFile = fileRepository.save(file);
-		companyModel.setLogoId(newFile);
+		if (data.getFileContent() == null) {			
+			final var file = new File();
+			file.setFileContent(data.getFileContent());
+			file.setFileExt(data.getFileExtension());
+			file.setFileName("Company Logo");
+			
+			file.setCreatedBy(principalService.getUserId());
+			
+			final var newFile = fileRepository.save(file);
+			companyModel.setLogoId(newFile);
+		}
 
 		companyModel.setCreatedBy(principalService.getUserId());
-
-		companyModel.setCreatedAt(LocalDateTime.now());
-		companyModel.setVer(0L);
-		companyModel.setIsActive(true);
 
 		final var newCompany = companyRepository.save(companyModel);
 
@@ -126,11 +123,11 @@ public class CompanyServiceImpl implements CompanyService {
 		final var count = companyRepository.countByCompanyName(name);
 		
 		if (name == null || name.isBlank()) {
-			throw new ValidateException("Nama company tidak boleh kosong", HttpStatus.BAD_REQUEST);
+			throw new ValidateException("Nama perusahaan tidak boleh kosong", HttpStatus.BAD_REQUEST);
 		}
 		
 		if (count > 0) {
-			throw new ValidateException("Company sudah dibuat", HttpStatus.BAD_REQUEST);
+			throw new ValidateException("Nama perusahaan sudah terdaftar", HttpStatus.BAD_REQUEST);
 		}
 		
 		if (date == null) {
@@ -138,7 +135,7 @@ public class CompanyServiceImpl implements CompanyService {
 		}
 		
 		if (date < 1 || date > 31) { 
-			throw new ValidateException("Tanggal payment date tidak sesuai", HttpStatus.BAD_REQUEST);
+			throw new ValidateException("Payment date tidak sesuai", HttpStatus.BAD_REQUEST);
 		}
 	}
 }
