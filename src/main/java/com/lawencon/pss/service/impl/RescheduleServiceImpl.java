@@ -260,21 +260,26 @@ public class RescheduleServiceImpl implements RescheduleService {
 	@Override
 	public ReschedulesResDto getLastRescheduleByPayrollDetailId(String id) {
 		final var reschedule = reschedulesRepository.findFirstBypayrollDetailIdIdOrderByCreatedAtDesc(id);
-		final var rescheduleModel = reschedule.get();
+		
+		if(reschedule.isPresent()) {
+			final var rescheduleModel = reschedule.get();			
+			final var scheduleDto = new ReschedulesResDto();
+			scheduleDto.setId(rescheduleModel.getId());
+			scheduleDto.setNewScheduleDate(rescheduleModel.getNewScheduleDate().toString());
+			scheduleDto.setPayrollDetailId(rescheduleModel.getPayrollDetailId().getId());
+			scheduleDto.setIsApproved(rescheduleModel.getIsApprove());
+			
+			final var payrollDetailModel = payrollDetailRepository.findById(rescheduleModel.getPayrollDetailId().getId());
+			final var payrollDetail = payrollDetailModel.get();
+			
+			scheduleDto.setOldScheduleDate(payrollDetail.getMaxUploadDate().toString());
+			scheduleDto.setPayrollDetailDescription(payrollDetail.getDescription());
+			
+			return scheduleDto;
+		}else {
+			return null;
+		}
 
-		final var scheduleDto = new ReschedulesResDto();
-		scheduleDto.setId(rescheduleModel.getId());
-		scheduleDto.setNewScheduleDate(rescheduleModel.getNewScheduleDate().toString());
-		scheduleDto.setPayrollDetailId(rescheduleModel.getPayrollDetailId().getId());
-		scheduleDto.setIsApproved(rescheduleModel.getIsApprove());
-
-		final var payrollDetailModel = payrollDetailRepository.findById(rescheduleModel.getPayrollDetailId().getId());
-		final var payrollDetail = payrollDetailModel.get();
-
-		scheduleDto.setOldScheduleDate(payrollDetail.getMaxUploadDate().toString());
-		scheduleDto.setPayrollDetailDescription(payrollDetail.getDescription());
-
-		return scheduleDto;
 	}
 
 }
