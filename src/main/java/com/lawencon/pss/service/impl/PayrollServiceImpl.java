@@ -135,7 +135,7 @@ public class PayrollServiceImpl implements PayrollsService {
 						.withDayOfMonth(convertedDate.getMonth().length(convertedDate.isLeapYear()));
 
 				Long lastDate = convertedDate.getLong(ChronoField.DAY_OF_MONTH);
-				LocalDate finalScheduleDate;
+//				LocalDate finalScheduleDate;
 
 				if (lastDate < defaultPaymentDay) {
 					String day = convertedDate.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
