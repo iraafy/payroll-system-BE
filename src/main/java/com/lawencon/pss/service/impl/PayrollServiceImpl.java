@@ -18,6 +18,7 @@ import java.util.Optional;
 import javax.mail.MessagingException;
 import javax.transaction.Transactional;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.lawencon.pss.constant.Roles;
@@ -29,6 +30,7 @@ import com.lawencon.pss.dto.payroll.PayrollReqDto;
 import com.lawencon.pss.dto.payroll.PayrollResDto;
 import com.lawencon.pss.dto.payroll.SignatureReqDto;
 import com.lawencon.pss.dto.report.PayrollDetailsReportResDto;
+import com.lawencon.pss.exception.ValidateException;
 import com.lawencon.pss.job.ReminderData;
 import com.lawencon.pss.model.Notification;
 import com.lawencon.pss.model.Payroll;
@@ -135,7 +137,6 @@ public class PayrollServiceImpl implements PayrollsService {
 						.withDayOfMonth(convertedDate.getMonth().length(convertedDate.isLeapYear()));
 
 				Long lastDate = convertedDate.getLong(ChronoField.DAY_OF_MONTH);
-//				LocalDate finalScheduleDate;
 
 				if (lastDate < defaultPaymentDay) {
 					String day = convertedDate.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
@@ -249,7 +250,9 @@ public class PayrollServiceImpl implements PayrollsService {
 		final Optional<Payroll> payroll = payrollRepository.findById(id);
 		final InsertResDto res = new InsertResDto();
 		
-		if(payroll.get() != null) {
+		final var isBefore = data.getMaxUploadDate().isBefore(payroll.get().getScheduleDate().toLocalDate());
+		
+		if(payroll.get() != null && isBefore) {
 			final User user = userRepository.findById(payroll.get().getClientId().getId()).get();
 			PayrollDetail newDetail = new PayrollDetail();
 			newDetail.setDescription(data.getDescription());
@@ -311,7 +314,7 @@ public class PayrollServiceImpl implements PayrollsService {
 
 			
 		}else {
-			res.setMessage("Payroll tidak ditemukan !");
+			throw new ValidateException("Deadline tanggal aktivitas tidak boleh melebihi jadwal payroll", HttpStatus.BAD_REQUEST);
 		}
 		return res;
 	}
