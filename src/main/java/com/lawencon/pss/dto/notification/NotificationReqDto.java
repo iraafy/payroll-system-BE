@@ -14,5 +14,7 @@ public class NotificationReqDto {
 	private String contextId;
 	
 	private String userId;
+	
+	private String payrollDetailId;
 
 }
