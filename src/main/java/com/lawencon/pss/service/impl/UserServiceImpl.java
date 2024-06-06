@@ -387,6 +387,7 @@ public class UserServiceImpl implements UserService {
 		final var roleId = data.getRoleId();
 		final var companyCount = companyRepository.countById(companyId);
 		final var roleCount = roleRepository.countById(roleId);
+		final var emailCount = userRepository.countByEmail(email);
 		
 		if (fullName.isBlank() || fullName == null) {
 			throw new ValidateException("Nama tidak boleh kosong", HttpStatus.BAD_REQUEST);
@@ -396,12 +397,16 @@ public class UserServiceImpl implements UserService {
 			throw new ValidateException("Email tidak boleh kosong", HttpStatus.BAD_REQUEST);
 		}
 		
+		if (emailCount > 0) {
+			throw new ValidateException("Email sudah terdaftar", HttpStatus.BAD_REQUEST);
+		}
+		
 		if (companyId.isBlank() || companyId == null) {
-			throw new ValidateException("Company tidak boleh kosong", HttpStatus.BAD_REQUEST);
+			throw new ValidateException("Perusahaan tidak boleh kosong", HttpStatus.BAD_REQUEST);
 		}
 		
 		if (companyCount < 1) {
-			throw new ValidateException("Company tidak ditemukan", HttpStatus.BAD_REQUEST);
+			throw new ValidateException("Perusahaan tidak ditemukan", HttpStatus.BAD_REQUEST);
 		}
 		
 		if (roleId.isBlank() || roleId == null) {
