@@ -216,8 +216,6 @@ public class RescheduleServiceImpl implements RescheduleService {
 		final var payrollDetailModel = payrollDetail.get();
 		final var payroll = payrollDetailModel.getPayroll();
 		final var client = payroll.getClientId();
-		payrollDetailModel.setMaxUploadDate(reschedule.getNewScheduleDate());
-		payrollDetailRepository.save(payrollDetailModel);
 		
 		final var notification = new Notification();
 		final var url = "/payrolls/"+payroll.getId();
