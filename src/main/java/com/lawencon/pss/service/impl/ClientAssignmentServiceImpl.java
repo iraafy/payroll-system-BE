@@ -1,9 +1,13 @@
 package com.lawencon.pss.service.impl;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
+import javax.mail.MessagingException;
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
@@ -19,6 +23,7 @@ import com.lawencon.pss.model.User;
 import com.lawencon.pss.repository.ClientAssignmentRepository;
 import com.lawencon.pss.repository.UserRepository;
 import com.lawencon.pss.service.ClientAssignmentService;
+import com.lawencon.pss.service.EmailService;
 import com.lawencon.pss.service.PrincipalService;
 
 import lombok.RequiredArgsConstructor;
@@ -30,6 +35,7 @@ public class ClientAssignmentServiceImpl implements ClientAssignmentService {
 	private final ClientAssignmentRepository clientAssignmentRepository;
 	private final UserRepository userRepository;
 	private final PrincipalService principalService;
+	private final EmailService emailService;	
 
 	@Override
 	public List<ClientAssignmentResDto> getClientById() {
@@ -111,6 +117,27 @@ public class ClientAssignmentServiceImpl implements ClientAssignmentService {
 			final var result = clientAssignmentRepository.save(newAssign);
 			response.setId(result.getId());			
 		}
+		
+		final var client = userRepository.findById(request.getClientId());
+		final var ps = userRepository.findById(request.getPsId());
+		
+		final Runnable runnable = () -> {
+			final var subjectEmail = "Payroll Service Telah Ditetapkan.";
+			Map<String, Object> templateModel = new HashMap<>();
+			templateModel.put("fullName", client.get().getFullName());
+			templateModel.put("ps", ps.get().getFullName());
+			final var userEmail = client.get().getEmail();
+			try {
+				emailService.sendTemplateEmail(userEmail, subjectEmail, "assign-pic", templateModel);
+			} catch (MessagingException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		};
+
+		final Thread mailThread = new Thread(runnable);
+		mailThread.start();
 		
 		response.setMessage("PS berhasil di-assign ke Client");
 		return response;

@@ -1,10 +1,14 @@
 package com.lawencon.pss.service.impl;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import javax.mail.MessagingException;
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
@@ -15,8 +19,12 @@ import com.lawencon.pss.dto.reschedules.RescheduleReqDto;
 import com.lawencon.pss.dto.reschedules.ReschedulesResDto;
 import com.lawencon.pss.model.PayrollDetail;
 import com.lawencon.pss.model.Reschedule;
+import com.lawencon.pss.repository.ClientAssignmentRepository;
 import com.lawencon.pss.repository.PayrollDetailRepository;
+import com.lawencon.pss.repository.PayrollRepository;
 import com.lawencon.pss.repository.RescheduleRepository;
+import com.lawencon.pss.repository.UserRepository;
+import com.lawencon.pss.service.EmailService;
 import com.lawencon.pss.service.PrincipalService;
 import com.lawencon.pss.service.RescheduleService;
 
@@ -28,6 +36,10 @@ public class RescheduleServiceImpl implements RescheduleService {
 
 	private final RescheduleRepository reschedulesRepository;
 	private final PayrollDetailRepository payrollDetailRepository;
+	private final EmailService emailService;
+	private final ClientAssignmentRepository clientAssignment;
+	private final UserRepository userRepository;
+	private final PayrollRepository payrollRepository;
 
 	private final PrincipalService principalService;
 
@@ -128,7 +140,9 @@ public class RescheduleServiceImpl implements RescheduleService {
 	public UpdateResDto updateStatusApproval(String id) {
 
 		final var rescheduleModel = reschedulesRepository.findById(id);
-		final Reschedule reschedule = rescheduleModel.get();
+		final var reschedule = rescheduleModel.get();
+		final var payroll = payrollRepository.findById(reschedule.getPayrollDetailId().getPayroll().getId());
+		final var client = userRepository.findById(payroll.get().getClientId().getId());
 
 		reschedule.setIsApprove(true);
 
@@ -139,6 +153,27 @@ public class RescheduleServiceImpl implements RescheduleService {
 
 		final var updatedReschedule = reschedulesRepository.save(reschedule);
 		final var res = new UpdateResDto();
+		
+		final Runnable runnable = () -> {
+			final var subjectEmail = "Perubahan Jadwal Aktivitas " + payrollDetail.get().getDescription() + " Telah Disetujui.";
+			Map<String, Object> templateModel = new HashMap<>();
+			templateModel.put("activity", payrollDetail.get().getDescription());				
+			templateModel.put("previousDate", payrollDetail.get().getMaxUploadDate());				
+			templateModel.put("currentDate", payrollDetailModel.getMaxUploadDate());
+			templateModel.put("fullName", client.get().getFullName());
+			String userEmail= client.get().getEmail();				
+
+			try {
+				emailService.sendTemplateEmail(userEmail, subjectEmail, "approve-reschedule", templateModel);
+			} catch (MessagingException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		};
+
+		final Thread mailThread = new Thread(runnable);
+		mailThread.start();
 
 		res.setVer(updatedReschedule.getVer());
 		res.setMessage("aktivitas disetujui untuk di reschedule");

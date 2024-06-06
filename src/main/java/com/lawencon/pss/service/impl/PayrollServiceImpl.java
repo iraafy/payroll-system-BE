@@ -1,5 +1,6 @@
 package com.lawencon.pss.service.impl;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -8,10 +9,13 @@ import java.time.format.TextStyle;
 import java.time.temporal.ChronoField;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 
+import javax.mail.MessagingException;
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
@@ -36,6 +40,7 @@ import com.lawencon.pss.repository.NotificationRepository;
 import com.lawencon.pss.repository.PayrollDetailRepository;
 import com.lawencon.pss.repository.PayrollRepository;
 import com.lawencon.pss.repository.UserRepository;
+import com.lawencon.pss.service.EmailService;
 import com.lawencon.pss.service.PayrollsService;
 import com.lawencon.pss.service.PrincipalService;
 import com.lawencon.pss.service.SchedulerService;
@@ -53,6 +58,7 @@ public class PayrollServiceImpl implements PayrollsService {
 	private final CompanyRepository companyRepository;
 	private final FileRepository fileRepository;
 	private final SchedulerService schedulerService;
+	private final EmailService emailService;
 
 	private final PrincipalService principalService;
 
@@ -129,6 +135,7 @@ public class PayrollServiceImpl implements PayrollsService {
 						.withDayOfMonth(convertedDate.getMonth().length(convertedDate.isLeapYear()));
 
 				Long lastDate = convertedDate.getLong(ChronoField.DAY_OF_MONTH);
+				LocalDate finalScheduleDate;
 
 				if (lastDate < defaultPaymentDay) {
 					String day = convertedDate.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
@@ -186,9 +193,32 @@ public class PayrollServiceImpl implements PayrollsService {
 			notificationModel.setIsActive(true);
 
 			notificationRepository.save(notificationModel);
+			
+			final Runnable runnable = () -> {
+				final var subjectEmail = "Payroll Bulan Ini Telah Ditetapkan.";
+				Map<String, Object> templateModel = new HashMap<>();
+				templateModel.put("url", "http://localhost:4200/payrolls/" + newPayroll.getId());
+				templateModel.put("schedule", payrollModel.getScheduleDate().toLocalDate());				
+				templateModel.put("fullName", client.getFullName());
+				templateModel.put("title", payrollModel.getTitle());
+				String userEmail= client.getEmail();				
+
+				try {
+					emailService.sendTemplateEmail(userEmail, subjectEmail, "new-payroll", templateModel);
+				} catch (MessagingException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			};
+
+			final Thread mailThread = new Thread(runnable);
+			mailThread.start();
 
 			res.setId(newPayroll.getId());
 			res.setMessage("Payroll " + data.getTitle() + " berhasil terbuat");
+			
+			
 		} else {
 			res.setMessage("User Not Found !");
 		}
@@ -229,8 +259,11 @@ public class PayrollServiceImpl implements PayrollsService {
 			final User user = userRepository.findById(payroll.get().getClientId().getId()).get();
 			PayrollDetail newDetail = new PayrollDetail();
 			newDetail.setDescription(data.getDescription());
+			final String activity = newDetail.getDescription();
 			newDetail.setForClient(data.getForClient());
 			newDetail.setMaxUploadDate(LocalDateTime.of(data.getMaxUploadDate(), LocalTime.MAX.minusSeconds(1)));
+			final LocalDate maxUpload = newDetail.getMaxUploadDate().toLocalDate();			
+			
 			newDetail.setPayroll(payroll.get());
 			newDetail.setCreatedBy(principalService.getUserId());
 
@@ -256,13 +289,35 @@ public class PayrollServiceImpl implements PayrollsService {
 			final var triggerLocalDateTime = LocalDateTime.of(data.getMaxUploadDate().minusDays(2), LocalTime.NOON.minusHours(5));
 			final Date triggerDate = Timestamp.valueOf(triggerLocalDateTime);
 			
-			reminder.setActivityLink("http://localhost:4200/payrolls/"+payroll.get().getId());
+			reminder.setActivityLink("http://localhost:4200/payrolls/"+ payroll.get().getId());
 			reminder.setDate(triggerDate);
 			reminder.setFullName(user.getFullName());
 			reminder.setEmail(user.getEmail());
 			reminder.setMessage(data.getDescription());
 			
 			schedulerService.runReminderJob(reminder);
+			
+			final Runnable runnable = () -> {
+				final var subjectEmail = "Aktivitas Payroll Baru Telah Ditetapkan.";
+				Map<String, Object> templateModel = new HashMap<>();
+				templateModel.put("url", reminder.getActivityLink());
+				templateModel.put("schedule", maxUpload);				
+				templateModel.put("fullName", user.getFullName());
+				templateModel.put("activity", activity);
+				String userEmail= user.getEmail();				
+
+				try {
+					emailService.sendTemplateEmail(userEmail, subjectEmail, "new-activity", templateModel);
+				} catch (MessagingException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			};
+
+			final Thread mailThread = new Thread(runnable);
+			mailThread.start();
+
 			
 		}else {
 			res.setMessage("Payroll tidak ditemukan !");
