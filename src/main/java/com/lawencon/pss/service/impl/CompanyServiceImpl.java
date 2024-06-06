@@ -123,11 +123,11 @@ public class CompanyServiceImpl implements CompanyService {
 		final var count = companyRepository.countByCompanyName(name);
 		
 		if (name == null || name.isBlank()) {
-			throw new ValidateException("Nama company tidak boleh kosong", HttpStatus.BAD_REQUEST);
+			throw new ValidateException("Nama perusahaan tidak boleh kosong", HttpStatus.BAD_REQUEST);
 		}
 		
 		if (count > 0) {
-			throw new ValidateException("Company sudah dibuat", HttpStatus.BAD_REQUEST);
+			throw new ValidateException("Nama perusahaan sudah terdaftar", HttpStatus.BAD_REQUEST);
 		}
 		
 		if (date == null) {
@@ -135,7 +135,7 @@ public class CompanyServiceImpl implements CompanyService {
 		}
 		
 		if (date < 1 || date > 31) { 
-			throw new ValidateException("Tanggal payment date tidak sesuai", HttpStatus.BAD_REQUEST);
+			throw new ValidateException("Payment date tidak sesuai", HttpStatus.BAD_REQUEST);
 		}
 	}
 }

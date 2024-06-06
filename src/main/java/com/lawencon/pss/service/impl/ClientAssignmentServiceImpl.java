@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.lawencon.pss.constant.Roles;
@@ -14,6 +15,7 @@ import com.lawencon.pss.dto.clientassignment.AllAssignmentResDto;
 import com.lawencon.pss.dto.clientassignment.ClientAssignmentReqDto;
 import com.lawencon.pss.dto.clientassignment.ClientAssignmentResDto;
 import com.lawencon.pss.dto.user.ClientResDto;
+import com.lawencon.pss.exception.ValidateException;
 import com.lawencon.pss.model.ClientAssignment;
 import com.lawencon.pss.model.User;
 import com.lawencon.pss.repository.ClientAssignmentRepository;
@@ -88,6 +90,8 @@ public class ClientAssignmentServiceImpl implements ClientAssignmentService {
 	@Override
 	@Transactional
 	public InsertResDto assignPs(ClientAssignmentReqDto request) {
+		this.validate(request);
+		
 		final var response = new InsertResDto();		
 		final var psId = request.getPsId();
 		final var clientId = request.getClientId();
@@ -147,4 +151,26 @@ public class ClientAssignmentServiceImpl implements ClientAssignmentService {
 		return responses;
 	}
 
+	private void validate(ClientAssignmentReqDto data) {
+		final var psId = data.getPsId();
+		final var clientId = data.getClientId();
+		final var psCount = userRepository.countById(psId);
+		final var clientCount = userRepository.countById(clientId);
+		
+		if (psId.isBlank() || psId == null) {
+			throw new ValidateException("ID PS tidak boleh kosong", HttpStatus.BAD_REQUEST);
+		}
+		
+		if (psCount < 1) {
+			throw new ValidateException("PS tidak ditemukan", HttpStatus.BAD_REQUEST);
+		}
+		
+		if (clientId.isBlank() || clientId == null) {
+			throw new ValidateException("ID Klien tidak boleh kosong", HttpStatus.BAD_REQUEST);
+		}
+		
+		if (clientCount < 1) {
+			throw new ValidateException("Klien tidak ditemukan", HttpStatus.BAD_REQUEST);
+		}
+	}
 }
