@@ -192,6 +192,16 @@ public class RescheduleServiceImpl implements RescheduleService {
 		final var updatedReschedule = reschedulesRepository.save(reschedule);
 		final var res = new UpdateResDto();
 		
+		final var notification = new Notification();
+		final var url = "/payrolls/"+payroll.get().getId();
+		notification.setContextId(id);
+		notification.setContextUrl(url);
+		notification.setCreatedBy(principalService.getUserId());
+		notification.setNotificationContent("Pengajuan reschedule untuk aktivitas " + payrollDetailModel.getDescription() + "telah disetujui");
+		notification.setUser(client.get());
+		
+		notificationRepository.save(notification);
+		
 		final Runnable runnable = () -> {
 			final var subjectEmail = "Perubahan Jadwal Aktivitas " + payrollDetail.get().getDescription() + " Telah Disetujui.";
 			Map<String, Object> templateModel = new HashMap<>();
@@ -230,8 +240,18 @@ public class RescheduleServiceImpl implements RescheduleService {
 		
 		final var payrollDetail = payrollDetailRepository.findById(reschedule.getPayrollDetailId().getId());
 		final var payrollDetailModel = payrollDetail.get();
-		payrollDetailModel.setMaxUploadDate(reschedule.getNewScheduleDate());
-		payrollDetailRepository.save(payrollDetailModel);
+		final var payroll = payrollDetailModel.getPayroll();
+		final var client = payroll.getClientId();
+		
+		final var notification = new Notification();
+		final var url = "/payrolls/"+payroll.getId();
+		notification.setContextId(id);
+		notification.setContextUrl(url);
+		notification.setCreatedBy(principalService.getUserId());
+		notification.setNotificationContent("Pengajuan reschedule untuk aktivitas " + payrollDetailModel.getDescription() + "telah ditolak");
+		notification.setUser(client);
+		
+		notificationRepository.save(notification);
 		
 		final var updatedReschedule = reschedulesRepository.save(reschedule);
 		final var res = new UpdateResDto();
