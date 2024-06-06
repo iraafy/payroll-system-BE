@@ -197,7 +197,7 @@ public class RescheduleServiceImpl implements RescheduleService {
 		notification.setContextId(id);
 		notification.setContextUrl(url);
 		notification.setCreatedBy(principalService.getUserId());
-		notification.setNotificationContent("Pengajuan reschedule untuk aktivitas " + payrollDetailModel.getDescription() + "telah disetujui");
+		notification.setNotificationContent("Pengajuan reschedule untuk aktivitas " + payrollDetailModel.getDescription() + " telah disetujui");
 		notification.setUser(client.get());
 		
 		notificationRepository.save(notification);
@@ -248,15 +248,13 @@ public class RescheduleServiceImpl implements RescheduleService {
 		notification.setContextId(id);
 		notification.setContextUrl(url);
 		notification.setCreatedBy(principalService.getUserId());
-		notification.setNotificationContent("Pengajuan reschedule untuk aktivitas " + payrollDetailModel.getDescription() + "telah ditolak");
+		notification.setNotificationContent("Pengajuan reschedule untuk aktivitas " + payrollDetailModel.getDescription() + " ditolak");
 		notification.setUser(client);
 		
 		notificationRepository.save(notification);
 		
 		final var updatedReschedule = reschedulesRepository.save(reschedule);
 		final var res = new UpdateResDto();
-		final var payroll = payrollRepository.findById(reschedule.getPayrollDetailId().getPayroll().getId());
-		final var client = userRepository.findById(payroll.get().getClientId().getId());
 		
 		final Runnable runnable = () -> {
 			final var subjectEmail = "Perubahan Jadwal Aktivitas " + payrollDetail.get().getDescription() + " Telah Ditolak.";
@@ -264,8 +262,8 @@ public class RescheduleServiceImpl implements RescheduleService {
 			templateModel.put("activity", payrollDetail.get().getDescription());				
 			templateModel.put("previousDate", payrollDetail.get().getMaxUploadDate().toLocalDate());				
 			templateModel.put("currentDate", payrollDetailModel.getMaxUploadDate().toLocalDate());
-			templateModel.put("fullName", client.get().getFullName());
-			String userEmail= client.get().getEmail();				
+			templateModel.put("fullName", client.getFullName());
+			String userEmail= client.getEmail();				
 
 			try {
 				emailService.sendTemplateEmail(userEmail, subjectEmail, "reject-reschedule", templateModel);
