@@ -36,4 +36,9 @@ public interface UserRepository extends JpaRepository<User,String> {
     		+ "WHERE u.role.roleCode = :roleCode"
     		)
     List<?> findClientWithPs(@Param("roleCode") String roleCode);
+    
+    long countByEmail(String email);
+    
+    long countById(String id);
+    
 }

@@ -174,9 +174,6 @@ public class PayrollServiceImpl implements PayrollsService {
 			payrollModel.setTitle(data.getTitle());
 
 			payrollModel.setCreatedBy(principalService.getUserId());
-			payrollModel.setCreatedAt(LocalDateTime.now());
-			payrollModel.setVer(0L);
-			payrollModel.setIsActive(true);
 
 			final var newPayroll = payrollRepository.save(payrollModel);
 
@@ -188,9 +185,6 @@ public class PayrollServiceImpl implements PayrollsService {
 			notificationModel.setUser(client);
 
 			notificationModel.setCreatedBy(principalService.getUserId());
-			notificationModel.setCreatedAt(LocalDateTime.now());
-			notificationModel.setVer(0L);
-			notificationModel.setIsActive(true);
 
 			notificationRepository.save(notificationModel);
 			
@@ -279,9 +273,6 @@ public class PayrollServiceImpl implements PayrollsService {
 			notificationModel.setUser(user);
 			
 			notificationModel.setCreatedBy(principalService.getUserId());
-			notificationModel.setCreatedAt(LocalDateTime.now());
-			notificationModel.setVer(0L);
-			notificationModel.setIsActive(true);
 
 			notificationRepository.save(notificationModel);
 			

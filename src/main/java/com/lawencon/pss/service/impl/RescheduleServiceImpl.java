@@ -2,7 +2,6 @@ package com.lawencon.pss.service.impl;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,9 +16,11 @@ import com.lawencon.pss.dto.InsertResDto;
 import com.lawencon.pss.dto.UpdateResDto;
 import com.lawencon.pss.dto.reschedules.RescheduleReqDto;
 import com.lawencon.pss.dto.reschedules.ReschedulesResDto;
+import com.lawencon.pss.model.Notification;
 import com.lawencon.pss.model.PayrollDetail;
 import com.lawencon.pss.model.Reschedule;
 import com.lawencon.pss.repository.ClientAssignmentRepository;
+import com.lawencon.pss.repository.NotificationRepository;
 import com.lawencon.pss.repository.PayrollDetailRepository;
 import com.lawencon.pss.repository.PayrollRepository;
 import com.lawencon.pss.repository.RescheduleRepository;
@@ -37,10 +38,10 @@ public class RescheduleServiceImpl implements RescheduleService {
 	private final RescheduleRepository reschedulesRepository;
 	private final PayrollDetailRepository payrollDetailRepository;
 	private final EmailService emailService;
-	private final ClientAssignmentRepository clientAssignment;
 	private final UserRepository userRepository;
 	private final PayrollRepository payrollRepository;
-
+	private final ClientAssignmentRepository clientAssignmentRepository;
+	private final NotificationRepository notificationRepository;
 	private final PrincipalService principalService;
 
 	@Override
@@ -102,6 +103,7 @@ public class RescheduleServiceImpl implements RescheduleService {
 
 
 		final var rescheduleModel = new Reschedule();
+		final var clientId = principalService.getUserId();
 		final var payrollDetailModel = payrollDetailRepository.findById(data.getPayrollDetailId());
 		final PayrollDetail payrollDetail = payrollDetailModel.get();
 
@@ -114,19 +116,29 @@ public class RescheduleServiceImpl implements RescheduleService {
 		if (isBefore) {
 			rescheduleModel.setNewScheduleDate(newDate);
 			rescheduleModel.setPayrollDetailId(payrollDetail);
-			rescheduleModel.setCreatedBy(principalService.getUserId());
+			rescheduleModel.setCreatedBy(clientId);
 			rescheduleModel.setIsApprove(false);
-
-			rescheduleModel.setCreatedAt(LocalDateTime.now());
-			rescheduleModel.setVer(0L);
-			rescheduleModel.setIsActive(true);
 
 			final var newReschedule = reschedulesRepository.save(rescheduleModel);
 
 			response.setId(newReschedule.getId());
 			response.setMessage(
 					"aktivitas " + payrollDetail.getDescription() + " di reschedule, harap tunggu untuk di approve");
-
+			
+			final var clientAssignment = clientAssignmentRepository.findByClientId(clientId).get();
+			final var ps = clientAssignment.getPs();
+			final var payrollId = payrollDetail.getPayroll().getId();
+			final var url = "/payrolls/" + payrollId + "/reschedule";
+			
+			final var notification = new Notification();
+			notification.setContextId(newReschedule.getId());
+			notification.setContextUrl(url);
+			notification.setCreatedBy(clientId);
+			notification.setNotificationContent("Pengajuan reschedule activity oleh Client");
+			notification.setUser(ps);
+			
+			notificationRepository.save(notification);
+			
 			return response;
 		}
 		response.setId(null);
