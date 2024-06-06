@@ -56,13 +56,21 @@ public class RescheduleController {
 	}
 
 	@PatchMapping("/{id}")
-	public ResponseEntity<UpdateResDto> updateStatus(@PathVariable String id) {
+	public ResponseEntity<UpdateResDto> acceptStatus(@PathVariable String id) {
 
-		final var res = rescheduleService.updateStatusApproval(id);
+		final var res = rescheduleService.acceptStatusApproval(id);
 
 		return new ResponseEntity<>(res, HttpStatus.OK);
 	}
 
+	@PatchMapping("/{id}/reject")
+	public ResponseEntity<UpdateResDto> rejectStatus(@PathVariable String id) {
+		
+		final var res = rescheduleService.rejectStatusApproval(id);
+		
+		return new ResponseEntity<>(res, HttpStatus.OK);
+	}
+	
 	@GetMapping("/payroll/payrollDetail/{payrollId}")
 	public ResponseEntity<List<ReschedulesResDto>> getReschedulesByPayrollDetailId(@PathVariable String payrollId) {
 		
