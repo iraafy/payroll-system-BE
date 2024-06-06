@@ -15,8 +15,10 @@ public interface RescheduleService {
     
     InsertResDto createReschedule(RescheduleReqDto data);
     
-    UpdateResDto updateStatusApproval(String id);
+    UpdateResDto acceptStatusApproval(String id);
 
+    UpdateResDto rejectStatusApproval(String id);
+    
     List<ReschedulesResDto> getScheduleByPayyrollId(String payrollId);
     
     List<ReschedulesResDto> getScheduleByPayyrollDetailId(String payrollId);

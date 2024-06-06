@@ -28,44 +28,47 @@
 				<tr>
 					<td colspan="3">
 						<p style="margin: 0 20px; font-size: 14px; line-height: 21px;">
-							Berikut adalah detail dari payroll Anda bulan ini, Terima kasih.
+							Pengajuan perubahan jadwal aktivitas [[${activity}]] telah <span style="color: green; font-weight: bold;">diterima</span>. Berikut adalah detail pengajuan perubahan jadwal. Terima kasih.
 						</p>
 					</td>
 				</tr>
 				<tr>
 					<td width="30%;" style="padding: 0 20px;">
-						<p style="color: #212121; padding-top: 20px; font-size: 16px; line-height: 24px; font-weight: 700; margin: 0;">Nama Payroll</p>
+						<p style="color: #212121; padding-top: 20px; font-size: 16px; line-height: 24px; font-weight: 700; margin: 0;">Nama Aktivitas</p>
 					</td>
 					<td width="10%">
 						<p style="color: #212121; padding-top: 20px; font-size: 16px; line-height: 24px; font-weight: 700; margin: 0;">:</p>
 					</td>
 					<td width="60%">
 						<p style="word-break: break-all; padding-top: 20px; color: #212121; font-size: 16px; line-height: 24px; font-weight: 700; margin: 0;">
-							[[${title}]]
+							[[${activity}]]
 						</p>
 					</td>
 				</tr>
 				<tr>
 					<td width="30%;" style="padding: 0 20px;">
-						<p style="color: #212121; padding-top: 10px; font-size: 16px; line-height: 24px; font-weight: 700; margin: 0;">Tanggal Payroll</p>
+						<p style="color: #212121; padding-top: 10px; font-size: 16px; line-height: 24px; font-weight: 700; margin: 0;">Tanggal Sebelumnya</p>
 					</td>
 					<td width="10%">
 						<p style="color: #212121; padding-top: 10px; font-size: 16px; line-height: 24px; font-weight: 700; margin: 0;">:</p>
 					</td>
 					<td width="60%">
 						<p style="word-break: break-all; color: #212121; padding-top: 10px; font-size: 16px; line-height: 24px; font-weight: 700; margin: 0;">
-							[[${schedule}]]
+							[[${previousDate}]]
 						</p>
 					</td>
 				</tr>
 				<tr>
-					<td style="padding: 40px 20px;" colspan="3">
-						<a th:href="@{${url}}" style="text-decoration: none; display: inline-block; padding: 8px 12px; border-radius: 8px; background-color: #0E8DC4; border: unset; margin: 0 auto;">
-							<p
-								style="margin: 0; font-size: 16px; line-height: 24px; font-weight: bold; color: #fff; font-family: 'Nunito Sans', sans-serif;">
-								Lihat Payroll
-							</p>
-						</a>
+					<td width="30%;" style="padding: 40 20px;">
+						<p style="color: #212121; padding-top: 10px; font-size: 16px; line-height: 24px; font-weight: 700; margin: 0;">Tanggal Saat Ini</p>
+					</td>
+					<td width="10%">
+						<p style="color: #212121; padding-top: 10px; font-size: 16px; line-height: 24px; font-weight: 700; margin: 0;">:</p>
+					</td>
+					<td width="60%">
+						<p style="word-break: break-all; color: #212121; padding-top: 10px; font-size: 16px; line-height: 24px; font-weight: 700; margin: 0;">
+							[[${currentDate}]]
+						</p>
 					</td>
 				</tr>
 				<tr>
