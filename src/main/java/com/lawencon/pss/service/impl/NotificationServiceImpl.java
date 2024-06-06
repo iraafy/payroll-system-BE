@@ -1,7 +1,12 @@
 package com.lawencon.pss.service.impl;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import javax.mail.MessagingException;
 
 import org.springframework.stereotype.Service;
 
@@ -11,6 +16,7 @@ import com.lawencon.pss.dto.notification.NotificationReqDto;
 import com.lawencon.pss.dto.notification.NotificationResDto;
 import com.lawencon.pss.model.Notification;
 import com.lawencon.pss.repository.NotificationRepository;
+import com.lawencon.pss.repository.PayrollDetailRepository;
 import com.lawencon.pss.repository.UserRepository;
 import com.lawencon.pss.service.EmailService;
 import com.lawencon.pss.service.NotificationService;
@@ -26,6 +32,7 @@ public class NotificationServiceImpl implements NotificationService {
 	private final UserRepository userRepository;
 	private final PrincipalService principalService;
 	private final EmailService emailService;
+	private final PayrollDetailRepository payrollDetailRepository;
 	
 	@Override
 	public InsertResDto createNotification(NotificationReqDto request) {
@@ -36,6 +43,7 @@ public class NotificationServiceImpl implements NotificationService {
 		final var reminder = userRepository.findById(principalService.getUserId()).get();
 		final var reminderName = reminder.getFullName();
 		final var fullName = recipient.getFullName();
+		final var payroll = payrollDetailRepository.findById(request.getPayrollDetailId());
 		notif.setContextId(request.getContextId());
 		notif.setContextUrl(request.getContextUrl());
 		notif.setNotificationContent(request.getNotificationContent());
@@ -45,11 +53,20 @@ public class NotificationServiceImpl implements NotificationService {
 		final var result = notificationRepository.save(notif);
 		
 		final Runnable runnable = () -> {
-			final var subjectEmail = "Pengingat untuk " + fullName + " !" ;
-			final var bodyEmail = reminderName + " mengingatkan anda untuk menyelesaikan aktivitas berikut";
-			
-			emailService.sendEmail(recipientEmail, subjectEmail, bodyEmail);			
-        };
+			final var subjectEmail = "Pengingat Unggah Aktivitas";
+			Map<String, Object> templateModel = new HashMap<>();
+			templateModel.put("fullName", fullName);
+			templateModel.put("activity", payroll.get().getDescription());
+			templateModel.put("url", "http://localhost:4200" + request.getContextUrl());
+
+			try {
+				emailService.sendTemplateEmail(recipientEmail, subjectEmail, "email-ping", templateModel);
+			} catch (MessagingException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		};
         
         final Thread mailThread = new Thread(runnable);
         mailThread.start();

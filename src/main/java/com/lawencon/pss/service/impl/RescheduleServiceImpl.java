@@ -122,11 +122,37 @@ public class RescheduleServiceImpl implements RescheduleService {
 			rescheduleModel.setIsActive(true);
 
 			final var newReschedule = reschedulesRepository.save(rescheduleModel);
+			final var payroll = payrollRepository.findById(rescheduleModel.getPayrollDetailId().getPayroll().getId());
+			final var client = userRepository.findById(payroll.get().getClientId().getId());
+			final var ps = clientAssignment.findByClientId(client.get().getId());
+			final var userEmail = ps.get().getPs().getEmail();
 
 			response.setId(newReschedule.getId());
 			response.setMessage(
 					"aktivitas " + payrollDetail.getDescription() + " di reschedule, harap tunggu untuk di approve");
+			
+			final Runnable runnable = () -> {
+				final var subjectEmail = "Pengajuan Perubahan Jadwal Aktivitas " + payrollDetailModel.get().getDescription();
+				Map<String, Object> templateModel = new HashMap<>();
+				templateModel.put("fullName", ps.get().getPs().getFullName());
+				templateModel.put("companyName", ps.get().getClient().getCompany().getCompanyName());
+				templateModel.put("clientName", ps.get().getClient().getFullName());
+				templateModel.put("activity", payrollDetailModel.get().getDescription());				
+				templateModel.put("currentDate", payrollDetailModel.get().getMaxUploadDate().toLocalDate());
+				templateModel.put("newDate", rescheduleModel.getNewScheduleDate().toLocalDate());								
 
+				try {
+					emailService.sendTemplateEmail(userEmail, subjectEmail, "request-reschedule", templateModel);
+				} catch (MessagingException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			};
+			
+			final Thread mailThread = new Thread(runnable);
+			mailThread.start();
+			
 			return response;
 		}
 		response.setId(null);
@@ -158,8 +184,8 @@ public class RescheduleServiceImpl implements RescheduleService {
 			final var subjectEmail = "Perubahan Jadwal Aktivitas " + payrollDetail.get().getDescription() + " Telah Disetujui.";
 			Map<String, Object> templateModel = new HashMap<>();
 			templateModel.put("activity", payrollDetail.get().getDescription());				
-			templateModel.put("previousDate", payrollDetail.get().getMaxUploadDate());				
-			templateModel.put("currentDate", payrollDetailModel.getMaxUploadDate());
+			templateModel.put("previousDate", payrollDetail.get().getMaxUploadDate().toLocalDate());				
+			templateModel.put("currentDate", payrollDetailModel.getMaxUploadDate().toLocalDate());
 			templateModel.put("fullName", client.get().getFullName());
 			String userEmail= client.get().getEmail();				
 
@@ -197,6 +223,29 @@ public class RescheduleServiceImpl implements RescheduleService {
 		
 		final var updatedReschedule = reschedulesRepository.save(reschedule);
 		final var res = new UpdateResDto();
+		final var payroll = payrollRepository.findById(reschedule.getPayrollDetailId().getPayroll().getId());
+		final var client = userRepository.findById(payroll.get().getClientId().getId());
+		
+		final Runnable runnable = () -> {
+			final var subjectEmail = "Perubahan Jadwal Aktivitas " + payrollDetail.get().getDescription() + " Telah Ditolak.";
+			Map<String, Object> templateModel = new HashMap<>();
+			templateModel.put("activity", payrollDetail.get().getDescription());				
+			templateModel.put("previousDate", payrollDetail.get().getMaxUploadDate().toLocalDate());				
+			templateModel.put("currentDate", payrollDetailModel.getMaxUploadDate().toLocalDate());
+			templateModel.put("fullName", client.get().getFullName());
+			String userEmail= client.get().getEmail();				
+
+			try {
+				emailService.sendTemplateEmail(userEmail, subjectEmail, "reject-reschedule", templateModel);
+			} catch (MessagingException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		};
+
+		final Thread mailThread = new Thread(runnable);
+		mailThread.start();
 		
 		res.setVer(updatedReschedule.getVer());
 		res.setMessage("Permintaan untuk pemindahan tanggal aktivitas berhasil ditolak");
