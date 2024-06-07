@@ -2,6 +2,7 @@ package com.lawencon.pss.service.impl;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,6 +53,8 @@ public class ReportServiceImpl implements ReportService {
 	
 	@Override
 	public JasperPrint exportFinalReport(String id) throws FileNotFoundException, JRException {
+		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+		
 		final var payrollModel = payrollRepository.findById(id);
 		final var payroll = payrollModel.get();
 		
@@ -64,7 +67,7 @@ public class ReportServiceImpl implements ReportService {
 		finalReport.setPayrollId(payroll.getId());
 		finalReport.setCompanyName(client.getCompany().getCompanyName());
 		finalReport.setTitle(payroll.getTitle());
-		finalReport.setScheduleDate(payroll.getScheduleDate().toLocalDate().toString());
+		finalReport.setScheduleDate(payroll.getScheduleDate().format(formatter));
 		
 		final File file = ResourceUtils.getFile("classpath:payrollReport.jasper");
 		

@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.time.temporal.ChronoField;
 import java.util.ArrayList;
@@ -92,6 +93,7 @@ public class PayrollServiceImpl implements PayrollsService {
 			response.setId(payroll.getId());
 			response.setTitle(payroll.getTitle());
 			response.setScheduleDate(payroll.getScheduleDate().toString());
+			response.setClientId(id);
 
 			responses.add(response);
 		}
@@ -550,6 +552,8 @@ public class PayrollServiceImpl implements PayrollsService {
 
 	@Override
 	public List<PayrollDetailsReportResDto> getPayrollDetailsForReport(String id) {
+		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+		
 		final var details = payrollDetailRepository.findByPayrollIdAndForClientOrderByCreatedAtAsc(id, true);
 		final ArrayList<PayrollDetailsReportResDto> resDetails = new ArrayList<>();
 
@@ -559,8 +563,8 @@ public class PayrollServiceImpl implements PayrollsService {
 			resDetail.setActivityName(detail.getDescription());
 			
 			if(detail.getUpdatedAt() != null) {
-				resDetail.setMaxUpload(detail.getMaxUploadDate().toLocalDate().toString());
-				resDetail.setUploadedDate(detail.getUpdatedAt().toLocalDate().toString());
+				resDetail.setMaxUpload(detail.getMaxUploadDate().format(formatter));
+				resDetail.setUploadedDate(detail.getUpdatedAt().format(formatter));
 				
 				if(detail.getUpdatedAt().isBefore(detail.getMaxUploadDate())) {
 					resDetail.setDescription("Tepat Waktu");
@@ -570,7 +574,7 @@ public class PayrollServiceImpl implements PayrollsService {
 				
 			}else {
 				resDetail.setMaxUpload("-");
-				resDetail.setUploadedDate(detail.getMaxUploadDate().toLocalDate().toString());								
+				resDetail.setUploadedDate(detail.getMaxUploadDate().format(formatter));								
 				resDetail.setDescription("Dokumen yang dikirim PS");
 			}
 			
