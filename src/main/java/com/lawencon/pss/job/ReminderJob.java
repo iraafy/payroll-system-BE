@@ -13,6 +13,7 @@ import org.quartz.JobExecutionException;
 import org.springframework.stereotype.Component;
 
 import com.lawencon.pss.service.EmailService;
+import com.lawencon.pss.service.NotificationService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 public class ReminderJob implements Job {
 
 	private final EmailService emailService;
+	private final NotificationService notificationService;
 	
 	@Override
 	public void execute(JobExecutionContext context) throws JobExecutionException {
@@ -33,6 +35,8 @@ public class ReminderJob implements Job {
 			templateModel.put("fullName", data.getFullName());
 			templateModel.put("message", data.getMessage());
 			templateModel.put("activityLink", data.getActivityLink());
+			
+			notificationService.createNotification(data.getRequest());
 			
 			try {
 				emailService.sendTemplateEmail(email, subject, "reminder-email", templateModel);
