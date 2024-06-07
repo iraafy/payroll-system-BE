@@ -117,7 +117,7 @@ public class UserServiceImpl implements UserService {
 		
 		final var createdBy = principalService.getUserId();
 
-		if (fileContent != null) {			
+		if (!fileContent.isBlank()) {			
 			final File file = new File();
 			file.setFileContent(fileContent);
 			file.setFileExt(fileExt);

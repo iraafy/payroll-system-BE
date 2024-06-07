@@ -2,6 +2,8 @@ package com.lawencon.pss.job;
 
 import java.util.Date;
 
+import com.lawencon.pss.dto.notification.NotificationReqDto;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,5 +16,6 @@ public class ReminderData {
 	private String fullName;
 	private String email;
 	private String activityLink;
+	private NotificationReqDto request;
 	
 }
