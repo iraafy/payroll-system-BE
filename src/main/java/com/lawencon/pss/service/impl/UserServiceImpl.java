@@ -233,6 +233,7 @@ public class UserServiceImpl implements UserService {
 			user.setId(u.getId());
 			user.setFullName(u.getFullName());
 			user.setCompanyName(u.getCompany().getCompanyName());
+			user.setRoleName(u.getRole().getRoleName());
 
 			response.add(user);
 		}
