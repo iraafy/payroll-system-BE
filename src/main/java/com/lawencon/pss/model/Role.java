@@ -12,7 +12,7 @@ import lombok.Setter;
 @Getter
 @Entity
 @Table(name = "tb_m_user_roles", uniqueConstraints = {
-		@UniqueConstraint(columnNames= {"roleCode"})
+		@UniqueConstraint(columnNames= {"role_code"})
 })
 public class Role extends BaseModel {
 
