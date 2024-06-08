@@ -261,7 +261,20 @@ public class PayrollServiceImpl implements PayrollsService {
 			newDetail.setDescription(data.getDescription());
 			final String activity = newDetail.getDescription();
 			newDetail.setForClient(data.getForClient());
-			newDetail.setMaxUploadDate(LocalDateTime.of(data.getMaxUploadDate(), LocalTime.MAX.minusSeconds(1)));
+			
+			LocalDate date = LocalDate.parse(data.getMaxUploadDate().toString());
+			String day = date.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
+			System.out.println(day);
+			LocalDateTime dateTime = LocalDateTime.of(date, LocalTime.MAX.minusSeconds(1));
+
+			if (day.equalsIgnoreCase("Sat")) {
+				newDetail.setMaxUploadDate(dateTime.minusDays(1));
+			} else if (day.equalsIgnoreCase("Sun")) {
+				newDetail.setMaxUploadDate(dateTime.minusDays(2));
+			} else {
+				newDetail.setMaxUploadDate(dateTime);
+			}
+			
 			final LocalDate maxUpload = newDetail.getMaxUploadDate().toLocalDate();			
 			
 			newDetail.setPayroll(payroll.get());
