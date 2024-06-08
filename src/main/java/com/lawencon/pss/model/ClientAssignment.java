@@ -13,7 +13,7 @@ import lombok.Setter;
 @Getter
 @Entity
 @Table(name = "tb_r_client_assignments", uniqueConstraints= {
-		@UniqueConstraint(columnNames= {"client"})
+		@UniqueConstraint(columnNames= {"client_id"})
 })
 public class ClientAssignment extends BaseModel {
 

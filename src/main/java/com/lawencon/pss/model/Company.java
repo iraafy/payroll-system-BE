@@ -14,7 +14,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "tb_m_companies", uniqueConstraints= {
-		@UniqueConstraint(columnNames= {"companyName"}),
+		@UniqueConstraint(columnNames= {"company_name"}),
 		@UniqueConstraint(columnNames= {"phone"}),
 })
 public class Company extends BaseModel {
