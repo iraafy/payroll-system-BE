@@ -21,8 +21,9 @@ public class Payroll extends BaseModel{
     @JoinColumn(name = "client_id", nullable = false)
     private User clientId;
 
+    @Column(name = "title", nullable = false)
     private String title;
 
-    @Column(name = "scheduled_date")
+    @Column(name = "scheduled_date", nullable = false)
     private LocalDateTime scheduleDate;
 }

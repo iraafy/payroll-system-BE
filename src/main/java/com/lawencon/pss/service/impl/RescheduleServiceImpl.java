@@ -178,6 +178,8 @@ public class RescheduleServiceImpl implements RescheduleService {
 		final var rescheduleModel = reschedulesRepository.findById(id);
 		final var reschedule = rescheduleModel.get();
 		final var payroll = payrollRepository.findById(reschedule.getPayrollDetailId().getPayroll().getId());
+		final var pd = payrollDetailRepository.findById(reschedule.getPayrollDetailId().getId());
+		final var prevDate = pd.get().getMaxUploadDate();
 		final var client = userRepository.findById(payroll.get().getClientId().getId());
 
 		reschedule.setIsApprove(true);
@@ -235,6 +237,7 @@ public class RescheduleServiceImpl implements RescheduleService {
 
 		final var rescheduleModel = reschedulesRepository.findById(id);
 		final Reschedule reschedule = rescheduleModel.get();
+		final var requestDate = reschedule.getNewScheduleDate();
 
 		reschedule.setIsApprove(null);
 
@@ -261,8 +264,8 @@ public class RescheduleServiceImpl implements RescheduleService {
 					+ " Telah Ditolak.";
 			Map<String, Object> templateModel = new HashMap<>();
 			templateModel.put("activity", payrollDetail.get().getDescription());
-			templateModel.put("previousDate", payrollDetail.get().getMaxUploadDate().toLocalDate().format(formatter));
-			templateModel.put("currentDate", payrollDetailModel.getMaxUploadDate().toLocalDate().format(formatter));
+			templateModel.put("currentDate", payrollDetail.get().getMaxUploadDate().toLocalDate().format(formatter));
+			templateModel.put("requestDate", payrollDetailModel.getMaxUploadDate().toLocalDate().format(formatter));
 			templateModel.put("fullName", client.getFullName());
 			String userEmail = client.getEmail();
 

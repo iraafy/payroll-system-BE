@@ -3,6 +3,7 @@ package com.lawencon.pss.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -10,7 +11,9 @@ import lombok.Setter;
 @Setter
 @Getter
 @Entity
-@Table(name = "tb_m_user_roles")
+@Table(name = "tb_m_user_roles", uniqueConstraints = {
+		@UniqueConstraint(columnNames= {"role_code"})
+})
 public class Role extends BaseModel {
 
     @Column(name = "role_code")
