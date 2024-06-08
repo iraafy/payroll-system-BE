@@ -389,6 +389,7 @@ public class UserServiceImpl implements UserService {
 		final var companyCount = companyRepository.countById(companyId);
 		final var roleCount = roleRepository.countById(roleId);
 		final var emailCount = userRepository.countByEmail(email);
+		final var phone = data.getPhone();
 		
 		if (fullName.isBlank() || fullName == null) {
 			throw new ValidateException("Nama tidak boleh kosong", HttpStatus.BAD_REQUEST);
@@ -416,6 +417,10 @@ public class UserServiceImpl implements UserService {
 		
 		if (roleCount < 1) { 
 			throw new ValidateException("Role tidak ditemukan", HttpStatus.BAD_REQUEST);
+		}
+		
+		if (phone.length() > 15) {
+			throw new ValidateException("Nomor Telepon tidak valid", HttpStatus.BAD_REQUEST);
 		}
 	}
 }
