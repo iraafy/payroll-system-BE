@@ -84,7 +84,7 @@ public class PayrollController {
 	}
 	
 	@PostMapping("{id}/details")
-	public ResponseEntity<InsertResDto> getDetails(@PathVariable String id, @RequestBody PayrollDetailReqDto data) {
+	public ResponseEntity<InsertResDto> createPayrollDetails(@PathVariable String id, @RequestBody PayrollDetailReqDto data) {
 		final InsertResDto res = payrollsService.createPayrollDetails(id, data);
 		
 		if(res.getId() != null) {
