@@ -40,15 +40,15 @@ public class NotificationServiceImpl implements NotificationService {
 		final Notification notif = new Notification();
 		final var recipient = userRepository.findById(request.getUserId()).get();
 		final var recipientEmail = recipient.getEmail();
-		final var reminder = userRepository.findById(principalService.getUserId()).get();
-		final var reminderName = reminder.getFullName();
+//		final var reminder = userRepository.findById(principalService.getUserId()).get();
+//		final var reminderName = reminder.getFullName();
 		final var fullName = recipient.getFullName();
 		final var payroll = payrollDetailRepository.findById(request.getPayrollDetailId());
 		notif.setContextId(request.getContextId());
 		notif.setContextUrl(request.getContextUrl());
 		notif.setNotificationContent(request.getNotificationContent());
 		notif.setUser(recipient);
-		notif.setCreatedBy(principalService.getUserId());
+		notif.setCreatedBy("SYSTEM");
 		
 		final var result = notificationRepository.save(notif);
 		

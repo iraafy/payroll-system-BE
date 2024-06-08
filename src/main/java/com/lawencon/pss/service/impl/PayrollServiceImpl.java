@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import com.lawencon.pss.constant.Roles;
 import com.lawencon.pss.dto.InsertResDto;
 import com.lawencon.pss.dto.UpdateResDto;
+import com.lawencon.pss.dto.notification.NotificationReqDto;
 import com.lawencon.pss.dto.payroll.PayrollDetailReqDto;
 import com.lawencon.pss.dto.payroll.PayrollDetailResDto;
 import com.lawencon.pss.dto.payroll.PayrollReqDto;
@@ -272,7 +273,7 @@ public class PayrollServiceImpl implements PayrollsService {
 
 			final var notificationModel = new Notification();
 
-			notificationModel.setNotificationContent("Ada aktivitas baru untuk anda");
+			notificationModel.setNotificationContent("PS telah menambahkan aktivitas " + activity + " untuk anda");
 			notificationModel.setContextUrl("/payrolls/" + payroll.get().getId());
 			notificationModel.setContextId(newDetail.getId());
 			notificationModel.setUser(user);
@@ -285,11 +286,19 @@ public class PayrollServiceImpl implements PayrollsService {
 			final var triggerLocalDateTime = LocalDateTime.of(data.getMaxUploadDate().minusDays(2), LocalTime.NOON.minusHours(5));
 			final Date triggerDate = Timestamp.valueOf(triggerLocalDateTime);
 			
+			final var request = new NotificationReqDto();
+			request.setContextId("REMINDER");
+			request.setContextUrl("/payrolls/" + payroll.get().getId());
+			request.setNotificationContent("Anda belum mengisi aktivitas " + activity);
+			request.setPayrollDetailId(newDetail.getId());
+			request.setUserId(user.getId());
+			
 			reminder.setActivityLink("http://localhost:4200/payrolls/"+ payroll.get().getId());
 			reminder.setDate(triggerDate);
 			reminder.setFullName(user.getFullName());
 			reminder.setEmail(user.getEmail());
 			reminder.setMessage(data.getDescription());
+			reminder.setRequest(request);
 			
 			schedulerService.runReminderJob(reminder);
 			

@@ -190,8 +190,7 @@ public class RescheduleServiceImpl implements RescheduleService {
 		notification.setContextId(id);
 		notification.setContextUrl(url);
 		notification.setCreatedBy(principalService.getUserId());
-		notification.setNotificationContent(
-				"Pengajuan reschedule untuk aktivitas " + payrollDetailModel.getDescription() + "telah disetujui");
+		notification.setNotificationContent("Pengajuan reschedule untuk aktivitas " + payrollDetailModel.getDescription() + " telah disetujui");
 		notification.setUser(client.get());
 
 		notificationRepository.save(notification);
@@ -243,15 +242,14 @@ public class RescheduleServiceImpl implements RescheduleService {
 		notification.setContextId(id);
 		notification.setContextUrl(url);
 		notification.setCreatedBy(principalService.getUserId());
-		notification.setNotificationContent(
-				"Pengajuan reschedule untuk aktivitas " + payrollDetailModel.getDescription() + "telah ditolak");
+		notification.setNotificationContent("Pengajuan reschedule untuk aktivitas " + payrollDetailModel.getDescription() + " ditolak");
 		notification.setUser(client);
 
 		notificationRepository.save(notification);
 
 		final var updatedReschedule = reschedulesRepository.save(reschedule);
 		final var res = new UpdateResDto();
-
+		
 		final Runnable runnable = () -> {
 			final var subjectEmail = "Perubahan Jadwal Aktivitas " + payrollDetail.get().getDescription()
 					+ " Telah Ditolak.";
