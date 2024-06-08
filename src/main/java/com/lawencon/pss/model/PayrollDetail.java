@@ -18,10 +18,10 @@ import lombok.Setter;
 @Table(name = "tb_r_payroll_details")
 public class PayrollDetail extends BaseModel {
 	
-	@Column(name = "description")
+	@Column(name = "description", nullable = false)
 	private String description;
 	
-	@Column(name = "max_upload_date")
+	@Column(name = "max_upload_date", nullable = false)
 	private LocalDateTime maxUploadDate;
 	
 	@Column(name = "ps_acknowledge")
@@ -30,7 +30,7 @@ public class PayrollDetail extends BaseModel {
 	@Column(name = "client_acknowledge")
 	private String clientAcknowledge;
 	
-	@Column(name = "for_client")
+	@Column(name = "for_client", nullable = false)
 	private Boolean forClient;
 	
 	@OneToOne

@@ -13,7 +13,10 @@ import lombok.Setter;
 @Setter
 @Getter
 @Entity
-@Table(name = "tb_m_users", uniqueConstraints= {@UniqueConstraint(columnNames={"full_name", "phone"})})
+@Table(name = "tb_m_users", uniqueConstraints= {
+		@UniqueConstraint(columnNames={"email"}),
+		@UniqueConstraint(columnNames={"phone"})
+		})
 public class User extends BaseModel {
 
     @Column(name = "email")

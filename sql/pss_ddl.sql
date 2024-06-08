@@ -50,7 +50,7 @@ CREATE TABLE tb_m_users (
 	role_id VARCHAR(36) NOT NULL,
 	company_id VARCHAR(36) NOT NULL,
 	file_id VARCHAR(36),
-	full_name VARCHAR(100),
+	full_name VARCHAR(100) NOT NULL,
 	phone VARCHAR(15) NOT NULL,
 	email VARCHAR(50) NOT NULL,
 	pwd TEXT NOT NULL,
@@ -113,7 +113,7 @@ CREATE TABLE tb_r_chats (
 CREATE TABLE tb_r_payrolls (
 	id VARCHAR(36) PRIMARY KEY,
 	client_id VARCHAR(36) NOT NULL,
-	title TEXT,
+	title TEXT NOT NULL,
 	scheduled_date TIMESTAMP NOT NULL,
 	created_by VARCHAR(36) NOT NULL,
 	created_at TIMESTAMP NOT NULL,
@@ -127,7 +127,7 @@ CREATE TABLE tb_r_payrolls (
 CREATE TABLE tb_r_payroll_details (
 	id VARCHAR(36) PRIMARY KEY,
 	payroll_id VARCHAR(36) NOT NULL,
-	description TEXT,
+	description TEXT NOT NULL,
 	file_id VARCHAR(36),
 	max_upload_date TIMESTAMP NOT NULL,
 	ps_acknowledge TEXT,
@@ -169,9 +169,6 @@ CREATE TABLE tb_r_reschedules (
 --	is_active BOOLEAN DEFAULT TRUE,
 --	CONSTRAINT recipient_fk FOREIGN KEY(recipient_id) REFERENCES tb_m_users(id)
 --);
-
-ALTER TABLE tb_m_companies 
-ADD CONSTRAINT company_name_bk UNIQUE(company_name);
 
 ------------------------------INSERT---------------------------------
 
