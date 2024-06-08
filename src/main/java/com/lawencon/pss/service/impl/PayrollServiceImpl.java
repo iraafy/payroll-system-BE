@@ -125,6 +125,9 @@ public class PayrollServiceImpl implements PayrollsService {
 	@Transactional
 	@Override
 	public InsertResDto createNewPayroll(PayrollReqDto data) {
+		
+		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+		
 		final var payrollModel = new Payroll();
 		final var user = userRepository.findById(data.getClientId());
 		final var res = new InsertResDto();
@@ -196,7 +199,7 @@ public class PayrollServiceImpl implements PayrollsService {
 				final var subjectEmail = "Payroll Bulan Ini Telah Ditetapkan.";
 				Map<String, Object> templateModel = new HashMap<>();
 				templateModel.put("url", "http://localhost:4200/payrolls/" + newPayroll.getId());
-				templateModel.put("schedule", payrollModel.getScheduleDate().toLocalDate());				
+				templateModel.put("schedule", payrollModel.getScheduleDate().toLocalDate().format(formatter));				
 				templateModel.put("fullName", client.getFullName());
 				templateModel.put("title", payrollModel.getTitle());
 				String userEmail= client.getEmail();				
@@ -250,6 +253,8 @@ public class PayrollServiceImpl implements PayrollsService {
 
 	@Override
 	public InsertResDto createPayrollDetails(String id, PayrollDetailReqDto data) {
+		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+		
 		final Optional<Payroll> payroll = payrollRepository.findById(id);
 		final InsertResDto res = new InsertResDto();
 		
@@ -261,7 +266,20 @@ public class PayrollServiceImpl implements PayrollsService {
 			newDetail.setDescription(data.getDescription());
 			final String activity = newDetail.getDescription();
 			newDetail.setForClient(data.getForClient());
-			newDetail.setMaxUploadDate(LocalDateTime.of(data.getMaxUploadDate(), LocalTime.MAX.minusSeconds(1)));
+			
+			LocalDate date = LocalDate.parse(data.getMaxUploadDate().toString());
+			String day = date.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
+			System.out.println(day);
+			LocalDateTime dateTime = LocalDateTime.of(date, LocalTime.MAX.minusSeconds(1));
+
+			if (day.equalsIgnoreCase("Sat")) {
+				newDetail.setMaxUploadDate(dateTime.minusDays(1));
+			} else if (day.equalsIgnoreCase("Sun")) {
+				newDetail.setMaxUploadDate(dateTime.minusDays(2));
+			} else {
+				newDetail.setMaxUploadDate(dateTime);
+			}
+			
 			final LocalDate maxUpload = newDetail.getMaxUploadDate().toLocalDate();			
 			
 			newDetail.setPayroll(payroll.get());
@@ -306,7 +324,7 @@ public class PayrollServiceImpl implements PayrollsService {
 				final var subjectEmail = "Aktivitas Payroll Baru Telah Ditetapkan.";
 				Map<String, Object> templateModel = new HashMap<>();
 				templateModel.put("url", reminder.getActivityLink());
-				templateModel.put("schedule", maxUpload);				
+				templateModel.put("schedule", maxUpload.format(formatter));				
 				templateModel.put("fullName", user.getFullName());
 				templateModel.put("activity", activity);
 				String userEmail= user.getEmail();				
