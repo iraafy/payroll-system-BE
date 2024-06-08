@@ -2,6 +2,7 @@ package com.lawencon.pss.service.impl;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -87,6 +88,9 @@ public class RescheduleServiceImpl implements RescheduleService {
 	@Transactional
 	@Override
 	public InsertResDto createReschedule(RescheduleReqDto data) {
+		
+		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+		
 		final var currentRescheduleModel = reschedulesRepository
 				.findFirstBypayrollDetailIdIdOrderByCreatedAtDesc(data.getPayrollDetailId());
 		
@@ -142,8 +146,8 @@ public class RescheduleServiceImpl implements RescheduleService {
 					templateModel.put("companyName", payrollService.get().getClient().getCompany().getCompanyName());
 					templateModel.put("clientName", payrollService.get().getClient().getFullName());
 					templateModel.put("activity", payrollDetailModel.get().getDescription());
-					templateModel.put("currentDate", payrollDetailModel.get().getMaxUploadDate().toLocalDate());
-					templateModel.put("newDate", newDateDetail);
+					templateModel.put("currentDate", payrollDetailModel.get().getMaxUploadDate().toLocalDate().format(formatter));
+					templateModel.put("newDate", newDateDetail.format(formatter));
 
 					try {
 						emailService.sendTemplateEmail(userEmail, subjectEmail, "request-reschedule", templateModel);
@@ -169,6 +173,7 @@ public class RescheduleServiceImpl implements RescheduleService {
 	@Transactional
 	@Override
 	public UpdateResDto acceptStatusApproval(String id) {
+		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
 		final var rescheduleModel = reschedulesRepository.findById(id);
 		final var reschedule = rescheduleModel.get();
@@ -200,8 +205,8 @@ public class RescheduleServiceImpl implements RescheduleService {
 					+ " Telah Disetujui.";
 			Map<String, Object> templateModel = new HashMap<>();
 			templateModel.put("activity", payrollDetail.get().getDescription());
-			templateModel.put("previousDate", payrollDetail.get().getMaxUploadDate().toLocalDate());
-			templateModel.put("currentDate", payrollDetailModel.getMaxUploadDate().toLocalDate());
+			templateModel.put("previousDate", payrollDetail.get().getMaxUploadDate().toLocalDate().format(formatter));
+			templateModel.put("currentDate", payrollDetailModel.getMaxUploadDate().toLocalDate().format(formatter));
 			templateModel.put("fullName", client.get().getFullName());
 			String userEmail = client.get().getEmail();
 
@@ -226,6 +231,7 @@ public class RescheduleServiceImpl implements RescheduleService {
 	@Override
 	@Transactional
 	public UpdateResDto rejectStatusApproval(String id) {
+		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
 		final var rescheduleModel = reschedulesRepository.findById(id);
 		final Reschedule reschedule = rescheduleModel.get();
@@ -255,8 +261,8 @@ public class RescheduleServiceImpl implements RescheduleService {
 					+ " Telah Ditolak.";
 			Map<String, Object> templateModel = new HashMap<>();
 			templateModel.put("activity", payrollDetail.get().getDescription());
-			templateModel.put("previousDate", payrollDetail.get().getMaxUploadDate().toLocalDate());
-			templateModel.put("currentDate", payrollDetailModel.getMaxUploadDate().toLocalDate());
+			templateModel.put("previousDate", payrollDetail.get().getMaxUploadDate().toLocalDate().format(formatter));
+			templateModel.put("currentDate", payrollDetailModel.getMaxUploadDate().toLocalDate().format(formatter));
 			templateModel.put("fullName", client.getFullName());
 			String userEmail = client.getEmail();
 
