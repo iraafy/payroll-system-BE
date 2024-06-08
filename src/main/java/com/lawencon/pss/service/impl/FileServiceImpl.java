@@ -15,8 +15,10 @@ import com.lawencon.pss.dto.file.FileReqDto;
 import com.lawencon.pss.dto.file.FileResDto;
 import com.lawencon.pss.dto.ftp.FtpReqDto;
 import com.lawencon.pss.model.File;
+import com.lawencon.pss.model.Notification;
 import com.lawencon.pss.repository.ClientAssignmentRepository;
 import com.lawencon.pss.repository.FileRepository;
+import com.lawencon.pss.repository.NotificationRepository;
 import com.lawencon.pss.repository.PayrollDetailRepository;
 import com.lawencon.pss.repository.UserRepository;
 import com.lawencon.pss.service.EmailService;
@@ -36,6 +38,7 @@ public class FileServiceImpl implements FileService {
 	private final PrincipalService principalService;
 	private final UserRepository userRepository;
 	private final ClientAssignmentRepository clientAssignmentRepository;
+	private final NotificationRepository notificationRepository;
 	private final EmailService emailService;
 	
 	@Override
@@ -90,6 +93,15 @@ public class FileServiceImpl implements FileService {
 		final var client = userRepository.findById(payroll.get().getPayroll().getClientId().getId());
 		final var payrollService = clientAssignmentRepository.findByClientId(client.get().getId());
 		final var userEmail = payrollService.get().getPs().getEmail();
+		
+		final var notification = new Notification();
+		notification.setContextId("Upload File");
+		notification.setContextUrl("/payrolls/"+payroll.get().getPayroll().getId());
+		notification.setCreatedBy(client.get().getId());
+		notification.setNotificationContent("Client telah mengunggah file pada aktivitas " + payroll.get().getDescription());
+		notification.setUser(payrollService.get().getPs());
+		
+		notificationRepository.save(notification);
 		
 		final Runnable runnable = () -> {
 			final var subjectEmail = "Klien Telah Mengunggah Dokumen Baru";

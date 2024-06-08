@@ -1,9 +1,7 @@
 package com.lawencon.pss.controller;
 
 import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Base64;
 import java.util.Date;
 import java.util.Optional;
@@ -11,7 +9,6 @@ import java.util.Optional;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.tomcat.util.http.fileupload.ByteArrayOutputStream;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,9 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
-import com.lawencon.pss.exception.ConvertException;
 import com.lawencon.pss.dto.InsertResDto;
 import com.lawencon.pss.dto.file.FileReqDto;
 import com.lawencon.pss.dto.file.FileResDto;
@@ -34,7 +29,6 @@ import com.lawencon.pss.repository.FileRepository;
 import com.lawencon.pss.service.FileService;
 import com.lawencon.pss.service.PayrollsService;
 import com.lawencon.pss.util.ConverterUtil;
-import com.lawencon.pss.util.FtpPojo;
 import com.lawencon.pss.util.FtpUtil;
 
 import lombok.RequiredArgsConstructor;
