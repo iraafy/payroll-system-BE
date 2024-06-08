@@ -78,7 +78,7 @@ public class FileController {
 		System.out.println(name);
 		final var file = fileServices.getFtpFileByFileName(name);
 		final var fileName = payrollService.getPayrollDetailById(name).getDescription();
-		final byte[] fileBytes = ftpUtil.getFile("/ftp_server/" + file.getStoredPath());
+		final byte[] fileBytes = ftpUtil.getFile("/salarySync/" + file.getStoredPath());
 		return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
 				"attachment; filename=" + fileName + "." + file.getFileExt()).body(fileBytes);
 	}
@@ -88,7 +88,7 @@ public class FileController {
 		System.out.println(name);
 		
 		final var file = fileServices.getFtpFileByFileName(name);
-		final byte[] fileBytes = ftpUtil.getFile("/ftp_server/" + file.getStoredPath());
+		final byte[] fileBytes = ftpUtil.getFile("/salarySync/" + file.getStoredPath());
 		final var stream = new ByteArrayInputStream(fileBytes);
 		String localPath = saveLocal(stream, file.getStoredPath());
 		String target = localPath.substring(0, localPath.lastIndexOf(".")) + SUFFIX;

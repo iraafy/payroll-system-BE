@@ -77,7 +77,7 @@ public class CompanyServiceImpl implements CompanyService {
 		companyModel.setAddress(data.getAddress());
 		companyModel.setPhone(data.getPhone());
 
-		if (data.getFileContent() == null) {			
+		if (data.getFileContent() != null) {			
 			final var file = new File();
 			file.setFileContent(data.getFileContent());
 			file.setFileExt(data.getFileExtension());

@@ -2,7 +2,10 @@ package com.lawencon.pss.service.impl;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,11 +76,15 @@ public class ReportServiceImpl implements ReportService {
 		
 		JRBeanCollectionDataSource detailsData = new JRBeanCollectionDataSource(payrollDetails);
 		
+		final var currentDate = LocalDateTime.now();
+		
 		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("companyName", finalReport.getCompanyName());
 		parameters.put("title", finalReport.getTitle());
 		parameters.put("scheduleDate", finalReport.getScheduleDate());
 		parameters.put("payrollDetailsDataset", detailsData);
+		parameters.put("currentDate", currentDate.format(formatter));
+		
 		
 		final JasperPrint jasperPrint = JasperFillManager.fillReport(file.getAbsolutePath(), parameters, new JREmptyDataSource());
 		
