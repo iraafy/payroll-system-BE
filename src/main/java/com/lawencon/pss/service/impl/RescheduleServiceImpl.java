@@ -173,6 +173,8 @@ public class RescheduleServiceImpl implements RescheduleService {
 		final var rescheduleModel = reschedulesRepository.findById(id);
 		final var reschedule = rescheduleModel.get();
 		final var payroll = payrollRepository.findById(reschedule.getPayrollDetailId().getPayroll().getId());
+		final var pd = payrollDetailRepository.findById(reschedule.getPayrollDetailId().getId());
+		final var prevDate = pd.get().getMaxUploadDate();
 		final var client = userRepository.findById(payroll.get().getClientId().getId());
 
 		reschedule.setIsApprove(true);
@@ -200,8 +202,8 @@ public class RescheduleServiceImpl implements RescheduleService {
 					+ " Telah Disetujui.";
 			Map<String, Object> templateModel = new HashMap<>();
 			templateModel.put("activity", payrollDetail.get().getDescription());
-			templateModel.put("previousDate", payrollDetail.get().getMaxUploadDate().toLocalDate());
-			templateModel.put("currentDate", payrollDetailModel.getMaxUploadDate().toLocalDate());
+			templateModel.put("previousDate", prevDate.toLocalDate());
+			templateModel.put("currentDate", reschedule.getNewScheduleDate().toLocalDate());
 			templateModel.put("fullName", client.get().getFullName());
 			String userEmail = client.get().getEmail();
 
@@ -229,6 +231,7 @@ public class RescheduleServiceImpl implements RescheduleService {
 
 		final var rescheduleModel = reschedulesRepository.findById(id);
 		final Reschedule reschedule = rescheduleModel.get();
+		final var requestDate = reschedule.getNewScheduleDate();
 
 		reschedule.setIsApprove(null);
 
@@ -255,8 +258,8 @@ public class RescheduleServiceImpl implements RescheduleService {
 					+ " Telah Ditolak.";
 			Map<String, Object> templateModel = new HashMap<>();
 			templateModel.put("activity", payrollDetail.get().getDescription());
-			templateModel.put("previousDate", payrollDetail.get().getMaxUploadDate().toLocalDate());
-			templateModel.put("currentDate", payrollDetailModel.getMaxUploadDate().toLocalDate());
+			templateModel.put("currentDate", payrollDetail.get().getMaxUploadDate().toLocalDate());
+			templateModel.put("requestDate", requestDate.toLocalDate());
 			templateModel.put("fullName", client.getFullName());
 			String userEmail = client.getEmail();
 

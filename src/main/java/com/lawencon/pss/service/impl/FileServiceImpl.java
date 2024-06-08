@@ -98,7 +98,7 @@ public class FileServiceImpl implements FileService {
 			templateModel.put("clientName", client.get().getFullName());
 			templateModel.put("companyName", client.get().getCompany().getCompanyName());
 			templateModel.put("activity", payroll.get().getDescription());
-			templateModel.put("url", "http://localhost/payrolls" + payroll.get().getId());
+			templateModel.put("url", "http://localhost:4200/payrolls/" + payroll.get().getPayroll().getId());
 
 			try {
 				emailService.sendTemplateEmail(userEmail, subjectEmail, "upload-document", templateModel);
