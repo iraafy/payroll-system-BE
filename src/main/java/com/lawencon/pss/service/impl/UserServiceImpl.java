@@ -174,6 +174,7 @@ public class UserServiceImpl implements UserService {
 				user.setId(u.getId());
 				user.setFullName(u.getFullName());
 				user.setEmail(u.getEmail());
+				user.setPhone(u.getPhone());
 				user.setRoleName(u.getRole().getRoleName());
 				user.setCompanyName(u.getCompany().getCompanyName());
 				if (u.getFile() != null) {
@@ -292,6 +293,8 @@ public class UserServiceImpl implements UserService {
 		final var user = new UserResDto();
 		user.setId(userModel.getId());
 		user.setFullName(userModel.getFullName());
+		user.setEmail(userModel.getEmail());
+		user.setPhone(userModel.getPhone());
 		user.setRoleName(userModel.getRole().getRoleName());
 		user.setCompanyName(userModel.getCompany().getCompanyName());
 		if (userModel.getFile() != null) {

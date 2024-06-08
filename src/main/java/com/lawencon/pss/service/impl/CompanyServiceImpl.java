@@ -41,6 +41,8 @@ public class CompanyServiceImpl implements CompanyService {
 		for (Company company : companiesModel) {
 			final var companyDto = new CompanyResDto();
 			companyDto.setId(company.getId());
+			companyDto.setPhone(company.getPhone());
+			companyDto.setAddress(company.getAddress());
 			companyDto.setCompanyName(company.getCompanyName());
 			companyDto.setPayrollDate(company.getDefaultPaymentDay());
 
