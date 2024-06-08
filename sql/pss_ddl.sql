@@ -17,7 +17,7 @@ CREATE TABLE tb_m_files (
 CREATE TABLE tb_m_companies (
 	id VARCHAR(36) PRIMARY KEY,
 	company_name VARCHAR(50) NOT NULL,
-	phone VARCHAR(15),
+	phone VARCHAR(15) NOT NULL,
 	address TEXT,
 	logo_id VARCHAR(36),
 	default_payment_day SMALLINT NOT NULL,
@@ -28,7 +28,8 @@ CREATE TABLE tb_m_companies (
 	vrsion INT NOT NULL,
 	is_active BOOLEAN DEFAULT TRUE,
 	CONSTRAINT logo_fk FOREIGN KEY(logo_id) REFERENCES tb_m_files(id),
-	CONSTRAINT name_bk UNIQUE(company_name)
+	CONSTRAINT name_bk UNIQUE(company_name),
+	CONSTRAINT phone_bk UNIQUE(phone)
 );
 
 CREATE TABLE tb_m_user_roles (
@@ -50,7 +51,7 @@ CREATE TABLE tb_m_users (
 	company_id VARCHAR(36) NOT NULL,
 	file_id VARCHAR(36),
 	full_name VARCHAR(100),
-	phone VARCHAR(15),
+	phone VARCHAR(15) NOT NULL,
 	email VARCHAR(50) NOT NULL,
 	pwd TEXT NOT NULL,
 	created_by VARCHAR(36) NOT NULL,
@@ -60,6 +61,7 @@ CREATE TABLE tb_m_users (
 	vrsion INT NOT NULL,
 	is_active BOOLEAN DEFAULT TRUE,
 	CONSTRAINT email_bk UNIQUE(email),
+	CONSTRAINT phone_bk UNIQUE(phone),
 	CONSTRAINT role_fk FOREIGN KEY(role_id) REFERENCES tb_m_user_roles(id),
 	CONSTRAINT company_fk FOREIGN KEY(company_id) REFERENCES tb_m_companies(id),
 	CONSTRAINT file_fk FOREIGN KEY(file_id) REFERENCES tb_m_files(id)
@@ -213,8 +215,7 @@ INSERT INTO tb_m_users (id, full_name, email, pwd, role_id, company_id, created_
 --tb_m_user_roles, 
 --tb_m_companies, 
 --tb_m_files, 
---tb_m_notifications,
---tb_r_email;
+--tb_m_notifications;
 ---------------------------DROP ALL TABLE------------------------------
    
 ------------------------------TRUNCATE---------------------------------
