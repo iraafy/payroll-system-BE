@@ -48,7 +48,7 @@ public class NotificationServiceImpl implements NotificationService {
 		notif.setContextUrl(request.getContextUrl());
 		notif.setNotificationContent(request.getNotificationContent());
 		notif.setUser(recipient);
-		notif.setCreatedBy(principalService.getUserId());
+		notif.setCreatedBy("SYSTEM");
 		
 		final var result = notificationRepository.save(notif);
 		

@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -12,7 +13,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @Entity
-@Table(name = "tb_m_users")
+@Table(name = "tb_m_users", uniqueConstraints= {@UniqueConstraint(columnNames={"full_name", "phone"})})
 public class User extends BaseModel {
 
     @Column(name = "email")

@@ -26,15 +26,15 @@ public class ChatController {
 	private final ChatService chatService;
 	
 	@GetMapping("{id}")
-	public ResponseEntity<ArrayList<ChatResDto>> ChatContents(@PathVariable String id) {
+	public ResponseEntity<ArrayList<ChatResDto>> chatContents(@PathVariable String id) {
 		final ArrayList<ChatResDto> chatsRes = chatService.seeChats(id);
 		return new ResponseEntity<>(chatsRes, HttpStatus.OK);
 	}
 	
 	@PostMapping("")
-	public ResponseEntity<InsertResDto> NewContents(@RequestBody ChatReqDto chat) {
+	public ResponseEntity<InsertResDto> newContents(@RequestBody ChatReqDto chat) {
 		System.out.println(chat.getMessage());
 		final InsertResDto insertRes = chatService.saveChat(chat);
-		return new ResponseEntity<>(insertRes, HttpStatus.OK);
+		return new ResponseEntity<>(insertRes, HttpStatus.CREATED);
 	}
 }
